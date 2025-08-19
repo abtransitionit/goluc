@@ -18,6 +18,8 @@ var kbeLDesc = kbeSDesc + ` xxx.`
 var kbeWkf *phase.Workflow
 var skipPhases []int
 var force bool
+var sorted bool
+var filtered bool
 
 // root Command
 var KbeCmd = &cobra.Command{
@@ -25,6 +27,37 @@ var KbeCmd = &cobra.Command{
 	Short: kbeSDesc,
 	Long:  kbeLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
+
+		if filtered {
+			// First, get sorted phases
+			sortedTiers, err := kbeWkf.SortedPhases(cmd.Context())
+			if err != nil {
+				logx.ErrorWithStack(err, "failed to sort phases")
+				return err
+			}
+
+			// Then filter out the phases to be skipped
+			filteredTiers, err := kbeWkf.FilterPhases(sortedTiers, skipPhases)
+			if err != nil {
+				logx.ErrorWithStack(err, "failed to filter phases")
+				return err
+			}
+
+			// Show the filtered and sorted list
+			kbeWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			return nil
+		}
+
+		if sorted {
+			sortedTiers, err := kbeWkf.SortedPhases(cmd.Context())
+			if err != nil {
+				logx.ErrorWithStack(err, "failed to sort phases")
+				return err
+			}
+			kbeWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
+			return nil
+		}
+
 		if force {
 			// Allows the command to be gracefully canceled by a user (e.g., via Ctrl+C).
 			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
@@ -61,5 +94,7 @@ func init() {
 	}
 	KbeCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	KbeCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
+	KbeCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases in topological order")
+	KbeCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases in topological order and filetered")
 	KbeCmd.AddCommand(provisionCmd)
 }
