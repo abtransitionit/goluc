@@ -7,6 +7,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
 )
@@ -43,7 +44,7 @@ func init() {
 func testPhase() {
 
 	// Show the sequence of phases before running the sequence.
-	myWorkflow.Show()
+	myWorkflow.Show(logx.GetLogger())
 
 	// Create a context for the workflow
 	ctx := context.Background()

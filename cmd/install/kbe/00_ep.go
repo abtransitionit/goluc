@@ -5,26 +5,15 @@ package kbe
 
 import (
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // Description
 var kbeSDesc = "provision a Kubernetes clusters."
 var kbeLDesc = kbeSDesc + ` xxx.`
-
-// var kbeSequence = phase.NewPhaseList(
-// 	phase.SetPhase("show", internal.SetupFunc, "display the desired KBE Cluster's configuration."),
-// 	phase.SetPhase("checklist", internal.BuildFunc, "check VMs are SSH reachable."),
-// 	phase.SetPhase("cpluc", internal.TestFunc, "provision LUC CLI"),
-// 	phase.SetPhase("upgrade", internal.TestFunc, "provision OS nodes with latest dnfapt packages and repositories."),
-// 	phase.SetPhase("dapack1", internal.TestFunc, "provision standard/required/missing OS CLI (via dnfapt  packages)."),
-// 	phase.SetPhase("darepo", internal.TestFunc, "provision dnfapt repositories."),
-
-// phase.SetPhase("dapack", internal.TestFunc, "darepo: Executes unit and integration tests."),
-// phase.SetPhase("gocli", internal.TestFunc, "darepo: Executes unit and integration tests."),
-// phase.SetPhase("update", internal.TestFunc, "darepo: Executes unit and integration tests."),
-// phase.SetPhase("reboot", internal.TestFunc, "darepo: Executes unit and integration tests."),
-// )
+var kbeWkf *phase.Workflow
 
 // root Command
 var KbeCmd = &cobra.Command{
@@ -33,15 +22,31 @@ var KbeCmd = &cobra.Command{
 	Long:  kbeLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info("%s", kbeSDesc)
-		// get the logger
-		// log := logx.GetLogger()
 		// Show the sequence of phases before running the sequence.
-		// kbeSequence.Show(log)
+		kbeWkf.Show(logx.GetLogger())
 
 	},
 }
 
 func init() {
+	var err error
+	kbeWkf, err = phase.NewWorkflowFromPhases(
+		phase.NewPhase("show", "display the desired KBE Cluster's configuration.", internal.CheckSystemStatus, nil),
+		phase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
+		phase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
+		phase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
+		phase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
+		phase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"dapack1"}),
+		phase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"dapack2"}),
+		// phase.NewPhase("dapack", internal.GenerateReport, "darepo: Executes unit and integration tests."),
+		// phase.NewPhase("gocli", internal.GenerateReport, "darepo: Executes unit and integration tests."),
+		// phase.NewPhase("update", internal.GenerateReport, "darepo: Executes unit and integration tests."),
+		// phase.NewPhase("reboot", internal.GenerateReport, "darepo: Executes unit and integration tests."),
+	)
+	if err != nil {
+		logx.ErrorWithStack(err, "failed to build workflow: %v")
+	}
+
 	KbeCmd.AddCommand(provisionCmd)
 }
 
