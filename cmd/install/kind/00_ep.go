@@ -59,9 +59,6 @@ func init() {
 		phase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"dapack1"}),
 		phase.NewPhase("path", "configure OS PATH envvar.", internal.GenerateReport, []string{"dapack1"}),
 		phase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"dapack1"}),
-		// phase.NewPhase("rcc", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-		// phase.NewPhase("create", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-		// phase.NewPhase("check", internal.GenerateReport, "darepo: Executes unit and integration tests."),
 	)
 	if err != nil {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
