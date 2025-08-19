@@ -55,11 +55,6 @@ func init() {
 		phase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
 		phase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"dapack1"}),
 		phase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"dapack1"}),
-		// phase.NewPhase("dapack", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-		// phase.NewPhase("gocli", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-		// phase.NewPhase("update", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-		// phase.NewPhase("reboot", internal.GenerateReport, "darepo: Executes unit and integration tests."),
-
 	)
 	if err != nil {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
