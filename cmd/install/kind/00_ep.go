@@ -14,6 +14,7 @@ import (
 var kindSDesc = "create a Kind clusters."
 var kindLDesc = kindSDesc + ` xxx.`
 var kindWkf *phase.Workflow
+var skipPhases []int
 
 // var kindSequence = phase.NewPhaseList(
 // 	phase.SetPhase("show", internal.SetupFunc, "display the desired KIND Cluster's configuration"),
@@ -67,6 +68,7 @@ func init() {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
 	}
 
+	KindCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	KindCmd.AddCommand(provisionCmd)
 }
 

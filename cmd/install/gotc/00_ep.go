@@ -14,6 +14,7 @@ import (
 var gotcSDesc = "Install the GO toolchain to start coding."
 var gotcLDesc = gotcSDesc + ` xxx.`
 var gotcWkf *phase.Workflow
+var skipPhases []int
 
 // root Command
 var GotcCmd = &cobra.Command{
@@ -55,6 +56,7 @@ func init() {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
 	}
 
+	GotcCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	GotcCmd.AddCommand(provisionCmd)
 }
 

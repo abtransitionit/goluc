@@ -1,6 +1,5 @@
-/*
-Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
-*/
+// Copyright © 2025 Amar BELGACEM abtransitionit@hotmail.com
+// Fille goluc/cmd/install/kbe/00_ep.go
 package kbe
 
 import (
@@ -17,6 +16,7 @@ import (
 var kbeSDesc = "provision a Kubernetes clusters."
 var kbeLDesc = kbeSDesc + ` xxx.`
 var kbeWkf *phase.Workflow
+var skipPhases []int
 
 // root Command
 var KbeCmd = &cobra.Command{
@@ -60,12 +60,6 @@ func init() {
 	if err != nil {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
 	}
-
+	KbeCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	KbeCmd.AddCommand(provisionCmd)
 }
-
-// // manage argument
-// if len(args) == 0 {
-// 	cmd.Help()
-// 	return
-// }
