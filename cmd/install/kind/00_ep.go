@@ -31,7 +31,7 @@ var KindCmd = &cobra.Command{
 			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
 			defer cancel()
 
-			if err := kindWkf.Execute(ctx, logx.GetLogger(), nil); err != nil {
+			if err := kindWkf.Execute(ctx, logx.GetLogger(), skipPhases); err != nil {
 				logx.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}

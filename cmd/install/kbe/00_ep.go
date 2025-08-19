@@ -26,11 +26,12 @@ var KbeCmd = &cobra.Command{
 	Long:  kbeLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if force {
-			// Run the workflow with this context
+			// Allows the command to be gracefully canceled by a user (e.g., via Ctrl+C).
 			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
 			defer cancel()
 
-			if err := kbeWkf.Execute(ctx, logx.GetLogger(), nil); err != nil {
+			// Pass the skipPhases variable to the Execute method.
+			if err := kbeWkf.Execute(ctx, logx.GetLogger(), skipPhases); err != nil {
 				logx.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}
@@ -58,6 +59,7 @@ func init() {
 		// phase.NewPhase("gocli", internal.GenerateReport, "darepo: Executes unit and integration tests."),
 		// phase.NewPhase("update", internal.GenerateReport, "darepo: Executes unit and integration tests."),
 		// phase.NewPhase("reboot", internal.GenerateReport, "darepo: Executes unit and integration tests."),
+
 	)
 	if err != nil {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
