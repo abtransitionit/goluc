@@ -4,27 +4,52 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package test
 
 import (
-	"github.com/abtransitionit/gocore/logx"
+	"context"
+	"log"
+
 	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
 )
 
-var mySequence = phase.NewPhaseList(
-	phase.SetPhase("Setup", internal.SetupFunc, "Prepares the environment for the build."),
-	phase.SetPhase("Build", internal.BuildFunc, "Compiles the source code into a binary."),
-	phase.SetPhase("Test", internal.TestFunc, "Executes unit and integration tests."),
-)
+var myWorkflow *phase.Workflow
 
+func init() {
+	var err error
+	myWorkflow, err = phase.NewWorkflowFromPhases(
+		phase.NewPhase("check_status", "Checks if the system is ready", internal.CheckSystemStatus, nil),
+		phase.NewPhase("fetch_data", "Fetches data from an external source", internal.FetchLatestData, nil),
+		phase.NewPhase("process_data", "Processes the fetched data", internal.ProcessData, nil),
+		phase.NewPhase("generate_report", "Generates a final report", internal.GenerateReport, nil),
+	)
+	if err != nil {
+		log.Fatalf("failed to build workflow: %v", err)
+	}
+}
+
+// func init() {
+// 	var err error
+// 	myWorkflow, err = phase.NewWorkflowFromPhases(
+// 		phase.NewPhase("check_status", "Checks if the system is ready", internal.CheckSystemStatus, nil),
+// 		phase.NewPhase("fetch_data", "Fetches data", internal.FetchLatestData, []string{"check_status"}),
+// 		phase.NewPhase("process_data", "Processes data", internal.ProcessData, []string{"fetch_data"}),
+// 		phase.NewPhase("generate_report", "Generates report", internal.GenerateReport, []string{"process_data"}),
+// 	)
+// 	if err != nil {
+// 		log.Fatalf("failed to build workflow: %v", err)
+// 	}
+// }
+
+// testPhase is the function that defines and runs the workflow.
 func testPhase() {
-	// Get the global logger instance.
-	log := logx.GetLogger()
 
 	// Show the sequence of phases before running the sequence.
-	mySequence.Show(log)
+	myWorkflow.Show()
 
-	// Run the sequence.
-	if err := mySequence.Run(log); err != nil {
-		log.ErrorWithNoStack(err, "Workflow execution failed.")
-		return
+	// Create a context for the workflow
+	ctx := context.Background()
+
+	// Execute the workflow
+	if err := myWorkflow.Execute(ctx); err != nil {
+		log.Fatalf("Workflow execution failed: %v", err)
 	}
 }

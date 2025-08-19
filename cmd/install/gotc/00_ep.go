@@ -5,8 +5,6 @@ package gotc
 
 import (
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/phase"
-	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -14,11 +12,11 @@ import (
 var gotcSDesc = "Install the GO toolchain to start coding."
 var gotcLDesc = gotcSDesc + ` xxx.`
 
-var gotcSequence = phase.NewPhaseList(
-	phase.SetPhase("Setup", internal.SetupFunc, "Prepares the environment for the build."),
-	phase.SetPhase("Build", internal.BuildFunc, "Compiles the source code into a binary."),
-	phase.SetPhase("Test", internal.TestFunc, "Executes unit and integration tests."),
-)
+// var gotcSequence = phase.NewPhaseList(
+// 	phase.SetPhase("Setup", internal.SetupFunc, "Prepares the environment for the build."),
+// 	phase.SetPhase("Build", internal.BuildFunc, "Compiles the source code into a binary."),
+// 	phase.SetPhase("Test", internal.TestFunc, "Executes unit and integration tests."),
+// )
 
 // root Command
 var GotcCmd = &cobra.Command{
@@ -28,9 +26,9 @@ var GotcCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info("%s", gotcSDesc)
 		// get the logger
-		log := logx.GetLogger()
+		// log := logx.GetLogger()
 		// Show the sequence of phases before running the sequence.
-		gotcSequence.Show(log)
+		// gotcSequence.Show(log)
 	},
 }
 
