@@ -41,6 +41,7 @@ jobs:
     with:
       go-version: ${{ needs.get-go-version.outputs.go-version }}
 
+
   create-tag:
     uses: abtransitionit/cicd-go/.github/workflows/code-tag.yaml@main
                   
