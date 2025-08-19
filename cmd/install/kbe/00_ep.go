@@ -4,6 +4,9 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kbe
 
 import (
+	"os"
+	"os/signal"
+
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
@@ -21,15 +24,21 @@ var KbeCmd = &cobra.Command{
 	Short: kbeSDesc,
 	Long:  kbeLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Info("%s", kbeSDesc)
+		// Create a context that is canceled when an OS interrupt signal is received.
+		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+
+		// Use a deferred call to ensure the context's resources are released.
+		defer cancel()
+
 		// Show the sequence of phases before running the sequence.
+		logx.Info("%s", kbeSDesc)
 		kbeWkf.Show(logx.GetLogger())
-		// Run the workflow
-		err := kbeWkf.Execute(cmd.Context(), logx.GetLogger())
+
+		// Run the workflow with this contexte
+		err := kbeWkf.Execute(ctx, logx.GetLogger())
 		if err != nil {
 			logx.ErrorWithStack(err, "failed to execute workflow")
 		}
-
 	},
 }
 
