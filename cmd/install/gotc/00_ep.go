@@ -24,6 +24,12 @@ var GotcCmd = &cobra.Command{
 		logx.Info("%s", gotcSDesc)
 		// Show the sequence of phases before running the sequence.
 		gotcWkf.Show(logx.GetLogger())
+		// Run the workflow
+		// Run the workflow
+		err := gotcWkf.Execute(cmd.Context(), logx.GetLogger())
+		if err != nil {
+			logx.ErrorWithStack(err, "failed to execute workflow")
+		}
 	},
 }
 

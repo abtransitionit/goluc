@@ -24,6 +24,11 @@ var KbeCmd = &cobra.Command{
 		logx.Info("%s", kbeSDesc)
 		// Show the sequence of phases before running the sequence.
 		kbeWkf.Show(logx.GetLogger())
+		// Run the workflow
+		err := kbeWkf.Execute(cmd.Context(), logx.GetLogger())
+		if err != nil {
+			logx.ErrorWithStack(err, "failed to execute workflow")
+		}
 
 	},
 }
