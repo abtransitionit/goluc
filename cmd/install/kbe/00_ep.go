@@ -30,12 +30,12 @@ var KbeCmd = &cobra.Command{
 		// Use a deferred call to ensure the context's resources are released.
 		defer cancel()
 
-		// Show the sequence of phases before running the sequence.
+		// Show the workflo before running the sequence.
 		logx.Info("%s", kbeSDesc)
 		kbeWkf.Show(logx.GetLogger())
 
 		// Run the workflow with this contexte
-		err := kbeWkf.Execute(ctx, logx.GetLogger())
+		err := kbeWkf.Execute(ctx, logx.GetLogger(), nil)
 		if err != nil {
 			logx.ErrorWithStack(err, "failed to execute workflow")
 		}

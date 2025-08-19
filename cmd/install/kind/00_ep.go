@@ -4,6 +4,9 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
+	"os"
+	"os/signal"
+
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
@@ -38,11 +41,21 @@ var KindCmd = &cobra.Command{
 	Short: kindSDesc,
 	Long:  kindLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Create a context that is canceled when an OS interrupt signal is received.
+		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+
+		// Use a deferred call to ensure the context's resources are released.
+		defer cancel()
+
+		// Show the workflo before running the sequence.
 		logx.Info("%s", kindSDesc)
-		// get the logger
-		// Show the sequence of phases before running the sequence.
 		kindWkf.Show(logx.GetLogger())
 
+		// Run the workflow with this contexte
+		err := kindWkf.Execute(ctx, logx.GetLogger(), nil)
+		if err != nil {
+			logx.ErrorWithStack(err, "failed to execute workflow")
+		}
 	},
 }
 
