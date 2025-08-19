@@ -18,28 +18,30 @@ var gotcSDesc = "Install the GO toolchain to start coding."
 var gotcLDesc = gotcSDesc + ` xxx.`
 var gotcWkf *phase.Workflow
 var skipPhases []int
+var force bool
 
 // root Command
 var GotcCmd = &cobra.Command{
 	Use:   "gotc",
 	Short: gotcSDesc,
 	Long:  gotcLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Create a context that is canceled when an OS interrupt signal is received.
-		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if force {
+			// Run the workflow with this context
+			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			defer cancel()
 
-		// Use a deferred call to ensure the context's resources are released.
-		defer cancel()
+			if err := gotcWkf.Execute(ctx, logx.GetLogger(), nil); err != nil {
+				logx.ErrorWithStack(err, "failed to execute workflow")
+				return err
+			}
+			return nil
+		}
 
-		// Show the workflo before running the sequence.
+		// Default: just show
 		logx.Info("%s", gotcSDesc)
 		gotcWkf.Show(logx.GetLogger())
-
-		// Run the workflow with this contexte
-		err := gotcWkf.Execute(ctx, logx.GetLogger(), nil)
-		if err != nil {
-			logx.ErrorWithStack(err, "failed to execute workflow")
-		}
+		return nil
 	},
 }
 
@@ -66,6 +68,7 @@ func init() {
 	}
 
 	GotcCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
+	GotcCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
 	GotcCmd.AddCommand(provisionCmd)
 }
 

@@ -18,44 +18,30 @@ var kindSDesc = "create a Kind clusters."
 var kindLDesc = kindSDesc + ` xxx.`
 var kindWkf *phase.Workflow
 var skipPhases []int
-
-// var kindSequence = phase.NewPhaseList(
-// 	phase.SetPhase("show", internal.SetupFunc, "display the desired KIND Cluster's configuration"),
-// 	phase.SetPhase("checkssh", internal.BuildFunc, "check VMs are SSH reachable."),
-// 	phase.SetPhase("cpluc", internal.TestFunc, "provision LUC CLI"),
-// 	phase.SetPhase("upgrade", internal.TestFunc, "provision OS nodes with latest dnfapt packages and repositories."),
-// 	phase.SetPhase("dapack", internal.TestFunc, "provision OS dnfapt package(s) on VM(s)."),
-// 	phase.SetPhase("gocli", internal.TestFunc, "provision Go toolchain"),
-// 	phase.SetPhase("service", internal.TestFunc, "configure OS services on Kind VMs."),
-// 	phase.SetPhase("linger", internal.TestFunc, "Allow non root user to run OS services."),
-// 	phase.SetPhase("path", internal.TestFunc, "configure OS PATH envvar."),
-// 	phase.SetPhase("rc", internal.TestFunc, "Add a line to non-root user RC file."),
-// 	// phase.SetPhase("rcc", internal.TestFunc, "Add lines to non-root user custom RC file."),
-// 	// phase.SetPhase("create", internal.TestFunc, "create KIND cluster."),
-// 	// phase.SetPhase("check", internal.TestFunc, "check KIND clusters."),
-// )
+var force bool
 
 // root Command
 var KindCmd = &cobra.Command{
 	Use:   "kind",
 	Short: kindSDesc,
 	Long:  kindLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Create a context that is canceled when an OS interrupt signal is received.
-		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if force {
+			// Run the workflow with this context
+			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			defer cancel()
 
-		// Use a deferred call to ensure the context's resources are released.
-		defer cancel()
+			if err := kindWkf.Execute(ctx, logx.GetLogger(), nil); err != nil {
+				logx.ErrorWithStack(err, "failed to execute workflow")
+				return err
+			}
+			return nil
+		}
 
-		// Show the workflo before running the sequence.
+		// Default: just show
 		logx.Info("%s", kindSDesc)
 		kindWkf.Show(logx.GetLogger())
-
-		// Run the workflow with this contexte
-		err := kindWkf.Execute(ctx, logx.GetLogger(), nil)
-		if err != nil {
-			logx.ErrorWithStack(err, "failed to execute workflow")
-		}
+		return nil
 	},
 }
 
@@ -82,6 +68,7 @@ func init() {
 	}
 
 	KindCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
+	KindCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
 	KindCmd.AddCommand(provisionCmd)
 }
 

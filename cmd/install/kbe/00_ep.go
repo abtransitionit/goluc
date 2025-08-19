@@ -17,28 +17,30 @@ var kbeSDesc = "provision a Kubernetes clusters."
 var kbeLDesc = kbeSDesc + ` xxx.`
 var kbeWkf *phase.Workflow
 var skipPhases []int
+var force bool
 
 // root Command
 var KbeCmd = &cobra.Command{
 	Use:   "kbe",
 	Short: kbeSDesc,
 	Long:  kbeLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Create a context that is canceled when an OS interrupt signal is received.
-		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if force {
+			// Run the workflow with this context
+			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			defer cancel()
 
-		// Use a deferred call to ensure the context's resources are released.
-		defer cancel()
+			if err := kbeWkf.Execute(ctx, logx.GetLogger(), nil); err != nil {
+				logx.ErrorWithStack(err, "failed to execute workflow")
+				return err
+			}
+			return nil
+		}
 
-		// Show the workflo before running the sequence.
+		// Default: just show
 		logx.Info("%s", kbeSDesc)
 		kbeWkf.Show(logx.GetLogger())
-
-		// Run the workflow with this contexte
-		err := kbeWkf.Execute(ctx, logx.GetLogger(), nil)
-		if err != nil {
-			logx.ErrorWithStack(err, "failed to execute workflow")
-		}
+		return nil
 	},
 }
 
@@ -61,5 +63,6 @@ func init() {
 		logx.ErrorWithStack(err, "failed to build workflow: %v")
 	}
 	KbeCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
+	KbeCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
 	KbeCmd.AddCommand(provisionCmd)
 }
