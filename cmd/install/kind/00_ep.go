@@ -6,7 +6,7 @@ package kind
 import (
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
-	"github.com/abtransitionit/gotest/internal"
+	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 

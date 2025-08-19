@@ -7,10 +7,10 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gotest/cmd/install/gotc"
-	"github.com/abtransitionit/gotest/cmd/install/kbe"
-	"github.com/abtransitionit/gotest/cmd/install/kind"
-	"github.com/abtransitionit/gotest/internal"
+	"github.com/abtransitionit/goluc/cmd/install/gotc"
+	"github.com/abtransitionit/goluc/cmd/install/kbe"
+	"github.com/abtransitionit/goluc/cmd/install/kind"
+	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 

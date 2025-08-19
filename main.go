@@ -5,7 +5,7 @@ package main
 
 import (
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gotest/cmd"
+	"github.com/abtransitionit/goluc/cmd"
 )
 
 func main() {

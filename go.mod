@@ -1,4 +1,4 @@
-module github.com/abtransitionit/gotest
+module github.com/abtransitionit/goluc
 
 // go toolchain version
 go 1.24.2

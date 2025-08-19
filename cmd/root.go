@@ -6,9 +6,9 @@ package cmd
 import (
 	"os"
 
+	"github.com/abtransitionit/goluc/cmd/install"
 	"github.com/abtransitionit/goluc/cmd/test"
 	"github.com/abtransitionit/goluc/internal"
-	"github.com/abtransitionit/gotest/cmd/install"
 	"github.com/spf13/cobra"
 )
 
