@@ -9,6 +9,7 @@ require github.com/spf13/cobra v1.9.1
 require (
 	github.com/abtransitionit/gocore v0.0.1
 	github.com/abtransitionit/golinux v0.0.1
+	github.com/abtransitionit/gotask v0.0.1
 )
 
 require (
