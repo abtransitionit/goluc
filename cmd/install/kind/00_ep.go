@@ -22,6 +22,7 @@ var force bool
 var sorted bool
 var filtered bool
 var show bool
+var logger = logx.GetLogger()
 
 // root Command
 var KindCmd = &cobra.Command{
@@ -29,21 +30,20 @@ var KindCmd = &cobra.Command{
 	Short: kindSDesc,
 	Long:  kindLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var logger = logx.GetLogger()
 
 		if filtered {
 			// get phases topoSorted
 			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
 			if err != nil {
-				logx.ErrorWithStack(err, "failed to sort phases")
+				logger.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
 			// filter them
-			logx.Info("filtered the tiers")
-			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kindWkf, logx.GetLogger(), skipPhases)
+			logger.Info("filtered the tiers")
+			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kindWkf, logger, skipPhases)
 
 			// show them
-			logx.Info("list of filtered phases")
+			logger.Info("list of filtered phases")
 			PhaseFilteredByTier.Show(logger)
 			return nil
 		}
@@ -52,12 +52,12 @@ var KindCmd = &cobra.Command{
 			// get phases sorted by tier
 			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
 			if err != nil {
-				logx.ErrorWithStack(err, "failed to sort phases")
+				logger.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
 
 			// show them
-			logx.Info("list of sorted phases")
+			logger.Info("list of sorted phases")
 			PhaseSortedByTier.Show(logger)
 			return nil
 		}
@@ -69,7 +69,7 @@ var KindCmd = &cobra.Command{
 
 			// run the workflow that recieve the context
 			if err := kindWkf.Execute(ctx, logger, skipPhases); err != nil {
-				logx.ErrorWithStack(err, "failed to execute workflow")
+				logger.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}
 			return nil
@@ -78,14 +78,14 @@ var KindCmd = &cobra.Command{
 		if show {
 
 			// show the phases of the workflow
-			logx.Info("list of worflow phases")
+			logger.Info("list of worflow phases")
 			kindWkf.Show(logger)
 			return nil
 		}
 
 		// Default action
-		logx.Infof("%s", kindSDesc) // log info
-		kindWkf.Show(logger)        // show the phases
+		logger.Infof("%s", kindSDesc) // log info
+		kindWkf.Show(logger)          // show the phases
 		return nil
 	},
 }
@@ -106,7 +106,7 @@ func init() {
 		phase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"dapack1"}),
 	)
 	if err != nil {
-		logx.ErrorWithStack(err, "failed to build workflow: %v")
+		logger.ErrorWithStack(err, "failed to build workflow: %v")
 	}
 
 	KindCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")

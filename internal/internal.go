@@ -6,7 +6,8 @@ package internal
 import (
 	"context"
 	"fmt"
-	"log"
+
+	"github.com/abtransitionit/gocore/logx"
 
 	"os"
 	"path/filepath"
@@ -14,6 +15,7 @@ import (
 )
 
 var CliName = filepath.Base(os.Args[0])
+var logger = logx.GetLogger()
 
 // defines the functions used by a phase
 func SetupFunc(ctx context.Context, cmd ...string) (string, error) {
@@ -36,29 +38,29 @@ func TestFunc(ctx context.Context, cmd ...string) (string, error) {
 
 // Dummy Phase Functions (for demonstration purposes)
 func CheckSystemStatus(ctx context.Context, cmd ...string) (string, error) {
-	log.Println("Checking system status...")
+	logger.Info("Checking system status...")
 	time.Sleep(1 * time.Second)
-	log.Println("System status OK.")
+	logger.Info("System status OK.")
 	return "System status OK", nil
 }
 
 func FetchLatestData(ctx context.Context, cmd ...string) (string, error) {
-	log.Println("Fetching latest data...")
+	logger.Info("Fetching latest data...")
 	time.Sleep(2 * time.Second)
-	log.Println("Data fetched successfully.")
+	logger.Info("Data fetched successfully.")
 	return "Data fetched successfully", nil
 }
 
 func ProcessData(ctx context.Context, cmd ...string) (string, error) {
-	log.Println("Processing data...")
+	logger.Info("Processing data...")
 	time.Sleep(3 * time.Second)
-	log.Println("Data processed.")
+	logger.Info("Data processed.")
 	return "Data processed", nil
 }
 
 func GenerateReport(ctx context.Context, cmd ...string) (string, error) {
-	log.Println("Generating report...")
+	logger.Info("Generating report...")
 	time.Sleep(1 * time.Second)
-	log.Println("Report generated.")
+	logger.Info("Report generated.")
 	return "Report generated", nil
 }
