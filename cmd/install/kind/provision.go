@@ -18,7 +18,7 @@ var provisionCmd = &cobra.Command{
 	Short: provisionSDesc,
 	Long:  provisionLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Info("%s", provisionSDesc)
+		logx.Infof("%s", provisionSDesc)
 	},
 }
 

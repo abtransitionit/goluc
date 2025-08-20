@@ -70,7 +70,7 @@ var KbeCmd = &cobra.Command{
 		}
 
 		// Default: just show
-		logx.Info("%s", kbeSDesc)
+		logx.Infof("%s", kbeSDesc)
 		kbeWkf.Show(logx.GetLogger())
 		return nil
 	},

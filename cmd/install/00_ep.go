@@ -49,7 +49,7 @@ var InstallCmd = &cobra.Command{
   %[1]s  install kbe -f config.yaml <tool>
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Info("%s", installSDesc)
+		logx.Infof("%s", installSDesc)
 		// manage argument
 		if len(args) == 0 {
 			cmd.Help()

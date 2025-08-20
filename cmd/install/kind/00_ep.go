@@ -84,8 +84,8 @@ var KindCmd = &cobra.Command{
 		}
 
 		// Default action
-		logx.Info("%s", kindSDesc) // log info
-		kindWkf.Show(logger)       // show the phases
+		logx.Infof("%s", kindSDesc) // log info
+		kindWkf.Show(logger)        // show the phases
 		return nil
 	},
 }

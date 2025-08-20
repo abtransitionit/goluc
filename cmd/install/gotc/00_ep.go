@@ -71,7 +71,7 @@ var GotcCmd = &cobra.Command{
 		}
 
 		// Default: just show
-		logx.Info("%s", gotcSDesc)
+		logx.Infof("%s", gotcSDesc)
 		gotcWkf.Show(logx.GetLogger())
 		return nil
 	},
