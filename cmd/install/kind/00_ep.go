@@ -48,7 +48,7 @@ var KindCmd = &cobra.Command{
 
 			// filter them
 			logx.Info("filtered the tiers")
-			PhaseFilteredByTier := PhaseSortedByTier.Filter(logx.GetLogger(), skipPhases)
+			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kindWkf, logx.GetLogger(), skipPhases)
 
 			// show them
 			logx.Info("list of filtered phases")
