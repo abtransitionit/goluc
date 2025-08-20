@@ -27,25 +27,21 @@ var KbeCmd = &cobra.Command{
 	Short: kbeSDesc,
 	Long:  kbeLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
-
+		var logger = logx.GetLogger()
 		if filtered {
 			// get phases topoSorted
-			sortedTiers, err := kbeWkf.TopoSort(cmd.Context())
+			PhaseSortedByTier, err := kbeWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
+			// filter them
+			logx.Info("filtered the tiers")
+			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kbeWkf, logx.GetLogger(), skipPhases)
 
-			// show the topoSorted phase
-			filteredTiers, err := kbeWkf.FilterPhases(sortedTiers, skipPhases)
-			if err != nil {
-				logx.ErrorWithStack(err, "failed to filter phases")
-				return err
-			}
-
-			// Show the filtered and sorted list
-			filteredTiers.Show(logx.GetLogger())
-			// kbeWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			// show them
+			logx.Info("list of filtered phases")
+			PhaseFilteredByTier.Show(logger)
 			return nil
 		}
 

@@ -28,24 +28,22 @@ var GotcCmd = &cobra.Command{
 	Short: gotcSDesc,
 	Long:  gotcLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var logger = logx.GetLogger()
+
 		if filtered {
-			// First, get sorted phases
-			sortedTiers, err := gotcWkf.TopoSort(cmd.Context())
+			// get phases topoSorted
+			PhaseSortedByTier, err := gotcWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
+			// filter them
+			logx.Info("filtered the tiers")
+			PhaseFilteredByTier := PhaseSortedByTier.Filter(*gotcWkf, logx.GetLogger(), skipPhases)
 
-			// Then filter out the phases to be skipped
-			filteredTiers, err := gotcWkf.FilterPhases(sortedTiers, skipPhases)
-			if err != nil {
-				logx.ErrorWithStack(err, "failed to filter phases")
-				return err
-			}
-
-			// Show the filtered and sorted list
-			filteredTiers.Show(logx.GetLogger())
-			// gotcWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			// show them
+			logx.Info("list of filtered phases")
+			PhaseFilteredByTier.Show(logger)
 			return nil
 		}
 

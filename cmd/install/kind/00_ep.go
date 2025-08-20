@@ -30,6 +30,7 @@ var KindCmd = &cobra.Command{
 	Long:  kindLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var logger = logx.GetLogger()
+
 		if filtered {
 			// get phases topoSorted
 			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
@@ -37,15 +38,6 @@ var KindCmd = &cobra.Command{
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
-
-			// show the phases
-			logx.Info("list of worflow phases")
-			kindWkf.Show(logger)
-
-			// show the sorted phases
-			logx.Info("list of worflow phases")
-			PhaseSortedByTier.Show(logger)
-
 			// filter them
 			logx.Info("filtered the tiers")
 			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kindWkf, logx.GetLogger(), skipPhases)
@@ -54,17 +46,6 @@ var KindCmd = &cobra.Command{
 			logx.Info("list of filtered phases")
 			PhaseFilteredByTier.Show(logger)
 			return nil
-
-			// // Then filter out the phases to be skipped
-			// filteredTiers, err := kindWkf.FilterPhases(sortedTiers, skipPhases)
-			// if err != nil {
-			// 	logx.ErrorWithStack(err, "failed to filter phases")
-			// 	return err
-			// }
-
-			// // Show the filtered and sorted list
-			// kindWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
-			// return nil
 		}
 
 		if sorted {
