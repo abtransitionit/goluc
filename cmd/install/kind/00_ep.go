@@ -21,6 +21,7 @@ var skipPhases []int
 var force bool
 var sorted bool
 var filtered bool
+var show bool
 
 // root Command
 var KindCmd = &cobra.Command{
@@ -28,51 +29,82 @@ var KindCmd = &cobra.Command{
 	Short: kindSDesc,
 	Long:  kindLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var logger = logx.GetLogger()
 		if filtered {
-			// First, get sorted phases
-			sortedTiers, err := kindWkf.SortedPhases(cmd.Context())
+			// get phases topoSorted
+			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
 
-			// Then filter out the phases to be skipped
-			filteredTiers, err := kindWkf.FilterPhases(sortedTiers, skipPhases)
-			if err != nil {
-				logx.ErrorWithStack(err, "failed to filter phases")
-				return err
-			}
+			// show the phases
+			logx.Info("list of worflow phases")
+			kindWkf.Show(logger)
 
-			// Show the filtered and sorted list
-			kindWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			// show the sorted phases
+			logx.Info("list of worflow phases")
+			PhaseSortedByTier.Show(logger)
+
+			// filter them
+			logx.Info("filtered the tiers")
+			PhaseFilteredByTier := PhaseSortedByTier.Filter(logx.GetLogger(), skipPhases)
+
+			// show them
+			logx.Info("list of filtered phases")
+			PhaseFilteredByTier.Show(logger)
 			return nil
+
+			// // Then filter out the phases to be skipped
+			// filteredTiers, err := kindWkf.FilterPhases(sortedTiers, skipPhases)
+			// if err != nil {
+			// 	logx.ErrorWithStack(err, "failed to filter phases")
+			// 	return err
+			// }
+
+			// // Show the filtered and sorted list
+			// kindWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			// return nil
 		}
 
 		if sorted {
-			sortedTiers, err := kindWkf.SortedPhases(cmd.Context())
+			// get phases sorted by tier
+			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
-			kindWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
+
+			// show them
+			logx.Info("list of sorted phases")
+			PhaseSortedByTier.Show(logger)
 			return nil
 		}
 
 		if force {
-			// Run the workflow with this context
+			// define a context: allow usr to cancel the workflow execution with CTRL+C
 			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
 			defer cancel()
 
-			if err := kindWkf.Execute(ctx, logx.GetLogger(), skipPhases); err != nil {
+			// run the workflow that recieve the context
+			if err := kindWkf.Execute(ctx, logger, skipPhases); err != nil {
 				logx.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}
 			return nil
 		}
 
-		// Default: just show
-		logx.Info("%s", kindSDesc)
-		kindWkf.Show(logx.GetLogger())
+		if show {
+
+			// show the phases of the workflow
+			logx.Info("list of worflow phases")
+			kindWkf.Show(logger)
+			return nil
+		}
+
+		// Default action
+		logx.Info("%s", kindSDesc) // log info
+		kindWkf.Show(logger)       // show the phases
 		return nil
 	},
 }
@@ -98,8 +130,9 @@ func init() {
 
 	KindCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	KindCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
-	KindCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases in topological order")
-	KindCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases in topological order and filetered")
+	KindCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases of a worflow (in topological order)")
+	KindCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases of a workflow (in a topological order and filetered)")
+	KindCmd.Flags().BoolVar(&show, "show", false, "show phases of a workflow")
 	KindCmd.AddCommand(provisionCmd)
 }
 

@@ -29,14 +29,14 @@ var KbeCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		if filtered {
-			// First, get sorted phases
-			sortedTiers, err := kbeWkf.SortedPhases(cmd.Context())
+			// get phases topoSorted
+			sortedTiers, err := kbeWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
 
-			// Then filter out the phases to be skipped
+			// show the topoSorted phase
 			filteredTiers, err := kbeWkf.FilterPhases(sortedTiers, skipPhases)
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to filter phases")
@@ -44,17 +44,19 @@ var KbeCmd = &cobra.Command{
 			}
 
 			// Show the filtered and sorted list
-			kbeWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			filteredTiers.Show(logx.GetLogger())
+			// kbeWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
 			return nil
 		}
 
 		if sorted {
-			sortedTiers, err := kbeWkf.SortedPhases(cmd.Context())
+			sortedTiers, err := kbeWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
-			kbeWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
+			sortedTiers.Show(logx.GetLogger())
+			// kbeWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
 			return nil
 		}
 
@@ -94,7 +96,7 @@ func init() {
 	}
 	KbeCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	KbeCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
-	KbeCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases in topological order")
-	KbeCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases in topological order and filetered")
+	KbeCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases of a worflow (in topological order)")
+	KbeCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases of a workflow (in a topological order and filetered)")
 	KbeCmd.AddCommand(provisionCmd)
 }

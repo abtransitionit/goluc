@@ -30,7 +30,7 @@ var GotcCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if filtered {
 			// First, get sorted phases
-			sortedTiers, err := gotcWkf.SortedPhases(cmd.Context())
+			sortedTiers, err := gotcWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
@@ -44,17 +44,19 @@ var GotcCmd = &cobra.Command{
 			}
 
 			// Show the filtered and sorted list
-			gotcWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
+			filteredTiers.Show(logx.GetLogger())
+			// gotcWkf.ShowPhaseList(filteredTiers, logx.GetLogger())
 			return nil
 		}
 
 		if sorted {
-			sortedTiers, err := gotcWkf.SortedPhases(cmd.Context())
+			sortedTiers, err := gotcWkf.TopoSort(cmd.Context())
 			if err != nil {
 				logx.ErrorWithStack(err, "failed to sort phases")
 				return err
 			}
-			gotcWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
+			sortedTiers.Show(logx.GetLogger())
+			// gotcWkf.ShowPhaseList(sortedTiers, logx.GetLogger())
 			return nil
 		}
 
@@ -101,8 +103,8 @@ func init() {
 
 	GotcCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	GotcCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
-	GotcCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases in topological order")
-	GotcCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases in topological order and filetered")
+	GotcCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases of a worflow (in topological order)")
+	GotcCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases of a workflow (in a topological order and filetered)")
 	GotcCmd.AddCommand(provisionCmd)
 }
 
