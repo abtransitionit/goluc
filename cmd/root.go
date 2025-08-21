@@ -6,8 +6,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/abtransitionit/goluc/cmd/install"
 	"github.com/abtransitionit/goluc/cmd/test"
+	workflow "github.com/abtransitionit/goluc/cmd/worflow"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -39,6 +39,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(install.InstallCmd)
+	rootCmd.AddCommand(workflow.WorkflowCmd)
 	rootCmd.AddCommand(test.TestCmd)
 }

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package install
+package workflow
 
 import (
 	"fmt"
@@ -16,25 +16,25 @@ import (
 
 // Description
 
-var installSDesc = "install softwares, tools locally or on remote host(s)."
+var worflowSDesc = "manage the provisioning process of systems, softwares and tools."
 
-var installLDesc = installSDesc + "\n" + `
-This command allows you to install various tools or software either on your local
+var worflowLDesc = worflowSDesc + "\n" + `
+This command allows you to install various systems, software or tools either on your local
 machine or on one or more remote hosts/VMs/containers.
 
-The installation process is usually driven by a custom YAML configuration file.
-The structure of this YAML file depends on the tool/software being installed,
+The installation process is driven by a worflow and a custom configuration YAML file.
+The structure of this YAML file depends on the system/software/tool being installed,
 and may define:
-  - Target hosts or VMs
+  - Target hosts, VMs or containers
   - Installation parameters or options
-  - Environment-specific settings
+  - Other Environment-specific settings
 `
 
 // root Command
-var InstallCmd = &cobra.Command{
+var WorkflowCmd = &cobra.Command{
 	Use:   "install",
-	Short: installSDesc,
-	Long:  installLDesc,
+	Short: worflowSDesc,
+	Long:  worflowLDesc,
 	Example: fmt.Sprintf(`
   # install kind locally using default configuration
   %[1]s  install kind <tool>
@@ -49,7 +49,7 @@ var InstallCmd = &cobra.Command{
   %[1]s  install kbe -f config.yaml <tool>
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Infof("%s", installSDesc)
+		logx.Infof("%s", worflowSDesc)
 		// manage argument
 		if len(args) == 0 {
 			cmd.Help()
@@ -60,7 +60,7 @@ var InstallCmd = &cobra.Command{
 }
 
 func init() {
-	InstallCmd.AddCommand(gotc.GotcCmd)
-	InstallCmd.AddCommand(kbe.KbeCmd)
-	InstallCmd.AddCommand(kind.KindCmd)
+	WorkflowCmd.AddCommand(gotc.GotcCmd)
+	WorkflowCmd.AddCommand(kbe.KbeCmd)
+	WorkflowCmd.AddCommand(kind.KindCmd)
 }

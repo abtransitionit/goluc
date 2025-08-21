@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
+	taskPhase "github.com/abtransitionit/gotask/phase"
 	"github.com/spf13/cobra"
 )
 
@@ -32,34 +33,23 @@ var KindCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		if filtered {
-			// get phases topoSorted
-			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
+			err := taskPhase.ShowFiltered(kindWkf, logger, cmd.Context(), skipPhases)
 			if err != nil {
-				logger.ErrorWithStack(err, "failed to sort phases")
+				logger.ErrorWithStack(err, "failed to display workflow phases sorted and filtered")
 				return err
 			}
-			// filter them
-			logger.Info("filtered the tiers")
-			PhaseFilteredByTier := PhaseSortedByTier.Filter(*kindWkf, logger, skipPhases)
-
-			// show them
-			logger.Info("list of filtered phases")
-			PhaseFilteredByTier.Show(logger)
 			return nil
+
 		}
 
 		if sorted {
-			// get phases sorted by tier
-			PhaseSortedByTier, err := kindWkf.TopoSort(cmd.Context())
+			_, err := taskPhase.ShowTier(kindWkf, logger)
 			if err != nil {
-				logger.ErrorWithStack(err, "failed to sort phases")
+				logger.ErrorWithStack(err, "failed to display workflow configuration")
 				return err
 			}
-
-			// show them
-			logger.Info("list of sorted phases")
-			PhaseSortedByTier.Show(logger)
 			return nil
+
 		}
 
 		if force {
@@ -76,17 +66,19 @@ var KindCmd = &cobra.Command{
 		}
 
 		if show {
-
-			// show the phases of the workflow
-			logger.Info("list of worflow phases")
-			kindWkf.Show(logger)
+			err := taskPhase.ShowPhase(kindWkf, logger)
+			if err != nil {
+				logger.ErrorWithStack(err, "failed to get workflow configuration")
+				return err
+			}
 			return nil
+
 		}
 
 		// Default action
-		logger.Infof("%s", kindSDesc) // log info
-		kindWkf.Show(logger)          // show the phases
+		cmd.Help()
 		return nil
+
 	},
 }
 

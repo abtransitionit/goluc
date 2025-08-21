@@ -1,0 +1,86 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package kind
+
+import (
+	"github.com/abtransitionit/gocore/logx"
+	corePhase "github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/goluc/internal"
+	taskPhase "github.com/abtransitionit/gotask/phase"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var kindSDesc = "create a Kind clusters."
+var kindLDesc = kindSDesc + ` xxx.`
+var kindWkf *corePhase.Workflow
+var skipPhases []int
+var force bool
+var sorted bool
+var filtered bool
+var show bool
+var logger = logx.GetLogger()
+
+// root Command
+var KindCmd = &cobra.Command{
+	Use:   "kind",
+	Short: kindSDesc,
+	Long:  kindLDesc,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		logger.Infof("%s", kindSDesc) // log info
+
+		// Step 1: Get the phases sorted by tier
+		sortedTiers, err := kindWkf.TopoSort(cmd.Context())
+		if err != nil {
+			logger.ErrorWithStack(err, "failed to sort phases")
+			return err
+		}
+
+		// Step 2: Call the new, production-grade ShowPhase function
+		// We'll pass a simple placeholder for toolConfig for now.
+		toolConfig := map[string]string{
+			"kind_version": "0.20.0",
+		}
+		_, err = taskPhase.ShowPhase(cmd.Context(), logger, kindWkf, &sortedTiers, toolConfig)
+		if err != nil {
+			logger.ErrorWithStack(err, "failed to display workflow configuration")
+			return err
+		}
+
+		return nil
+	},
+}
+
+func init() {
+	var err error
+	kindWkf, err = corePhase.NewWorkflowFromPhases(
+		corePhase.NewPhase("show", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
+		corePhase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
+		corePhase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
+		corePhase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
+		corePhase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
+		corePhase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"upgrade"}),
+		corePhase.NewPhase("gocli", "provision Go toolchain", internal.GenerateReport, []string{"dapack1"}),
+		corePhase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"dapack1"}),
+		corePhase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"dapack1"}),
+		corePhase.NewPhase("path", "configure OS PATH envvar.", internal.GenerateReport, []string{"dapack1"}),
+		corePhase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"dapack1"}),
+	)
+	if err != nil {
+		logger.ErrorWithStack(err, "failed to build workflow: %v")
+	}
+	kindWkf.Name = "KIND Workflow"
+	KindCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
+	KindCmd.Flags().BoolVar(&force, "force", false, "force execution of workflow")
+	KindCmd.Flags().BoolVar(&sorted, "sorted", false, "show phases of a worflow (in topological order)")
+	KindCmd.Flags().BoolVar(&filtered, "filtered", false, "show phases of a workflow (in a topological order and filetered)")
+	KindCmd.Flags().BoolVar(&show, "show", false, "show phases of a workflow")
+	KindCmd.AddCommand(provisionCmd)
+}
+
+// // manage argument
+// if len(args) == 0 {
+// 	cmd.Help()
+// 	return
+// }
