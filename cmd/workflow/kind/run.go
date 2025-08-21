@@ -22,6 +22,12 @@ var runCmd = &cobra.Command{
 	Short: "execute the workflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
+		// Check if only --skip-phase or --keep-phase is set.
+		if len(skipPhases) > 0 && len(keepPhases) > 0 {
+			logger.Info("flags --skip-phase and --keep-phase cannot be used together")
+			return nil
+		}
+
 		// The dry-run flag does not need the --force flag, as it is a non-destructive action.
 		if dryRun {
 			logger.Info("Executing in dry-run mode.")
