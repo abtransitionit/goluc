@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/abtransitionit/goluc/cmd/test"
-	workflow "github.com/abtransitionit/goluc/cmd/worflow"
+	"github.com/abtransitionit/goluc/cmd/workflow"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )

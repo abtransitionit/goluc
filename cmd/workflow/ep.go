@@ -7,9 +7,9 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/install/gotc"
-	"github.com/abtransitionit/goluc/cmd/install/kbe"
-	"github.com/abtransitionit/goluc/cmd/install/kind"
+	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
+	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
+	"github.com/abtransitionit/goluc/cmd/workflow/kind"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,6 @@ import (
 // Description
 
 var workflowSDesc = "Manage the provisioning process of systems, software and tools."
-
 var workflowLDesc = workflowSDesc + "\n" + `
 This command allows you to install various systems, software or tools, on your local
 machine or on one or more remote hosts, VMs or containers.
@@ -32,21 +31,18 @@ and may define:
 
 // root Command
 var WorkflowCmd = &cobra.Command{
-	Use:   "install",
+	Use:   "workflow",
 	Short: workflowSDesc,
 	Long:  workflowLDesc,
 	Example: fmt.Sprintf(`
-  # install kind locally using default configuration
-  %[1]s  install kind <tool>
+  # manage KIND workflow
+  %[1]s workflow kind
 	
-  # Install kind locally using default configuration
-  %[1]s  install kind --remote o1u <tool>
+  # manage go toolchain workflow
+  %[1]s workflow gotc
 
-  # provision a Kubernetes cluster on remote VMs using a default configuration
-  %[1]s  install kbe <tool>
-
-  # provision a Kubernetes cluster on remote VMs using a specific configuration
-  %[1]s  install kbe -f config.yaml <tool>
+	# manage KBE workflow
+  %[1]s workflow kbe
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Infof("%s", workflowSDesc)
@@ -60,7 +56,8 @@ var WorkflowCmd = &cobra.Command{
 }
 
 func init() {
-	WorkflowCmd.AddCommand(gotc.GotcCmd)
-	WorkflowCmd.AddCommand(kbe.KbeCmd)
-	WorkflowCmd.AddCommand(kind.KindCmd)
+	// define the entry point for each workflow
+	WorkflowCmd.AddCommand(gotc.EpCmd)
+	WorkflowCmd.AddCommand(kbe.EpCmd)
+	WorkflowCmd.AddCommand(kind.EpCmd)
 }
