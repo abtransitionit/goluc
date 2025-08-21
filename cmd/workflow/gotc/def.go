@@ -20,7 +20,8 @@ var (
 func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("show", "show execution plan.", internal.CheckSystemStatus, nil),
+		corephase.NewPhase("showPhase", "display the worflow execution plan", internal.Dummy, nil),
+		corephase.NewPhase("show2", "show execution plan.", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checkP", "check prerequisites.", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("download", "download tarball.", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("copy", "temporary copy file to temp.", internal.FetchLatestData, nil),

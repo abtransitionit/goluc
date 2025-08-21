@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
+	"github.com/abtransitionit/gotask/workflow"
 )
 
 // Package variables
@@ -21,7 +22,8 @@ var (
 func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("show", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
+		corephase.NewPhase("showPhase", "display the worflow execution plan", workflow.ShowWorkflow, nil),
+		corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
 		corephase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),

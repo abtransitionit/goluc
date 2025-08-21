@@ -20,7 +20,8 @@ var (
 func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("show", "display the desired KBE Cluster's configuration.", internal.CheckSystemStatus, nil),
+		corephase.NewPhase("showPhase", "display the worflow execution plan", internal.Dummy, nil),
+		corephase.NewPhase("show2", "display the desired KBE Cluster's configuration.", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
 		corephase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
