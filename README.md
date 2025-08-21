@@ -1,27 +1,24 @@
-# gotplrepo
+# Goluc
+This repository is a `GO` project that provide a `Linux` CLI named `LUC` (aka. **L**inux **U**nified **C**LI). 
 
-This repository serves as a standardized template for all future GitHub GO projects within the organization.  
 
+# Badges
+
+[![Dev CI](https://github.com/abtransitionit/gotest/actions/workflows/ci-dev.yaml/badge.svg?branch=dev)](https://github.com/abtransitionit/gotest/actions/workflows/ci-dev.yaml)
+[![Main CI](https://github.com/abtransitionit/gotest/actions/workflows/ci-main.yaml/badge.svg?branch=main)](https://github.com/abtransitionit/gotest/actions/workflows/ci-main.yaml)
 [![LICENSE](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://choosealicense.com/licenses/apache-2.0/)
 
 ----
 
-
-# Features  
-This project template includes the following components:  
-
-
-|Component|Description|
-|-|-|
-|Licensing|Predefined open-source license (Apache 2.0) for legal compliance.|
-|Code of Conduct| Ensures a welcoming and inclusive environment for all contributors.|  
-|README|Structured documentation template for clear project onboarding.|  
 
 
 
 ---
 
 # Getting Started  
+
+## Developper
+- the project uses codes form multiple GO projects (e.g : `gocore`, `golinux`, `gotask`).
 
 ## 1. Create a repository from this template (e.g. `gomine`)
 - on `github.com` create `gomine` : an empty git repo without `README` and `.gitcore`
@@ -77,3 +74,16 @@ Track version updates and changes:
 
 ---
 
+# Todo
+
+```go
+var rootSDesc = "LUC  is a user-friendly, auto-documented command-line interface."
+var rootLDesc = rootSDesc + ` It simplifies daily tasks for DevOps engineers and developers by providing a unified and consistent CLI experience. LUC can, for example:
+	→ Manage containers and container images,
+	→ Manage Linux OS packages and repositories using a unified interface — no need to worry about whether it's apt or dnf nor if it's debian, fedora or ubuntu
+	→ Manage remote VM objects,
+	→ Simplify the creation and management of Kubernetes clusters across virtual machines,
+	→ ...and much more.
+
+As a Linux cross-distribution CLI, LUC is also well-suited and ready for full automation and integration into any CI/CD pipelines.`
+``
