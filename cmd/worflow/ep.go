@@ -16,25 +16,25 @@ import (
 
 // Description
 
-var worflowSDesc = "manage the provisioning process of systems, softwares and tools."
+var workflowSDesc = "Manage the provisioning process of systems, software and tools."
 
-var worflowLDesc = worflowSDesc + "\n" + `
-This command allows you to install various systems, software or tools either on your local
-machine or on one or more remote hosts/VMs/containers.
+var workflowLDesc = workflowSDesc + "\n" + `
+This command allows you to install various systems, software or tools, on your local
+machine or on one or more remote hosts, VMs or containers.
 
-The installation process is driven by a worflow and a custom configuration YAML file.
-The structure of this YAML file depends on the system/software/tool being installed,
+The installation process is driven by a workflow and a custom configuration YAML file.
+The structure of this YAML file depends on the system, software or tool being installed,
 and may define:
   - Target hosts, VMs or containers
-  - Installation parameters or options
-  - Other Environment-specific settings
+  - Installation parameters and options
+  - Environment-specific settings
 `
 
 // root Command
 var WorkflowCmd = &cobra.Command{
 	Use:   "install",
-	Short: worflowSDesc,
-	Long:  worflowLDesc,
+	Short: workflowSDesc,
+	Long:  workflowLDesc,
 	Example: fmt.Sprintf(`
   # install kind locally using default configuration
   %[1]s  install kind <tool>
@@ -49,7 +49,7 @@ var WorkflowCmd = &cobra.Command{
   %[1]s  install kbe -f config.yaml <tool>
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Infof("%s", worflowSDesc)
+		logx.Infof("%s", workflowSDesc)
 		// manage argument
 		if len(args) == 0 {
 			cmd.Help()
