@@ -4,8 +4,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
+	"context"
+
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
+
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/abtransitionit/gotask/workflow"
 )
@@ -22,7 +25,7 @@ var (
 func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("showPhase", "display the worflow execution plan", workflow.ShowWorkflow, nil),
+		corephase.NewPhase("showPhase", "display the worflow execution plan", showPhaseAdapter, nil),
 		corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
@@ -38,4 +41,17 @@ func init() {
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
 	}
+}
+
+// The adapter function to bridge the type mismatch.
+// It accepts the required PhaseFunc signature and calls the specific ShowPhase.
+func showPhaseAdapter(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+	// The adapter can access the package-level 'wkf' variable since it's in the same package.
+	// it can also acces external method and feed them with anything that nelongs to KIND
+	err := workflow.ShowPhase(wkf, l)
+	if err != nil {
+		return "", err
+	}
+	// Return the required string and a nil error on success.
+	return "Workflow plan displayed.", nil
 }

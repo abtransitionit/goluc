@@ -14,6 +14,7 @@ import (
 var keepPhases []int
 var skipPhases []int
 var force bool
+var dryRun bool
 
 // root Command
 var runCmd = &cobra.Command{
@@ -21,9 +22,41 @@ var runCmd = &cobra.Command{
 	Short: "execute the workflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
+		// The dry-run flag does not need the --force flag, as it is a non-destructive action.
+		if dryRun {
+			logger.Info("Executing in dry-run mode.")
+			// Call the new Plan method from the gocore library
+			return wkf.DryRun(cmd.Context(), logger, skipPhases)
+		}
+
+		// The --force flag is a security gate; it must be present for any execution.
+		if !force {
+			logger.Info("The --force flag is required to execute the workflow.")
+			return cmd.Help()
+		}
+
+		// Check for the dry-run flag first
+		if dryRun {
+			logger.Info("execute workflow in dry-run mode.")
+			// Call the DryRun method
+			return wkf.DryRun(cmd.Context(), logger, skipPhases)
+		}
+
 		if len(skipPhases) != 0 {
 			logger.Infof("execute workflow while skipping phases: %v", skipPhases)
+			// define a context: allow usr to cancel the workflow execution with CTRL+C
+			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			defer cancel()
+
+			// execute the workflow
+			if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
+				// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
+				logger.ErrorWithStack(err, "failed to execute workflow")
+				return err
+			}
+			// success
 			return nil
+
 		}
 
 		if len(keepPhases) != 0 {
@@ -31,23 +64,18 @@ var runCmd = &cobra.Command{
 			return nil
 		}
 
-		if force {
-			logger.Info("execute workflow with all phases (force enabled)")
-			// define a context: allow usr to cancel the workflow execution with CTRL+C
-			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
-			defer cancel()
+		// Default action : here we have only flag --force
+		// define a context: allow usr to cancel the workflow execution with CTRL+C
+		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+		defer cancel()
 
-			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
-				logger.ErrorWithStack(err, "failed to execute workflow")
-				return err
-			}
-
-			return nil
+		// execute the workflow with the correct parameters (in that case, skipPhases is empty)
+		if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
+			// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
+			logger.ErrorWithStack(err, "failed to execute workflow")
+			return err
 		}
-
-		// Default action
-		cmd.Help()
+		// success
 		return nil
 
 	},
@@ -57,4 +85,6 @@ func init() {
 	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
 	runCmd.Flags().IntSliceVarP(&keepPhases, "keep-phase", "k", []int{}, "phase(s) to keep by ID during execution")
 	runCmd.Flags().BoolVar(&force, "force", false, "security flag, needed to execute the workflow")
+	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show the execution plan without executing any phases")
+
 }
