@@ -50,7 +50,7 @@ func testPhase() {
 	ctx := context.Background()
 
 	// Execute the workflow
-	if err := myWorkflow.Execute(ctx, logx.GetLogger(), nil); err != nil {
+	if err := myWorkflow.Execute(ctx, logx.GetLogger(), nil, nil); err != nil {
 		log.Fatalf("Workflow execution failed: %v", err)
 	}
 }

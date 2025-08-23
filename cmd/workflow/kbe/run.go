@@ -11,7 +11,7 @@ import (
 )
 
 // Package variables
-var keepPhases []int
+var retainPhases []int
 var skipPhases []int
 var force bool
 
@@ -26,8 +26,8 @@ var runCmd = &cobra.Command{
 			return nil
 		}
 
-		if len(keepPhases) != 0 {
-			logger.Infof("execute workflow restricted to selected phases %v", keepPhases)
+		if len(retainPhases) != 0 {
+			logger.Infof("execute workflow restricted to selected phases %v", retainPhases)
 			return nil
 		}
 
@@ -38,7 +38,7 @@ var runCmd = &cobra.Command{
 			defer cancel()
 
 			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
+			if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
 				logger.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}
@@ -55,6 +55,6 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
-	runCmd.Flags().IntSliceVarP(&keepPhases, "keep-phase", "k", []int{}, "phase(s) to keep by ID during execution")
+	runCmd.Flags().IntSliceVarP(&retainPhases, "retain-phase", "r", []int{}, "phase(s) to retain by ID during execution")
 	runCmd.Flags().BoolVar(&force, "force", false, "security flag, needed to execute the workflow")
 }

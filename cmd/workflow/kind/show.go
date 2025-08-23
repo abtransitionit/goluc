@@ -1,9 +1,15 @@
+// File goluc/cmd/workflow/kind/show.go
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 package kind
 
 import (
+	"context"
+	"os"
+	"os/signal"
+
+	gocorectx "github.com/abtransitionit/gocore/ctx"
 	"github.com/abtransitionit/gotask/workflow"
 	"github.com/spf13/cobra"
 )
@@ -12,6 +18,7 @@ import (
 var phase bool
 var tier bool
 var filter bool
+var testctx bool
 
 // root Command
 var showCmd = &cobra.Command{
@@ -19,6 +26,33 @@ var showCmd = &cobra.Command{
 	Short: "show the workflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
+		if testctx {
+			logger.Info("testing passing a var to the context and use it by a phase in a library")
+			// Create a context that is not empty: it allow user to ctrl-c
+			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			defer cancel()
+
+			// create a var to add to the ctx
+			// mxExecutionId := "max-123-xyz"
+
+			// add the var to the ctx
+			// ctx = context.WithValue(ctx, gocorectx.ExecutionIDKey, mxExecutionId)
+			ctx = context.WithValue(ctx, gocorectx.WorkflowKey, wkf)
+
+			// call any phase (they mandatory have all the same signature)
+			result, err := workflow.ShowWorkflow(ctx, logger)
+			if err != nil {
+				logger.ErrorWithStack(err, "failed to get workflow")
+				return err
+			}
+
+			// show the result
+			logger.Infof("result of the call: %s", result)
+			logger.Infof("var pass to the context: %s", result)
+			logger.Info("the test is to pass the worflow var and make it use by a phase in a library")
+			return nil
+
+		}
 		if phase {
 			logger.Info("show all phases of a workflow")
 			err := workflow.ShowPhase(wkf, logger)
@@ -57,4 +91,5 @@ func init() {
 	showCmd.Flags().BoolVar(&phase, "phase", false, "show all phases of a worflow")
 	showCmd.Flags().BoolVar(&tier, "tier", false, "show all tiers of a worflow (in topological order)")
 	showCmd.Flags().BoolVar(&filter, "filter", false, "Show all tiers of a workflow, including skipped or retained phases, in topological order and filtered.")
+	showCmd.Flags().BoolVar(&testctx, "tctx", false, "test passing a vat to the context.")
 }

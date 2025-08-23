@@ -11,7 +11,7 @@ import (
 )
 
 // Package variables
-var keepPhases []int
+var retainPhases []int
 var skipPhases []int
 var force bool
 var dryRun bool
@@ -22,8 +22,8 @@ var runCmd = &cobra.Command{
 	Short: "execute the workflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		// Check if only --skip-phase or --keep-phase is set.
-		if len(skipPhases) > 0 && len(keepPhases) > 0 {
+		// Check --skip-phase or --retain-phase are mutually exclusive
+		if len(skipPhases) > 0 && len(retainPhases) > 0 {
 			logger.Info("flags --skip-phase and --keep-phase cannot be used together")
 			return nil
 		}
@@ -32,7 +32,7 @@ var runCmd = &cobra.Command{
 		if dryRun {
 			logger.Info("Executing in dry-run mode.")
 			// Call the new Plan method from the gocore library
-			return wkf.DryRun(cmd.Context(), logger, skipPhases)
+			return wkf.DryRun(cmd.Context(), logger, skipPhases, retainPhases)
 		}
 
 		// The --force flag is a security gate; it must be present for any execution.
@@ -55,7 +55,7 @@ var runCmd = &cobra.Command{
 			defer cancel()
 
 			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
+			if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
 				// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
 				logger.ErrorWithStack(err, "failed to execute workflow")
 				return err
@@ -65,8 +65,8 @@ var runCmd = &cobra.Command{
 
 		}
 
-		if len(keepPhases) != 0 {
-			logger.Infof("execute workflow restricted to selected phases %v", keepPhases)
+		if len(retainPhases) != 0 {
+			logger.Infof("execute workflow restricted to selected phases %v", retainPhases)
 			return nil
 		}
 
@@ -76,7 +76,7 @@ var runCmd = &cobra.Command{
 		defer cancel()
 
 		// execute the workflow with the correct parameters (in that case, skipPhases is empty)
-		if err := wkf.Execute(ctx, logger, skipPhases); err != nil {
+		if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
 			// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
 			logger.ErrorWithStack(err, "failed to execute workflow")
 			return err
@@ -89,7 +89,7 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
-	runCmd.Flags().IntSliceVarP(&keepPhases, "keep-phase", "k", []int{}, "phase(s) to keep by ID during execution")
+	runCmd.Flags().IntSliceVarP(&retainPhases, "retain-phase", "r", []int{}, "phase(s) to retain by ID during execution")
 	runCmd.Flags().BoolVar(&force, "force", false, "security flag, needed to execute the workflow")
 	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show the execution plan without executing any phases")
 
