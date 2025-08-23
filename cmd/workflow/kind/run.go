@@ -45,7 +45,7 @@ var runCmd = &cobra.Command{
 		if dryRun {
 			logger.Info("execute workflow in dry-run mode.")
 			// Call the DryRun method
-			return wkf.DryRun(cmd.Context(), logger, skipPhases)
+			return wkf.DryRun(cmd.Context(), logger, skipPhases, retainPhases)
 		}
 
 		if len(skipPhases) != 0 {
