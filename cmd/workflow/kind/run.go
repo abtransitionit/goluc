@@ -7,110 +7,75 @@ import (
 	"os"
 	"os/signal"
 
-	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/spf13/cobra"
 )
 
-// Package variables
+// Package variables for CLI flags
 var retainPhases []int
 var skipPhases []int
 var force bool
 var dryRun bool
 
-// root Command
+// root command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "execute the workflow",
+	Short: "Execute the workflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		// check@requirement --skip-phase or --retain-phase are mutually exclusive
+		// check requirement: --skip-phase and --retain-phase are mutually exclusive
 		if len(skipPhases) > 0 && len(retainPhases) > 0 {
-			logger.Info("flags --skip-phase and --keep-phase cannot be used together")
+			logger.Info("flags --skip-phase and --retain-phase cannot be used together")
 			return nil
 		}
 
-		// requirement: The dry-run flag does not need the --force flag, as it is a non-destructive action.
-		if dryRun {
-			if err := wkf.DryRun(cmd.Context(), logger, skipPhases, retainPhases); err != nil {
-				logger.ErrorWithNoStack(err, "failed to execute workflow")
-				return nil
-			}
-		}
-
-		// The --force flag is a security gate; it must be present for any execution.
-		if !force {
-			logger.Info("The --force flag is required to execute the workflow.")
+		// check requirement: either --dry-run OR --force must be used
+		if !force && !dryRun {
+			logger.Info("The --force flag is required to execute the workflow")
 			return cmd.Help()
 		}
 
-		// check@requirement dry-run flag must run with --force
-		if dryRun {
-			if err := wkf.DryRun(cmd.Context(), logger, skipPhases, retainPhases); err != nil {
-				logger.ErrorWithNoStack(err, "failed to execute workflow")
-				return nil
-			}
-		}
-
-		if len(skipPhases) != 0 {
-			// logger.Infof("execute workflow with skipped phases: %v", skipPhases)
-			// define a context: allow usr to cancel the workflow execution with CTRL+C
-			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
-			defer cancel()
-
-			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
-				// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
-				logger.ErrorWithNoStack(err, "failed to execute workflow")
-				return nil
-			}
-			// success
-			return nil
-
-		}
-
-		if len(retainPhases) != 0 {
-			// logger.Infof("execute workflow restricted to retained phases %v", retainPhases)
-			// define a context: allow usr to cancel the workflow execution with CTRL+C
-			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
-			defer cancel()
-
-			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
-				// if err := wkf.Execute(ctx, logger, skipPhases, dryRun); err != nil {
-				logger.ErrorWithNoStack(err, "failed to execute workflow")
-				return nil
-			}
-			// success
-			return nil
-
-		}
-
-		// Default action : here we have only flag --force
-		// define a context: allow usr to cancel the workflow execution with CTRL+C
+		// Define the context that will be used for all modes. allow user to cancel with ctrl+c
 		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
 		defer cancel()
 
-		// execute the workflow with the correct parameters (in that case, skipPhases is empty)
+		// mode: dry-run
+		if dryRun {
+			//logger.Info("Executing workflow in dry-run mode")
+			if err := wkf.DryRun(ctx, logger, skipPhases, retainPhases); err != nil {
+				logger.ErrorWithNoStack(err, "failed to dry-run workflow")
+			}
+			return nil
+		}
+
+		// // Actual execution
+		// if len(skipPhases) > 0 {
+		// 	logger.Infof("Executing workflow with skipped phases: %v", skipPhases)
+		// } else if len(retainPhases) > 0 {
+		// 	logger.Infof("Executing workflow restricted to retained phases: %v", retainPhases)
+		// } else {
+		// 	logger.Info("Executing workflow with all phases")
+		// }
+
+		// mode: with or without skip/retain
 		if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
 			logger.ErrorWithNoStack(err, "failed to execute workflow")
 			return nil
 		}
-		// success
-		return nil
 
+		logger.Info("Workflow executed successfully")
+		return nil
 	},
 }
 
 func init() {
-	var err error
-	wkf, err = corephase.NewWorkflowFromPhases()
-	if err != nil {
-		logger.ErrorWithNoStack(err, "failed to build workflow")
-	}
+	// var err error
+	// wkf, err = corephase.NewWorkflowFromPhases()
+	// if err != nil {
+	// 	logger.ErrorWithNoStack(err, "failed to build workflow")
+	// }
 
-	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "phase(s) to skip by ID during execution")
-	runCmd.Flags().IntSliceVarP(&retainPhases, "retain-phase", "r", []int{}, "phase(s) to retain by ID during execution")
-	runCmd.Flags().BoolVar(&force, "force", false, "security flag, needed to execute the workflow")
-	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show the execution plan without executing any phases")
-
+	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "Phase(s) to skip by ID during execution")
+	runCmd.Flags().IntSliceVarP(&retainPhases, "retain-phase", "r", []int{}, "Phase(s) to retain by ID during execution")
+	runCmd.Flags().BoolVar(&force, "force", false, "Security flag required to execute the workflow")
+	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Show the execution plan without executing any phases")
 }
