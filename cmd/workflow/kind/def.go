@@ -25,7 +25,7 @@ func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
 		// corephase.NewPhase("showPhase", "display the worflow execution plan", showPhaseAdapter, nil),
-		corephase.NewPhase("showPhase", "display the worflow execution plan", workflow.ShowWorkflow, nil),
+		// corephase.NewPhase("showPhase", "display the worflow execution plan", workflow.ShowWorkflow, nil),
 		corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),

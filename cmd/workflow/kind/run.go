@@ -4,9 +4,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
+	"context"
 	"os"
 	"os/signal"
 
+	corectx "github.com/abtransitionit/gocore/ctx"
 	"github.com/spf13/cobra"
 )
 
@@ -34,30 +36,27 @@ var runCmd = &cobra.Command{
 			return cmd.Help()
 		}
 
-		// Define the context that will be used for all modes. allow user to cancel with ctrl+c
-		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+		// Define the context that will be used by all phases of tyhe workflow
+		PhaseCtx := context.Background()
+		// allowuser to cancel with ctrl+c
+		PhaseCtx, cancel := signal.NotifyContext(PhaseCtx, os.Interrupt)
 		defer cancel()
+		// add var 01
+		PhaseCtx = context.WithValue(PhaseCtx, corectx.StringKeyId, "exec-123")
+		PhaseCtx = context.WithValue(PhaseCtx, corectx.WorkflowKeyId, wkf)
+
+		// - add var to the context
 
 		// mode: dry-run
 		if dryRun {
-			//logger.Info("Executing workflow in dry-run mode")
-			if err := wkf.DryRun(ctx, logger, skipPhases, retainPhases); err != nil {
+			if err := wkf.DryRun(PhaseCtx, logger, skipPhases, retainPhases); err != nil {
 				logger.ErrorWithNoStack(err, "failed to dry-run workflow")
 			}
 			return nil
 		}
 
-		// // Actual execution
-		// if len(skipPhases) > 0 {
-		// 	logger.Infof("Executing workflow with skipped phases: %v", skipPhases)
-		// } else if len(retainPhases) > 0 {
-		// 	logger.Infof("Executing workflow restricted to retained phases: %v", retainPhases)
-		// } else {
-		// 	logger.Info("Executing workflow with all phases")
-		// }
-
 		// mode: with or without skip/retain
-		if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
+		if err := wkf.Execute(PhaseCtx, logger, skipPhases, retainPhases); err != nil {
 			logger.ErrorWithNoStack(err, "failed to execute workflow")
 			return nil
 		}

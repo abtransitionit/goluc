@@ -9,7 +9,7 @@ import (
 	"os"
 	"os/signal"
 
-	gocorectx "github.com/abtransitionit/gocore/ctx"
+	corectx "github.com/abtransitionit/gocore/ctx"
 	"github.com/abtransitionit/gotask/workflow"
 	"github.com/spf13/cobra"
 )
@@ -28,16 +28,14 @@ var showCmd = &cobra.Command{
 
 		if testctx {
 			logger.Info("testing passing a var to the context and use it by a phase in a library")
-			// Create a context that is not empty: it allow user to ctrl-c
-			ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt)
+			// create a context
+			ctx := context.Background()
+			// allow user to ctrl-c via ctx
+			ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 			defer cancel()
 
-			// create a var to add to the ctx
-			// mxExecutionId := "max-123-xyz"
-
 			// add the var to the ctx
-			// ctx = context.WithValue(ctx, gocorectx.ExecutionIDKey, mxExecutionId)
-			ctx = context.WithValue(ctx, gocorectx.WorkflowKey, wkf)
+			ctx = context.WithValue(ctx, corectx.WorkflowKeyId, wkf)
 
 			// call any phase (they mandatory have all the same signature)
 			result, err := workflow.ShowWorkflow(ctx, logger)
