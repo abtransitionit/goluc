@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/phase"
 
 	"os"
 	"path/filepath"
@@ -43,35 +44,35 @@ func TestFunc(ctx context.Context, l logx.Logger, cmd ...string) (string, error)
 }
 
 // Dummy Phase Functions (for demonstration purposes)
-func CheckSystemStatus(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+func CheckSystemStatus(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
 	logger.Info("Checking system status...")
 	time.Sleep(1 * time.Second)
 	logger.Info("System status OK.")
 	return "System status OK", nil
 }
 
-func FetchLatestData(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+func FetchLatestData(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
 	logger.Info("Fetching latest data...")
 	time.Sleep(2 * time.Second)
 	logger.Info("Data fetched successfully.")
 	return "Data fetched successfully", nil
 }
 
-func ProcessData(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+func ProcessData(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
 	logger.Info("Processing data...")
 	time.Sleep(3 * time.Second)
 	logger.Info("Data processed.")
 	return "Data processed", nil
 }
 
-func GenerateReport(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+func GenerateReport(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
 	logger.Info("Generating report...")
 	time.Sleep(1 * time.Second)
 	logger.Info("Report generated.")
 	return "Report generated", nil
 }
 
-func Dummy(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+func Dummy(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
 	logger.Info("Generating report...")
 	time.Sleep(1 * time.Second)
 	logger.Info("Report generated.")

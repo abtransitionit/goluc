@@ -38,7 +38,7 @@ var showCmd = &cobra.Command{
 			ctx = context.WithValue(ctx, corectx.WorkflowKeyId, wkf)
 
 			// call any phase (they mandatory have all the same signature)
-			result, err := workflow.ShowWorkflow(ctx, logger)
+			result, err := workflow.ShowWorkflow(ctx, logger, nil, "showPhase")
 			if err != nil {
 				logger.ErrorWithStack(err, "failed to get workflow")
 				return err

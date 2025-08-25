@@ -56,7 +56,7 @@ var runCmd = &cobra.Command{
 		}
 
 		// mode: with or without skip/retain
-		if err := wkf.Execute(PhaseCtx, logger, skipPhases, retainPhases); err != nil {
+		if err := wkf.Execute(PhaseCtx, logger, targets, skipPhases, retainPhases); err != nil {
 			logger.ErrorWithNoStack(err, "failed to execute workflow")
 			return nil
 		}

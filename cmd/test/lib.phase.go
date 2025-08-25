@@ -43,6 +43,14 @@ func init() {
 // testPhase is the function that defines and runs the workflow.
 func testPhase() {
 
+	var targets = []phase.Target{
+		&phase.Vm{NameStr: "o1u"},
+		&phase.Vm{NameStr: "o2a"},
+		&phase.Vm{NameStr: "o3r"},
+		&phase.Vm{NameStr: "o4f"},
+		&phase.Vm{NameStr: "o5d"},
+	}
+
 	// Show the sequence of phases before running the sequence.
 	myWorkflow.Show(logx.GetLogger())
 
@@ -50,7 +58,7 @@ func testPhase() {
 	ctx := context.Background()
 
 	// Execute the workflow
-	if err := myWorkflow.Execute(ctx, logx.GetLogger(), nil, nil); err != nil {
+	if err := myWorkflow.Execute(ctx, logx.GetLogger(), targets, nil, nil); err != nil {
 		log.Fatalf("Workflow execution failed: %v", err)
 	}
 }

@@ -38,7 +38,7 @@ var runCmd = &cobra.Command{
 			defer cancel()
 
 			// execute the workflow
-			if err := wkf.Execute(ctx, logger, skipPhases, retainPhases); err != nil {
+			if err := wkf.Execute(ctx, logger, targets, skipPhases, retainPhases); err != nil {
 				logger.ErrorWithStack(err, "failed to execute workflow")
 				return err
 			}

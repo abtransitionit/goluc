@@ -11,18 +11,33 @@ import (
 
 // Package variables
 var (
-	SDesc   = "This is the KuBernetes Easy workflow."
-	cmdName = "kbe"
 	logger  = logx.GetLogger()
 	wkf     *corephase.Workflow
+	targets []corephase.Target
+)
+
+// Package variables : confifg1s
+var (
+	cmdName = "kbe"
+	SDesc   = "This is the KuBernetes Easy workflow."
+)
+
+// Package variables : confifg2
+var (
+	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
 )
 
 func init() {
+	// create the targets slice from vmList
+	for _, vmName := range vmList {
+		targets = append(targets, &corephase.Vm{NameStr: vmName})
+	}
+
+	// create the workflow
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("showPhase", "display the worflow execution plan", internal.Dummy, nil),
+		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
 		corephase.NewPhase("show2", "display the desired KBE Cluster's configuration.", internal.CheckSystemStatus, nil),
-		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
 		corephase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
 		corephase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
