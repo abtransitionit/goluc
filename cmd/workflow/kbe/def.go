@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
+	"github.com/abtransitionit/gotask/vm"
 )
 
 // Package variables

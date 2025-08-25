@@ -9,6 +9,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
+	"github.com/abtransitionit/gotask/dnfapt"
 	"github.com/abtransitionit/gotask/vm"
 	"github.com/abtransitionit/gotask/workflow"
 )
@@ -41,13 +42,13 @@ func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
 		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
-		corephase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
+		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"checkVmAccess"}),
 		corephase.NewPhase("showConfig", "display the desired KIND Cluster's configuration", vm.CheckVmSshAccess, nil),
 		corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("checklist", "check VMs are SSH reachable.", internal.FetchLatestData, nil),
 		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
-		corephase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
-		corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"upgrade"}),
+		corephase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgradeOs"}),
+		corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"upgradeOs"}),
 		corephase.NewPhase("gocli", "provision Go toolchain", internal.GenerateReport, []string{"dapack1"}),
 		corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"dapack1"}),
 		corephase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"dapack1"}),
