@@ -1,0 +1,31 @@
+// file: cmd/goprj/goprj.go
+package goprj
+
+import (
+	"fmt"
+
+	"github.com/abtransitionit/gocore/cli"
+	"github.com/spf13/cobra"
+)
+
+// SDesc is the short description for the goprj command.
+var SDesc = "Manage go projects."
+
+// LDesc is the long description for the goprj command.
+var LDesc = SDesc + "\n" + `
+This command allows you to act on a Go project, such as vetting, testing, and building.
+`
+
+// Cmd is the goprj command. It uses the new cli.NewCommand function from gocore.
+var GoPrjCmd = cli.NewCommand("goprj", SDesc, LDesc, func(cmd *cobra.Command, args []string) error {
+	// Retrieve the logger from the context using the new GetLogger helper.
+	logger := cli.GetLogger(cmd.Context())
+	logger.Infof("Welcome to %s!", cmd.Use)
+	logger.Infof("I am ready to manage your projects.")
+
+	if len(args) > 0 {
+		fmt.Printf("You passed an argument: %s\n", args[0])
+	}
+
+	return nil
+})
