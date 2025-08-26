@@ -19,12 +19,14 @@ var playCmd = &cobra.Command{
 	Long:  playLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info(playSDesc)
+		// testScp()
+		testScpAsSudo()
 
 		// logx.Info("test Phase testPhaseO1")
 		// testPhaseO1()
 
-		logx.Info("test Phase testPhase")
-		testPhase()
+		// logx.Info("test Phase testPhase")
+		// testPhase()
 
 		// logx.Info("test DeleteFile")
 		// testDeleteFile()
@@ -35,7 +37,7 @@ var playCmd = &cobra.Command{
 		// logx.Info("test TouchAsSudo")
 		// testTouchAsSudo()
 
-		logx.Info("End of test")
+		// logx.Info("End of test")
 
 		// test.CheckCliExits("gpg")
 		// // out := test.GeRemoteProperty("o1u", "osfamily")
