@@ -13,6 +13,7 @@ import (
 var (
 	projectPath string
 	outputDir   string
+	platform    string
 )
 
 // the command
@@ -23,7 +24,7 @@ var buildCmd = &cobra.Command{
 		logger := logx.GetLogger()
 		if err := cli.BuildGoProject(logger, projectPath, outputDir); err != nil {
 			logger.Errorf("%v", err)
-			return nil
+			return err
 		}
 
 		return nil
@@ -34,6 +35,7 @@ func init() {
 	// Add flags to the command.
 	buildCmd.Flags().StringVarP(&projectPath, "path", "p", "", "Full path to the Go project to build")
 	buildCmd.Flags().StringVarP(&outputDir, "output-dir", "o", "/tmp", "Directory to save the built artifact")
+	buildCmd.Flags().StringVarP(&platform, "platform", "", "", "Target platform for cross-compilation (e.g., 'linux/amd64').")
 
 	// Mark the 'path' flag as required.
 	buildCmd.MarkFlagRequired("path")
