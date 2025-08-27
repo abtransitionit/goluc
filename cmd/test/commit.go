@@ -27,8 +27,6 @@ var commitCmd = &cobra.Command{
 		// define a slice of string
 		reploFolder := "/Users/max/wkspc/git"
 		repoSlice := []string{"gocore", "golinux", "gotask", "goluc"}
-		// repoSlice := []string{"gocore", "golinux", "gotask"}
-		// repoSlice := []string{"gocore"}
 
 		// iterate over the slice
 		for _, repoName := range repoSlice {
@@ -40,7 +38,6 @@ var commitCmd = &cobra.Command{
 				logger.Errorf("failed to initiate git actions for '%s': %v > %s", repoName, err, output)
 			}
 			logger.Infof("git actions done on: %s", repoName)
-
 		}
 	},
 }
