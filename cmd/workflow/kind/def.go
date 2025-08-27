@@ -10,6 +10,7 @@ import (
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/abtransitionit/gotask/dnfapt"
+	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/vm"
 	"github.com/abtransitionit/gotask/workflow"
 )
@@ -42,6 +43,7 @@ func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
 		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
+		corephase.NewPhase("copyAgent", "copy LUC CLI agent to all VMs", luc.DeployLuc, []string{"checkVmAccess"}),
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"checkVmAccess"}),
 		corephase.NewPhase("showConfig", "display the desired KIND Cluster's configuration", vm.CheckVmSshAccess, nil),
 		corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),

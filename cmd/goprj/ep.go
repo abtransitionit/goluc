@@ -32,4 +32,5 @@ func init() {
 	GoPrjCmd.AddCommand(testCmd)
 	GoPrjCmd.AddCommand(vetCmd)
 	GoPrjCmd.AddCommand(buildCmd)
+	GoPrjCmd.AddCommand(deployCmd)
 }

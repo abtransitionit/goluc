@@ -23,7 +23,8 @@ var rootLDesc = rootSDesc + ` It simplifies daily tasks for DevOps engineers and
 	→ Simplify the creation and management of Kubernetes clusters across virtual machines,
 	→ ...and much more.
 
-As a Linux cross-distribution CLI, LUC is also well-suited and ready for full automation and integration into any CI/CD pipelines.`
+As a Linux cross-distribution CLI, LUC is also well-suited and ready for full automation and integration into any CI/CD pipelines.
+`
 
 // root Command
 var rootCmd = &cobra.Command{
