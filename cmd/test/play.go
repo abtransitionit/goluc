@@ -19,8 +19,9 @@ var playCmd = &cobra.Command{
 	Long:  playLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info(playSDesc)
+		testProperty()
 		// testScp()
-		testScpAsSudo()
+		// testScpAsSudo()
 
 		// logx.Info("test Phase testPhaseO1")
 		// testPhaseO1()

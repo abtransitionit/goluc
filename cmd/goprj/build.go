@@ -16,10 +16,18 @@ var (
 	platform    string
 )
 
+var buildSDesc = "Build the artifcat of a Go project"
+var buildLDesc = buildSDesc + "\n" + `
+Example usage.
+
+go run . goprj build -o /tmp -p /Users/max/wkspc/git/goluc/
+`
+
 // the command
 var buildCmd = &cobra.Command{
 	Use:   "build",
-	Short: "Build the artifcat of a Go project",
+	Short: buildSDesc,
+	Long:  buildLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		logger := logx.GetLogger()
 		if err := cli.BuildGoProject(logger, projectPath, outputDir); err != nil {

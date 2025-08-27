@@ -24,8 +24,8 @@ var deploySDesc = "deploy an artifcat on a remote host"
 var deployLDesc = deploySDesc + "\n" + `
 Example usage.
 
-goluc    goprj deploy --force -l /tmp/goluc-linux -r /usr/local/bin/goluc -v o1u
 go run . goprj deploy --force -l /tmp/goluc-linux -r /usr/local/bin/goluc -v o1u
+clear && go  run . goprj build -o /tmp -p /Users/max/wkspc/git/goluc/ && go run . goprj deploy --force -l /tmp/goluc-linux -r/usr/local/bin/goluc -vo1u
 `
 
 // the command

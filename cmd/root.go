@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/abtransitionit/goluc/cmd/goprj"
+	"github.com/abtransitionit/goluc/cmd/prop"
 	"github.com/abtransitionit/goluc/cmd/property"
 	"github.com/abtransitionit/goluc/cmd/test"
 	"github.com/abtransitionit/goluc/cmd/workflow"
@@ -46,4 +47,5 @@ func init() {
 	rootCmd.AddCommand(workflow.WorkflowCmd)
 	rootCmd.AddCommand(property.PropertyCmd)
 	rootCmd.AddCommand(test.TestCmd)
+	rootCmd.AddCommand(prop.PropCmd)
 }

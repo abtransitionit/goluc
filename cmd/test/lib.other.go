@@ -9,6 +9,7 @@ import (
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/golinux/property"
 	"github.com/abtransitionit/goluc/internal"
 )
 
@@ -61,4 +62,15 @@ func testPhase() {
 	if err := myWorkflow.Execute(ctx, logx.GetLogger(), targets, nil, nil); err != nil {
 		log.Fatalf("Workflow execution failed: %v", err)
 	}
+}
+
+func testProperty() {
+	logger := logx.GetLogger()
+	logger.Infof("testProperty")
+	propertyName := "ostype"
+	propertyValue, err := property.GetPropertyRemote("o1u", propertyName)
+	if err != nil {
+		logger.Errorf("%v", err)
+	}
+	logger.Infof("value : %s", propertyValue)
 }

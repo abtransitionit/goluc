@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package property
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/property"
 	"github.com/spf13/cobra"
@@ -28,7 +30,7 @@ var PropertyCmd = &cobra.Command{
 	Short: SDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		logger := logx.GetLogger()
-		logger.Infof("%s", SDesc)
+		// logger.Infof("%s", SDesc)
 		// check parameters
 		if len(args) == 0 {
 			logger.Info("No property name provided.")
@@ -41,24 +43,23 @@ var PropertyCmd = &cobra.Command{
 
 		if remote == "" {
 			logger.Infof("look up property %s for the local machine", propertyName)
-			propertyValue, err := property.GetPropertyLocal("cpu")
+			propertyValue, err := property.GetPropertyLocal(propertyName)
 			if err != nil {
-				logger.Infof("impossible")
+				logger.Errorf("%v", err)
 				return nil
 			}
 			logger.Infof("value : %s", propertyValue)
-
 			return nil
 		}
 
 		// here remote is provided
-		logger.Infof("look up property %s for the remote machine > %s", propertyName, remote)
-		// propertyValue, err := property.GetPropertyRemote(remote, "cpu")
-		// if err != nil {
-		// 	logger.Infof("impossible")
-		// 	return nil
-		// }
-		// logger.Infof("value : %s", propertyValue)
+		// logger.Infof("look up property %s for the remote machine > %s", propertyName, remote)
+		propertyValue, err := property.GetPropertyRemote(remote, "cpu")
+		if err != nil {
+			logger.Errorf("%v", err)
+			return nil
+		}
+		logger.Infof("%s", propertyValue)
 
 		// // Get the property
 		// if val, err := GetProperty(propertyName); err == nil {
@@ -66,6 +67,7 @@ var PropertyCmd = &cobra.Command{
 		// }
 
 		// success
+		fmt.Print(propertyValue)
 		return nil
 
 	},
@@ -73,4 +75,5 @@ var PropertyCmd = &cobra.Command{
 
 func init() {
 	PropertyCmd.Flags().StringVarP(&remote, "remote", "r", "", "provide the name of the remote VM")
+
 }
