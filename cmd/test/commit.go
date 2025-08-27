@@ -26,8 +26,8 @@ var commitCmd = &cobra.Command{
 		command := "git checkout main ; git merge --no-edit dev; git push origin main; git checkout dev"
 		// define a slice of string
 		reploFolder := "/Users/max/wkspc/git"
-		// repoName := []string{"gocore", "golinux", "gotask", "goluc"}
-		repoSlice := []string{"gocore", "golinux", "gotask"}
+		repoSlice := []string{"gocore", "golinux", "gotask", "goluc"}
+		// repoSlice := []string{"gocore", "golinux", "gotask"}
 		// repoSlice := []string{"gocore"}
 
 		// iterate over the slice
