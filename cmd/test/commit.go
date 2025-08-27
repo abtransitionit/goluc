@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/run"
 	"github.com/spf13/cobra"
 )
 
@@ -20,17 +21,26 @@ var commitCmd = &cobra.Command{
 	Short: commitSDesc,
 	Long:  commitLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Info(commitSDesc)
-		command:='git checkout main ; git merge --no-edit dev; git push origin main; git checkout dev'
+		logger := logx.GetLogger()
+		logger.Info(commitSDesc)
+		command := "git checkout main ; git merge --no-edit dev; git push origin main; git checkout dev"
 		// define a slice of string
 		reploFolder := "/Users/max/wkspc/git"
-		repoName := []string{"gocore", "golinux", "gotask", "goluc"}
+		// repoName := []string{"gocore", "golinux", "gotask", "goluc"}
+		repoSlice := []string{"gocore", "golinux", "gotask"}
+		// repoSlice := []string{"gocore"}
 
 		// iterate over the slice
-		for _, v := range repoName {
-			repoPath := fmt.Sprintf("%s/%s", reploFolder, v)
+		for _, repoName := range repoSlice {
+			repoPath := fmt.Sprintf("%s/%s", reploFolder, repoName)
 			// print the value
-			logx.Infof("git actions on : %s", repoPath)
+			logx.Infof("Initiating git actions on : %s", repoPath)
+			output, err := run.RunOnLocal(command)
+			if err != nil {
+				logger.Errorf("failed to initiate git actions for '%s': %v > %s", repoName, err, output)
+			}
+			logger.Infof("git actions done on: %s", repoName)
+
 		}
 	},
 }
