@@ -64,11 +64,22 @@ func testPhase() {
 	}
 }
 
-func testProperty() {
+func testPropertyRemote() {
 	logger := logx.GetLogger()
 	logger.Infof("testProperty")
 	propertyName := "ostype"
 	propertyValue, err := property.GetPropertyRemote("o1u", propertyName)
+	if err != nil {
+		logger.Errorf("%v", err)
+	}
+	logger.Infof("value : %s", propertyValue)
+}
+
+func testPropertyLocal() {
+	logger := logx.GetLogger()
+	logger.Infof("testProperty")
+	propertyName := "ostype"
+	propertyValue, err := property.GetPropertyLocal(propertyName)
 	if err != nil {
 		logger.Errorf("%v", err)
 	}
