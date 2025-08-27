@@ -9,7 +9,8 @@ import (
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase"
-	"github.com/abtransitionit/golinux/property"
+	"github.com/abtransitionit/gocore/property"
+	linuxproperty "github.com/abtransitionit/golinux/property"
 	"github.com/abtransitionit/goluc/internal"
 )
 
@@ -67,8 +68,9 @@ func testPhase() {
 func testPropertyRemote() {
 	logger := logx.GetLogger()
 	logger.Infof("testProperty")
-	propertyName := "ostype"
-	propertyValue, err := property.GetPropertyRemote("o1u", propertyName)
+	propertyName := "cpu"
+	// propertyValue, err := property.FetchProperty("o1u", propertyName)
+	propertyValue, err := linuxproperty.GetProperty("o1u", propertyName)
 	if err != nil {
 		logger.Errorf("%v", err)
 	}
@@ -78,8 +80,8 @@ func testPropertyRemote() {
 func testPropertyLocal() {
 	logger := logx.GetLogger()
 	logger.Infof("testProperty")
-	propertyName := "ostype"
-	propertyValue, err := property.GetPropertyLocal(propertyName)
+	propertyName := "uname"
+	propertyValue, err := property.GetProperty(propertyName)
 	if err != nil {
 		logger.Errorf("%v", err)
 	}

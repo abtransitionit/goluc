@@ -19,7 +19,7 @@ var playCmd = &cobra.Command{
 	Long:  playLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info(playSDesc)
-		testPropertyLocal()
+		// testPropertyLocal()
 		testPropertyRemote()
 	},
 }

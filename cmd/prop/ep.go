@@ -6,7 +6,6 @@ package prop
 import (
 	"fmt"
 
-	"github.com/abtransitionit/gocore/logx"
 	linuxproperty "github.com/abtransitionit/golinux/property"
 	"github.com/spf13/cobra"
 )
@@ -30,29 +29,17 @@ var PropCmd = &cobra.Command{
 	Short: SDesc,
 	Args:  cobra.ExactArgs(1), // Require exactly one argument: the property name
 	RunE: func(cmd *cobra.Command, args []string) error {
-		logger := logx.GetLogger()
 		property := args[0]
 
 		var value string
 		var err error
-
-		if vmName != "" {
-			// Remote property
-			value, err = linuxproperty.GetPropertyRemote(vmName, property)
-			if err != nil {
-				return fmt.Errorf("failed to get remote property: %w", err)
-			}
-		} else {
-			// Local property
-			value, err = linuxproperty.GetPropertyLocal(property)
-			if err != nil {
-				return fmt.Errorf("failed to get local property: %w", err)
-			}
+		value, err = linuxproperty.GetProperty(vmName, property)
+		if err != nil {
+			return fmt.Errorf("%v", err)
 		}
-
 		// Print the value (both for user and logs)
 		fmt.Println(value)
-		logger.Infof("Property '%s' = %s", property, value)
+		// logger.Infof("Property '%s' = %s", property, value)
 		return nil
 
 	},
