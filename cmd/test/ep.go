@@ -30,4 +30,5 @@ var TestCmd = &cobra.Command{
 
 func init() {
 	TestCmd.AddCommand(playCmd)
+	TestCmd.AddCommand(commitCmd)
 }
