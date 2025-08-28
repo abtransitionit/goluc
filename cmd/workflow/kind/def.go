@@ -34,6 +34,12 @@ var (
 	listRequiredPackage = []string{"uidmap"}
 )
 
+// install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
+// install packageName = "uidmap" on all except debian
+// if pkgName == "uidmap" && data.OsFamily != "debian" {
+// 	logx.L.Debugf("[%s] [%s] Skipping package : OS family is %s, not 'debian'.", vm, pkgName, data.OsFamily)
+// 	continue
+
 func init() {
 	// create the targets slice from vmList
 	for _, vmName := range vmList {

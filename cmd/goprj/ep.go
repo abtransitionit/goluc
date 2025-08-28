@@ -13,7 +13,7 @@ This command allows to act on a go project: vet, test, build, ...
 `
 
 // root Command
-var GoPrjCmd = &cobra.Command{
+var EpCmd = &cobra.Command{
 	Use:   "goprj",
 	Short: SDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,8 +29,8 @@ var GoPrjCmd = &cobra.Command{
 
 func init() {
 	// define the entry point for each workflow
-	GoPrjCmd.AddCommand(testCmd)
-	GoPrjCmd.AddCommand(vetCmd)
-	GoPrjCmd.AddCommand(buildCmd)
-	GoPrjCmd.AddCommand(deployCmd)
+	EpCmd.AddCommand(testCmd)
+	EpCmd.AddCommand(vetCmd)
+	EpCmd.AddCommand(buildCmd)
+	EpCmd.AddCommand(deployCmd)
 }

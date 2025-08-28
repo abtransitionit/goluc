@@ -10,13 +10,14 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
+	"github.com/abtransitionit/goluc/cmd/workflow/mco"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // Description
 
-var workflowSDesc = "Manage the provisioning process of systems, software and tools."
+var workflowSDesc = "Manage the provisioning process of systems, software and tools using workflows."
 var workflowLDesc = workflowSDesc + "\n" + `
 This command allows you to install various systems, software or tools, on your local
 machine or on one or more remote hosts, VMs or containers.
@@ -30,8 +31,8 @@ and may define:
 `
 
 // root Command
-var WorkflowCmd = &cobra.Command{
-	Use:   "workflow",
+var EpCmd = &cobra.Command{
+	Use:   "wkf",
 	Short: workflowSDesc,
 	Long:  workflowLDesc,
 	Example: fmt.Sprintf(`
@@ -57,7 +58,8 @@ var WorkflowCmd = &cobra.Command{
 
 func init() {
 	// define the entry point for each workflow
-	WorkflowCmd.AddCommand(gotc.EpCmd)
-	WorkflowCmd.AddCommand(kbe.EpCmd)
-	WorkflowCmd.AddCommand(kind.EpCmd)
+	EpCmd.AddCommand(mco.EpCmd)
+	EpCmd.AddCommand(gotc.EpCmd)
+	EpCmd.AddCommand(kbe.EpCmd)
+	EpCmd.AddCommand(kind.EpCmd)
 }

@@ -25,7 +25,7 @@ This command allows to get several kind of OS properties like.
 `
 
 // root Command
-var PropertyCmd = &cobra.Command{
+var EpCmd = &cobra.Command{
 	Use:   "property",
 	Short: SDesc,
 	Args:  cobra.ExactArgs(1), // Require exactly one argument: the property name
@@ -46,7 +46,7 @@ var PropertyCmd = &cobra.Command{
 }
 
 func init() {
-	// PropertyCmd.Flags().StringVarP(&remote, "remote", "r", "", "provide the name of the remote VM")
-	PropertyCmd.Flags().StringVar(&vmName, "vm", "", "VM name to query remotely")
+	// EpCmd.Flags().StringVarP(&remote, "remote", "r", "", "provide the name of the remote VM")
+	EpCmd.Flags().StringVar(&vmName, "vm", "", "VM name to query remotely")
 
 }

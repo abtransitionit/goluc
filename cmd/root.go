@@ -42,9 +42,9 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(goprj.GoPrjCmd)
-	rootCmd.AddCommand(workflow.WorkflowCmd)
-	rootCmd.AddCommand(property.PropertyCmd)
+	rootCmd.AddCommand(goprj.EpCmd)
+	rootCmd.AddCommand(workflow.EpCmd)
+	rootCmd.AddCommand(property.EpCmd)
 	rootCmd.AddCommand(test.TestCmd)
 	// rootCmd.AddCommand(prop.PropCmd)
 }
