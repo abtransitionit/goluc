@@ -30,8 +30,8 @@ var (
 
 // Package variables : confifg2
 var (
-	vmList              = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	listRequiredPackage = []string{"uidmap"}
+	vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
 )
 
 // install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
@@ -54,7 +54,7 @@ func init() {
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		// corephase.NewPhase("showConfig", "display the desired KIND Cluster's configuration", vm.CheckVmSshAccess, nil),
 		// corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
-		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredPackage), []string{"upgradeOs"}),
+		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
 		corephase.NewPhase("dapack1", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"upgradeOs"}),
 		corephase.NewPhase("gocli", "provision Go toolchain", internal.GenerateReport, []string{"dapack1"}),
 		corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"dapack1"}),
