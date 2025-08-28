@@ -32,7 +32,8 @@ var (
 
 // Package variables : confifg2
 var (
-	vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	vmList                = []string{"o1u"}
 	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
 	listGoCli             = []coregocli.GoCli{
 		{Name: "cni", Version: "1.7.1"},
