@@ -66,13 +66,17 @@ func git(ctx context.Context, logger logx.Logger, targets []corephase.Target, cm
 	const repoFolder = "/Users/max/wkspc/git"
 	var cmds []string
 	// loopt over repo name
-	for _, repo := range []string{"gocore", "golinux", "gotask", "goluc"} {
+	for _, repoName := range []string{"gocore", "golinux", "gotask", "goluc"} {
 
 		// define repo path
-		repoPath := fmt.Sprintf("%s/%s", repoFolder, repo)
+		repoPath := fmt.Sprintf("%s/%s", repoFolder, repoName)
 
 		// define cli(s) to play on repo
 		cmds = append(cmds, fmt.Sprintf("cd %s", repoPath))
+		// cmds = append(cmds, "git checkout dev") // we sure we are on dev
+		cmds = append(cmds, "git add .")                                           // stage all files
+		cmds = append(cmds, "git diff --cached --quiet || git commit -m 'update'") // commit if there is changes
+		cmds = append(cmds, "git push origin dev")                                 // push
 		cmds = append(cmds, "git checkout main")
 		cmds = append(cmds, "git merge --no-edit dev")
 		cmds = append(cmds, "git push origin main")
@@ -84,6 +88,7 @@ func git(ctx context.Context, logger logx.Logger, targets []corephase.Target, cm
 		if err != nil {
 			return "error while updating repo", err
 		}
+		logger.Debugf("updated repo %s", repoName)
 	}
 	return "repo updated", nil
 }
