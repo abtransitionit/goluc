@@ -41,7 +41,9 @@ func init() {
 	// create the workflow
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("git", "merge dev to main and push all 4 projects : gocore, golinux, gotask, goluc", git, nil),
+		corephase.NewPhase("gitDevToMain", "merge dev to main and push all 4 projects : gocore, golinux, gotask, goluc", gitDevToMain, nil),
+		corephase.NewPhase("gitDevToPremain", "merge dev to premain and push all 4 projects : gocore, golinux, gotask, goluc", gitTodo, nil),
+		corephase.NewPhase("gitPremainToMain", "merge premain to main and push all 4 projects : gocore, golinux, gotask, goluc", gitTodo, nil),
 		corephase.NewPhase("buildLuc", "build LUC for curent and linux platform", build, nil),
 		corephase.NewPhase("deployLuc", "deploy LUC on all VMs", luc.DeployOnVm, nil),
 		corephase.NewPhase("deleteLuc", "delete LUC on all VMs", luc.DeleteOnVm, nil),
@@ -60,7 +62,11 @@ func build(ctx context.Context, logger logx.Logger, targets []corephase.Target, 
 	}
 	return "", nil
 }
-func git(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
+func gitTodo(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
+	logger.Infof("To implement")
+	return "", nil
+}
+func gitDevToMain(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
 
 	// define var
 	const repoFolder = "/Users/max/wkspc/git"
