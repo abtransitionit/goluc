@@ -41,7 +41,7 @@ func init() {
 	// create the workflow
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
-		corephase.NewPhase("git", "merge dev to main and push all 4 project", git, nil),
+		corephase.NewPhase("git", "merge dev to main and push all 4 projects : gocore, golinux, gotask, goluc", git, nil),
 		corephase.NewPhase("buildLuc", "build LUC for curent and linux platform", build, nil),
 		corephase.NewPhase("deployLuc", "deploy LUC on all VMs", luc.DeployOnVm, nil),
 		corephase.NewPhase("deleteLuc", "delete LUC on all VMs", luc.DeleteOnVm, nil),
@@ -82,8 +82,8 @@ func git(ctx context.Context, logger logx.Logger, targets []corephase.Target, cm
 		cli := strings.Join(cmds, " && ")
 		_, err := run.RunOnLocal(cli)
 		if err != nil {
-			return "", err
+			return "error while updating repo", err
 		}
 	}
-	return "", nil
+	return "repo updated", nil
 }

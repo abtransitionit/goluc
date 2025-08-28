@@ -75,6 +75,6 @@ func init() {
 
 	runCmd.Flags().IntSliceVarP(&skipPhases, "skip-phase", "s", []int{}, "Phase(s) to skip by ID during execution")
 	runCmd.Flags().IntSliceVarP(&retainPhases, "retain-phase", "r", []int{}, "Phase(s) to retain by ID during execution")
-	runCmd.Flags().BoolVar(&force, "force", false, "Security flag required to execute the workflow")
+	runCmd.Flags().BoolVarP(&force, "force", "f", false, "Security flag required to execute the workflow")
 	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Show the execution plan without executing any phases")
 }
