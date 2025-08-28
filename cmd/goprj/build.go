@@ -4,7 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package goprj
 
 import (
-	"github.com/abtransitionit/gocore/cli"
+	"github.com/abtransitionit/gocore/gocli"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +30,7 @@ var buildCmd = &cobra.Command{
 	Long:  buildLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		logger := logx.GetLogger()
-		if err := cli.BuildGoProject(logger, projectPath, outputDir); err != nil {
+		if err := gocli.BuildGoProject(logger, projectPath, outputDir); err != nil {
 			logger.Errorf("%v", err)
 			return err
 		}

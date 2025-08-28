@@ -6,6 +6,7 @@ package gotc
 import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/goluc/internal"
 	"github.com/abtransitionit/gotask/vm"
 	"github.com/abtransitionit/gotask/workflow"
 )
@@ -39,6 +40,9 @@ func init() {
 	wkf, err = corephase.NewWorkflowFromPhases(
 		corephase.NewPhase("showPhase", "display the worflow execution plan", workflow.ShowWorkflow, nil),
 		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
+		corephase.NewPhase("gocli", "provision Go toolchain", internal.GenerateReport, nil),
+		// corephase.NewPhase("showConfig", "display the desired KIND Cluster's configuration", vm.CheckVmSshAccess, nil),
+		// corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")

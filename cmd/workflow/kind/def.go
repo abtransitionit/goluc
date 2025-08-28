@@ -6,10 +6,12 @@ package kind
 import (
 	"context"
 
+	coregocli "github.com/abtransitionit/gocore/gocli"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/abtransitionit/gotask/dnfapt"
+	taskgocli "github.com/abtransitionit/gotask/gocli"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/vm"
 	"github.com/abtransitionit/gotask/workflow"
@@ -32,6 +34,15 @@ var (
 var (
 	vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
 	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
+	listGoCli             = []coregocli.GoCli{
+		{Name: "cni", Version: "1.7.1"},
+		{Name: "containerd", Version: "2.1.1"},
+		{Name: "kind", Version: "latest"},
+		{Name: "nerdctl", Version: "2.1.2"},
+		{Name: "rootlesskit", Version: "2.3.5"},
+		{Name: "runc", Version: "1.3.0"},
+		{Name: "slirp4netns", Version: "1.3.3"},
+	}
 )
 
 // install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
@@ -52,15 +63,12 @@ func init() {
 		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
 		corephase.NewPhase("copyAgent", "copy LUC CLI agent to all VMs", luc.DeployLuc, []string{"checkVmAccess"}),
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
-		// corephase.NewPhase("showConfig", "display the desired KIND Cluster's configuration", vm.CheckVmSshAccess, nil),
-		// corephase.NewPhase("show2", "display the desired KIND Cluster's configuration", internal.CheckSystemStatus, nil),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
-		corephase.NewPhase("dapack1", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"upgradeOs"}),
-		corephase.NewPhase("gocli", "provision Go toolchain", internal.GenerateReport, []string{"dapack1"}),
-		corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"dapack1"}),
-		corephase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"dapack1"}),
-		corephase.NewPhase("path", "configure OS PATH envvar.", internal.GenerateReport, []string{"dapack1"}),
-		corephase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"dapack1"}),
+		corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
+		corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("path", "configure OS PATH envvar.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")

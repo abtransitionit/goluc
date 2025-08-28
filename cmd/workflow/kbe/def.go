@@ -7,6 +7,8 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/goluc/internal"
+	"github.com/abtransitionit/gotask/dnfapt"
+	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/vm"
 )
 
@@ -25,7 +27,9 @@ var (
 
 // Package variables : confifg2
 var (
-	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
+	// listGoCli             = []string{"gocli"}
 )
 
 func init() {
@@ -38,12 +42,12 @@ func init() {
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
 		corephase.NewPhase("checkVmAccess", "Check if VMs are SSH reachable", vm.CheckVmSshAccess, nil),
-		corephase.NewPhase("show2", "display the desired KBE Cluster's configuration.", internal.CheckSystemStatus, nil),
-		corephase.NewPhase("cpluc", "provision LUC CLI", internal.ProcessData, nil),
-		corephase.NewPhase("upgrade", "provision OS nodes with latest dnfapt packages and repositories.", internal.GenerateReport, []string{"cpluc"}),
-		corephase.NewPhase("dapack1", "provision standard/required/missing OS CLI (via dnfapt  packages).", internal.CheckSystemStatus, []string{"upgrade"}),
-		corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"dapack1"}),
-		corephase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"dapack1"}),
+		corephase.NewPhase("copyAgent", "copy LUC CLI agent to all VMs", luc.DeployLuc, []string{"checkVmAccess"}),
+		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
+		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
+		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", gocli.InstallOnVm(listGoCli), []string{"updateApp"}),
+		corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
+		corephase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
