@@ -47,7 +47,5 @@ var downloadCmd = &cobra.Command{
 }
 
 func init() {
-	// downloadCmd.Flags().StringVarP(&vmName, "vm", "v", "", "VM name on which to do the download")
 	downloadCmd.Flags().StringVarP(&prefix, "prefix", "p", "tmp", "a custom prefix for the downloaded artifact's path")
-
 }

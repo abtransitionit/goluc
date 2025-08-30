@@ -71,11 +71,21 @@ func gitTodo(ctx context.Context, logger logx.Logger, targets []corephase.Target
 }
 func DeployLucLocally(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
 	logger.Infof("Deploying goluc to /usr/local/bin")
-	_, err := filex.CpAsSudo(logger, "/tmp/goluc", "/usr/local/bin/goluc")
+
+	// get cli
+	cli, err := filex.CpAsSudo(ctx, logger, "/tmp/goluc", "/usr/local/bin/goluc")
 	if err != nil {
 		return "", err
 	}
-	logger.Infof("goluc locally deployed to /usr/local/bin")
+
+	// play it localy
+	_, err = run.RunOnLocal(cli)
+	if err != nil {
+		return "", err
+	}
+
+	// success
+	logger.Infof("deployed goluc locally to /usr/local/bin")
 	return "", nil
 }
 func gitDevToMain(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {

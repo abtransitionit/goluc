@@ -9,34 +9,36 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/abtransitionit/gocore/filex"
+	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/golinux/filex"
 	"github.com/spf13/cobra"
 )
 
 // Package variables for CLI flags.
 
-var detectSDesc = "guess to detect the binary type of a file"
-var detectLDesc = detectSDesc + "\n" + `
+var sudocpSDesc = "cp file as sudo to a root location"
+var sudocpLDesc = sudocpSDesc + "\n" + `
 Example usage.
 
 go run . do download <URL>
 `
 
 // the command
-var detectCmd = &cobra.Command{
-	Use:   "detect",
-	Short: detectSDesc,
-	Long:  detectLDesc,
-	Args:  cobra.ExactArgs(1), // Require exactly one argument: the file location
+var sudocpCmd = &cobra.Command{
+	Use:   "sudocp",
+	Short: sudocpSDesc,
+	Long:  sudocpLDesc,
+	Args:  cobra.ExactArgs(2), // Require exactly one argument: the file location
 	RunE: func(cmd *cobra.Command, args []string) error {
-		filePath := args[0]
+		src := args[0]
+		dst := args[1]
+		// get logger
+		logger := logx.GetLogger()
 		// Create a context to allow user to ctrl-c the download.
 		ctx := context.Background()
 		ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 		defer cancel()
-		// logger := logx.GetLogger()
-		// logger.Infof("%s", cmd.Short)
-		fileType, err := filex.DetectBinaryType(ctx, vmName, filePath)
+		fileType, err := filex.CpAsSudo(ctx, logger, src, dst)
 		if err != nil {
 			return fmt.Errorf("%v", err)
 		}
