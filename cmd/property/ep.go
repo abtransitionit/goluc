@@ -38,9 +38,7 @@ var EpCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("%v", err)
 		}
-		// Print the value (both for user and logs)
 		fmt.Println(value)
-		// logger.Infof("Property '%s' = %s", property, value)
 		return nil
 	},
 }

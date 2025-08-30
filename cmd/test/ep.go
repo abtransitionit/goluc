@@ -8,8 +8,8 @@ import (
 )
 
 // Description
-var testSDesc = "Test some code."
-var testLDesc = testSDesc + `
+var epSDesc = "Test some code."
+var epLDesc = epSDesc + `
 This command is used to run different kinds of tests on your code or environment.
 It can be used for quick checks during development, or more complete scenarios
 depending on the subcommand invoked.
@@ -22,14 +22,14 @@ Typical use cases:
 `
 
 // root Command
-var TestCmd = &cobra.Command{
+var EpCmd = &cobra.Command{
 	Use:   "test",
-	Short: testSDesc,
-	Long:  testLDesc,
+	Short: epSDesc,
+	Long:  epLDesc,
 }
 
 func init() {
-	TestCmd.AddCommand(playCmd)
-	TestCmd.AddCommand(commitCmd)
-	TestCmd.AddCommand(delgolucCmd)
+	EpCmd.AddCommand(playCmd)
+	EpCmd.AddCommand(commitCmd)
+	EpCmd.AddCommand(delgolucCmd)
 }

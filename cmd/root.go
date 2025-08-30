@@ -6,6 +6,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/abtransitionit/goluc/cmd/do"
 	"github.com/abtransitionit/goluc/cmd/goprj"
 	"github.com/abtransitionit/goluc/cmd/property"
 	"github.com/abtransitionit/goluc/cmd/test"
@@ -45,6 +46,7 @@ func init() {
 	rootCmd.AddCommand(goprj.EpCmd)
 	rootCmd.AddCommand(workflow.EpCmd)
 	rootCmd.AddCommand(property.EpCmd)
-	rootCmd.AddCommand(test.TestCmd)
+	rootCmd.AddCommand(test.EpCmd)
+	rootCmd.AddCommand(do.EpCmd)
 	// rootCmd.AddCommand(prop.PropCmd)
 }

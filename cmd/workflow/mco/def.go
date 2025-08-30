@@ -11,6 +11,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/gocore/run"
+	"github.com/abtransitionit/golinux/filex"
 	"github.com/abtransitionit/goluc/internal/task/luc"
 )
 
@@ -41,11 +42,13 @@ func init() {
 	// create the workflow
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
+		corephase.NewPhase("cleanTmp", "empty the /tmp folder on the VMs", luc.CleanTmpOnVm, nil),
 		corephase.NewPhase("gitDevToMain", "merge dev to main and push all 4 projects : gocore, golinux, gotask, goluc", gitDevToMain, nil),
 		corephase.NewPhase("gitDevToPremain", "merge dev to premain and push all 4 projects : gocore, golinux, gotask, goluc", gitTodo, nil),
 		corephase.NewPhase("gitPremainToMain", "merge premain to main and push all 4 projects : gocore, golinux, gotask, goluc", gitTodo, nil),
 		corephase.NewPhase("buildLuc", "build LUC for curent and linux platform", build, nil),
 		corephase.NewPhase("deployLuc", "deploy LUC on all VMs", luc.DeployOnVm, nil),
+		corephase.NewPhase("deployLucLocal", "deploy LUC Localy (ie. /usr/local/bin)", DeployLucLocally, []string{"buildLuc"}),
 		corephase.NewPhase("deleteLuc", "delete LUC on all VMs", luc.DeleteOnVm, nil),
 		corephase.NewPhase("deployLuc2", "deploy LUC on all VMs", luc.DeployOnVm, []string{"buildLuc"}),
 	)
@@ -64,6 +67,15 @@ func build(ctx context.Context, logger logx.Logger, targets []corephase.Target, 
 }
 func gitTodo(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
 	logger.Infof("To implement")
+	return "", nil
+}
+func DeployLucLocally(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
+	logger.Infof("Deploying goluc to /usr/local/bin")
+	_, err := filex.CpAsSudo(logger, "/tmp/goluc", "/usr/local/bin/goluc")
+	if err != nil {
+		return "", err
+	}
+	logger.Infof("goluc locally deployed to /usr/local/bin")
 	return "", nil
 }
 func gitDevToMain(ctx context.Context, logger logx.Logger, targets []corephase.Target, cmd ...string) (string, error) {
