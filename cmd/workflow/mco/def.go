@@ -42,6 +42,7 @@ func init() {
 	// create the workflow
 	var err error
 	wkf, err = corephase.NewWorkflowFromPhases(
+		// corephase.NewPhase("cleanuserbin", "empty the /usr/local/bin folder on the VMs of a list LUC specifics binaries", CleanUserBinForLucOnVm, nil),
 		corephase.NewPhase("cleanTmp", "empty the /tmp folder on the VMs", luc.CleanTmpOnVm, nil),
 		corephase.NewPhase("gitDevToMain", "merge dev to main and push all 4 projects : gocore, golinux, gotask, goluc", gitDevToMain, nil),
 		corephase.NewPhase("gitDevToPremain", "merge dev to premain and push all 4 projects : gocore, golinux, gotask, goluc", gitTodo, nil),
