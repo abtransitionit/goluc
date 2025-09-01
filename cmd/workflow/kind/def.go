@@ -9,31 +9,35 @@ import (
 	coregocli "github.com/abtransitionit/gocore/gocli"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
-	"github.com/abtransitionit/goluc/internal"
+	liuxoservice "github.com/abtransitionit/golinux/oservice"
 	"github.com/abtransitionit/gotask/dnfapt"
 	taskgocli "github.com/abtransitionit/gotask/gocli"
 	"github.com/abtransitionit/gotask/luc"
+	"github.com/abtransitionit/gotask/oservice"
+	"github.com/abtransitionit/gotask/util"
 	"github.com/abtransitionit/gotask/vm"
 	"github.com/abtransitionit/gotask/workflow"
 )
 
-// Package variables
-var (
-	logger  = logx.GetLogger()
-	wkf     *corephase.Workflow
-	targets []corephase.Target
-)
-
 // Package variables : confifg1
 var (
-	cmdName = "kind"
-	SDesc   = "This is the KIND workflow."
+	logger           = logx.GetLogger()
+	wkf              *corephase.Workflow
+	targets          []corephase.Target
+	customRcFileName = ".profile.luc "  // name of the user's custom rc file
+	binFolderPath    = "/usr/local/bin" // location of binaries
 )
 
 // Package variables : confifg2
 var (
-	// vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmList                = []string{"o1u"}
+	cmdName = "kind" // the app name - should also be the workflow name
+	SDesc   = "This is the KIND workflow."
+)
+
+// Package variables : confifg3
+var (
+	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmList                = []string{"o1u"}
 	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
 	listGoCli             = []coregocli.GoCli{
 		{Name: "cni", Version: "1.7.1"},
@@ -44,13 +48,24 @@ var (
 		{Name: "runc", Version: "1.3.0"},
 		{Name: "slirp4netns", Version: "1.3.3"},
 	}
-)
+	apparmorContent = `
+		# Allow rootlesskit to create user namespaces (userns)
+		# Ref: https://ubuntu.com/blog/ubuntu-23-10-restricted-unprivileged-user-namespaces
+		abi <abi/4.0>,
+		include <tunables/global>
 
-// install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
-// install packageName = "uidmap" on all except debian
-// if pkgName == "uidmap" && data.OsFamily != "debian" {
-// 	logx.L.Debugf("[%s] [%s] Skipping package : OS family is %s, not 'debian'.", vm, pkgName, data.OsFamily)
-// 	continue
+		/usr/local/bin/rootlesskit/rootlesskit flags=(unconfined) {
+			userns,
+
+			# Site-specific additions and overrides. See local/README for details.
+			include if exists <local/usr.local.bin.rootlesskit.rootlesskit>
+		}
+	`
+
+	listOsService = []liuxoservice.OsService{
+		{Name: "apparmor", Path: "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit", Content: apparmorContent},
+	}
+)
 
 func init() {
 	// create the targets slice from vmList
@@ -66,10 +81,11 @@ func init() {
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
 		corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
-		corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"installGoCli"}),
-		corephase.NewPhase("linger", "Allow non root user to run OS services.", internal.GenerateReport, []string{"installGoCli"}),
-		corephase.NewPhase("path", "configure OS PATH envvar.", internal.GenerateReport, []string{"installGoCli"}),
-		corephase.NewPhase("rc", "Add a line to non-root user RC file.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
+		corephase.NewPhase("enablelinger", "Allows user services to be session independant", oservice.EnableLinger, []string{"installGoCli"}),
+		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"enablelinger"}),
+		corephase.NewPhase("setPathEnvar", "configure PATH envvar for current 	user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
+		// corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
@@ -88,3 +104,9 @@ func showPhaseAdapter(ctx context.Context, l logx.Logger, cmd ...string) (string
 	// Return the required string and a nil error on success.
 	return "Workflow plan displayed.", nil
 }
+
+// install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
+// install packageName = "uidmap" on all except debian
+// if pkgName == "uidmap" && data.OsFamily != "debian" {
+// 	logx.L.Debugf("[%s] [%s] Skipping package : OS family is %s, not 'debian'.", vm, pkgName, data.OsFamily)
+// 	continue

@@ -28,13 +28,15 @@ This command allows to get several kind of OS properties like.
 var EpCmd = &cobra.Command{
 	Use:   "property",
 	Short: SDesc,
-	Args:  cobra.ExactArgs(1), // Require exactly one argument: the property name
+	// Args:  cobra.ExactArgs(1), // Require exactly one argument: the property name
+	Args: cobra.MinimumNArgs(1), // Require at least one argument: the property name
 	RunE: func(cmd *cobra.Command, args []string) error {
 		property := args[0]
+		params := args[1:] // slice of extra params
 
 		var value string
 		var err error
-		value, err = linuxproperty.GetProperty(vmName, property)
+		value, err = linuxproperty.GetProperty(vmName, property, params...)
 		if err != nil {
 			return fmt.Errorf("%v", err)
 		}
