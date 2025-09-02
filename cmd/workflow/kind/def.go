@@ -63,8 +63,9 @@ var (
 	`
 
 	listOsService = []liuxoservice.OsService{
-		{Name: "apparmor", Path: "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit", Content: apparmorContent},
+		{Name: "apparmor", Path: "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit", Content: apparmorContent}, // active and enabled by default
 	}
+	CniLocation = "/usr/local/bin/cni"
 )
 
 func init() {
@@ -85,7 +86,7 @@ func init() {
 		corephase.NewPhase("enablelinger", "Allows user services to be session independant", oservice.EnableLinger, []string{"installGoCli"}),
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"enablelinger"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar for current 	user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
-		corephase.NewPhase("startOsService", "start OS services needed by thge app", oservice.StartOsService(listOsService), []string{"setPathEnvar"}),
+		// corephase.NewPhase("startOsService", "start OS services needed by thge app", oservice.StartOsService(listOsService), []string{"setPathEnvar"}),
 		// corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
