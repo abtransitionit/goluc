@@ -78,39 +78,3 @@ func Dummy(ctx context.Context, l logx.Logger, targets []phase.Target, cmd ...st
 	logger.Info("Report generated.")
 	return "Report generated", nil
 }
-
-// func EnableLinger(ctx context.Context, logger logx.Logger, targets []phase.Target, cmd ...string) (string, error) {
-// 	logger.Infof("🅣 Starting EnableLinger")
-
-// 	if len(targets) == 0 {
-// 		logger.Warnf("🅣 No targets provided")
-// 		return "", nil
-// 	}
-
-// 	var tasks []syncx.Func
-// 	for _, t := range targets {
-// 		vm, ok := t.(*phase.Vm)
-// 		if !ok || t.Type() != "Vm" {
-// 			logger.Warnf("🅣 Skipping non-VM target %s", t.Name())
-// 			continue
-// 		}
-
-// 		vmName := vm.Name()
-// 		tasks = append(tasks, func() error {
-// 			cli := oservice.EnableLinger()
-// 			if _, err := run.RunCliSsh(vmName, cli); err != nil {
-// 				logger.Errorf("🅣 Failed on VM %s: %v", vmName, err)
-// 				return err
-// 			}
-// 			logger.Infof("🅣 Linger enabled on VM %s", vmName)
-// 			return nil
-// 		})
-// 	}
-
-// 	logger.Infof("🅣 Running %d tasks", len(tasks))
-
-// 	if errs := syncx.RunConcurrently(ctx, tasks); errs != nil {
-// 		return "", errs[0]
-// 	}
-// 	return "", nil
-// }

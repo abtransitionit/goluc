@@ -11,6 +11,7 @@ import (
 	corephase "github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/golinux/envar"
 	liuxoservice "github.com/abtransitionit/golinux/oservice"
+	"github.com/abtransitionit/goluc/internal/task/ctd"
 	"github.com/abtransitionit/gotask/dnfapt"
 	taskgocli "github.com/abtransitionit/gotask/gocli"
 	"github.com/abtransitionit/gotask/luc"
@@ -37,8 +38,8 @@ var (
 
 // Package variables : confifg3
 var (
-	// vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmList                = []string{"o1u"}
+	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmList                = []string{"o1u"}
 	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
 	listGoCli             = []coregocli.GoCli{
 		{Name: "cni", Version: "1.7.1"},
@@ -90,8 +91,8 @@ func init() {
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"enablelinger"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("setEnvar", "define envvars into current user's custom RC file.", util.SetEnvar(customRcFileName, listEnvVar), []string{"setPathEnvar"}),
-		// corephase.NewPhase("setContainerd", "sets up a rootless session independant containerd env for the current user.", util.SetContainerd(), []string{"setPathEnvar"}),
-		// corephase.NewPhase("startOsService", "start OS services needed by thge app", oservice.StartOsService(listOsService), []string{"setPathEnvar"}),
+		corephase.NewPhase("setContainerd", "sets up a rootless containerd env linux session independant for the current user.", ctd.SetContainerd, []string{"startOsService"}),
+		corephase.NewPhase("startOsService", "start OS services needed by thge app", oservice.StartOsService(listOsService), []string{"setEnvar"}),
 		// corephase.NewPhase("service", "configure OS services on Kind VMs.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
