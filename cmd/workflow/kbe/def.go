@@ -7,9 +7,8 @@ import (
 	coregocli "github.com/abtransitionit/gocore/gocli"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
-	"github.com/abtransitionit/goluc/internal"
+	linuxdnfapt "github.com/abtransitionit/golinux/dnfapt"
 	"github.com/abtransitionit/gotask/dnfapt"
-	taskgocli "github.com/abtransitionit/gotask/gocli"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/vm"
 )
@@ -29,14 +28,19 @@ var (
 
 // Package variables : confifg2
 var (
-	// vmList                = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmList                = []string{"o1u"}
+	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmList                = []string{"o1u"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = []coregocli.GoCli{
 		{Name: "kind", Version: "latest"},
+		{Name: "kubeadm", Version: "1.32.0"},
+		{Name: "kubectl", Version: "1.32.0"},
+		{Name: "helm", Version: "3.17.3"},
 	}
-
-	// listGoCli             = []string{"gocli"}
+	listDaRepository = []linuxdnfapt.DaRepository{
+		{Name: "crio", FileName: "kbe-crio", Version: "1.32"},
+		{Name: "k8s", FileName: "kbe-k8s", Version: "1.32"},
+	}
 )
 
 func init() {
@@ -52,11 +56,31 @@ func init() {
 		corephase.NewPhase("copyAgent", "copy LUC CLI agent to all VMs", luc.DeployLuc, []string{"checkVmAccess"}),
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
-		corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
-		corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
-		corephase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(listDaRepository), []string{"updateApp"}),
+		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
+		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
+		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
+		// corephase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"installGoCli"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
 	}
 }
+
+// var KbeGoCliConfigMap = config.CustomCLIConfigMap{
+// 	"kubeadm": {
+// 		Name:      "kubeadm",
+// 		Version:   KbeVersion,
+// 		DstFolder: "/usr/local/bin",
+// 	},
+// 	"kubectl": {
+// 		Name:      "kubectl",
+// 		Version:   KbeVersion,
+// 		DstFolder: "/usr/local/bin",
+// 	},
+// 	"helm": {
+// 		Name:      "helm",
+// 		Version:   "3.17.3",
+// 		DstFolder: "/usr/local/bin",
+// 	},
+// }

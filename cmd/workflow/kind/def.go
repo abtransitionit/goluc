@@ -40,7 +40,7 @@ var (
 var (
 	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
 	// vmList                = []string{"o1u"}
-	listRequiredDaPackage = []string{"uidmap"} // uidmap/{newuidmap, newgidmap}
+	listRequiredDaPackage = []string{"uidmap", "dbus-user-session"} // uidmap/{newuidmap, newgidmap}
 	listGoCli             = []coregocli.GoCli{
 		{Name: "cni", Version: "1.7.1"},
 		{Name: "containerd", Version: "2.1.1"},
@@ -65,7 +65,7 @@ var (
 	`
 
 	listOsService = []liuxoservice.OsService{
-		{Name: "apparmor", Path: "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit", Content: apparmorContent}, // active and enabled by default
+		{Name: "apparmor", Path: "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit", Content: apparmorContent},
 	}
 	listEnvVar = []envar.EnvVar{
 		{Name: "CNI_PATH", Value: "/usr/local/bin/cni"},

@@ -14,22 +14,19 @@ import (
 
 func SetContainerdOnSingleVm(ctx context.Context, logger logx.Logger, vmName string) (string, error) {
 	cmds := []string{
-		"echo CNI_PATH=$CNI_PATH",
-		"echo PWD=$(pwd)",
 		"containerd-rootless-setuptool.sh install",
 	}
 	cmd := strings.Join(cmds, " && ")
 	logger.Debugf("playing %s: %s", vmName, cmd)
 
 	// play cli
-	output, err := run.RunCliSsh(vmName, cmd)
+	_, err := run.RunCliSsh(vmName, cmd)
 	if err != nil {
 		return "", fmt.Errorf("failed to play cli on vm: '%s': '%s' : %w", vmName, cmd, err)
 	}
 
 	// success
-	fmt.Printf("%s\n", output)
-
+	// fmt.Printf("%s\n", output)
 	logger.Debugf("%s: played %s", vmName, cmd)
 	return "", nil
 }
