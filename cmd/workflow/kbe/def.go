@@ -29,15 +29,15 @@ var (
 // Package variables : confifg2
 var (
 	// vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmList                = []string{"o1u"}
+	vmList                = []string{"o1u", "o2a", "o4f"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
-	listGoCli             = []coregocli.GoCli{
+	listGoCli             = coregocli.SliceGoCli{
 		{Name: "kind", Version: "latest"},
 		{Name: "kubeadm", Version: "1.32.0"},
 		{Name: "kubectl", Version: "1.32.0"},
 		{Name: "helm", Version: "3.17.3"},
 	}
-	listDaRepository = []linuxdnfapt.DaRepository{
+	sliceDaRepo = linuxdnfapt.SliceDaRepo{
 		{Name: "crio", FileName: "kbe-crio", Version: "1.32"},
 		{Name: "k8s", FileName: "kbe-k8s", Version: "1.32"},
 	}
@@ -56,7 +56,7 @@ func init() {
 		corephase.NewPhase("copyAgent", "copy LUC CLI agent to all VMs", luc.DeployLuc, []string{"checkVmAccess"}),
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
-		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(listDaRepository), []string{"updateApp"}),
+		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(sliceDaRepo), []string{"updateApp"}),
 		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
 		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
