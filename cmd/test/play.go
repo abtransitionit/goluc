@@ -19,8 +19,8 @@ var playCmd = &cobra.Command{
 	Long:  playLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.Info(playSDesc)
-		// testPropertyLocal()
-		testPropertyRemote()
+		logger := logx.GetLogger()
+		getFile(logger)
 	},
 }
 
@@ -33,6 +33,9 @@ func init() {
 	// Make them mutually exclusive
 	playCmd.MarkFlagsMutuallyExclusive("list", "runall")
 }
+
+// testPropertyLocal()
+// testPropertyRemote()
 
 // testScp()
 // testScpAsSudo()

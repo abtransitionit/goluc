@@ -28,8 +28,8 @@ var (
 
 // Package variables : confifg2
 var (
-	// vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmList                = []string{"o1u", "o2a", "o4f"}
+	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmList                = []string{"o1u", "o2a", "o4f"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "kind", Version: "latest"},
