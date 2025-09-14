@@ -8,8 +8,13 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	linuxdnfapt "github.com/abtransitionit/golinux/dnfapt"
+	liuxoservice "github.com/abtransitionit/golinux/oservice"
+	linuxkernel "github.com/abtransitionit/golinux/oskernel"
 	"github.com/abtransitionit/gotask/dnfapt"
 	"github.com/abtransitionit/gotask/luc"
+	"github.com/abtransitionit/gotask/oservice"
+	taskoskernel "github.com/abtransitionit/gotask/oskernel"
+	"github.com/abtransitionit/gotask/selinux"
 	"github.com/abtransitionit/gotask/vm"
 )
 
@@ -28,8 +33,8 @@ var (
 
 // Package variables : confifg2
 var (
-	vmList = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	// vmList                = []string{"o1u", "o2a", "o4f"}
+	vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmListNode                = []string{"o1u", "o2a", "o4f"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "kind", Version: "latest"},
@@ -41,11 +46,27 @@ var (
 		{Name: "crio", FileName: "kbe-crio", Version: "1.32"},
 		{Name: "k8s", FileName: "kbe-k8s", Version: "1.32"},
 	}
+	sliceDaPackNode = linuxdnfapt.SliceDaPack{
+		{Name: "crio"},
+		{Name: "kubeadm"},
+		{Name: "kubelet"},
+	}
+	kFilename      = "99-kbe.conf"
+	sliceOsKModule = []string{"overlay", "br_netfilter"}
+	sliceOsKParam  = linuxkernel.SliceOsKParam{
+		{Kvp: "net.ipv4.ip_forward=1", Description: "Enable IPv4 packet forwarding - core kernel parameter"},
+		{Kvp: "net.bridge.bridge-nf-call-iptables=1", Description: "Pass bridged IPv4 traffic to iptables - br_netfilter module parameter"},
+		{Kvp: "net.bridge.bridge-nf-call-ip6tables=1", Description: "Pass bridged IPv6 traffic to iptables - br_netfilter module parameter"},
+	}
+	sliceOsService = []liuxoservice.OsService{
+		{Name: "crio"},
+		{Name: "kubelet"},
+	}
 )
 
 func init() {
-	// create the targets slice from vmList
-	for _, vmName := range vmList {
+	// create the targets slice from vmListNode
+	for _, vmName := range vmListNode {
 		targets = append(targets, &corephase.Vm{NameStr: vmName})
 	}
 
@@ -57,6 +78,11 @@ func init() {
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
 		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(sliceDaRepo), []string{"updateApp"}),
+		corephase.NewPhase("installDaPackage", "provision Dnfapt package(s).", dnfapt.InstallDaPackage(sliceDaPackNode), []string{"installDaRepository"}),
+		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"checkVmAccess"}),
+		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
+		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
+		corephase.NewPhase("startOsService", "start OS services needed by the app", oservice.StartOsService(sliceOsService), []string{"confSelinux"}),
 		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
 		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),

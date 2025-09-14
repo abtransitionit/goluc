@@ -92,7 +92,7 @@ func init() {
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("setEnvar", "define envvars into current user's custom RC file.", util.SetEnvar(customRcFileName, listEnvVar), []string{"setPathEnvar"}),
 		corephase.NewPhase("setContainerd", "sets up a rootless containerd env linux session independant for the current user.", ctd.SetContainerd, []string{"startOsService"}),
-		corephase.NewPhase("startOsService", "start OS services needed by thge app", oservice.StartOsService(listOsService), []string{"setEnvar"}),
+		corephase.NewPhase("startOsService", "start OS services needed by the app", oservice.StartOsService(listOsService), []string{"setEnvar"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
