@@ -34,7 +34,7 @@ var (
 // Package variables : confifg2
 var (
 	vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	// vmListNode                = []string{"o1u", "o2a", "o4f"}
+	// vmListNode            = []string{"o1u", "o2a"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "kind", Version: "latest"},
@@ -82,6 +82,7 @@ func init() {
 		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"checkVmAccess"}),
 		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
 		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
+		// att this point kubelet service status should be activating only
 		corephase.NewPhase("startOsService", "start OS services needed by the app", oservice.StartOsService(sliceOsService), []string{"confSelinux"}),
 		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
