@@ -58,10 +58,10 @@ var (
 		{Kvp: "net.bridge.bridge-nf-call-iptables=1", Description: "Pass bridged IPv4 traffic to iptables - br_netfilter module parameter"},
 		{Kvp: "net.bridge.bridge-nf-call-ip6tables=1", Description: "Pass bridged IPv6 traffic to iptables - br_netfilter module parameter"},
 	}
-	sliceOsServiceEnable = []liuxoservice.OsService{
+	sliceOsServiceStart = []liuxoservice.OsService{
 		{Name: "crio"},
 	}
-	sliceOsServiceStart = []liuxoservice.OsService{
+	sliceOsServiceEnable = []liuxoservice.OsService{
 		{Name: "crio"},
 		{Name: "kubelet"},
 	}
@@ -88,6 +88,7 @@ func init() {
 		// att this point kubelet service status should be activating only
 		corephase.NewPhase("enableOsService", "enable OS services to start after a reboot", oservice.EnableOsService(sliceOsServiceEnable), []string{"confSelinux"}),
 		corephase.NewPhase("startOsService", "start OS services for current session", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
+		corephase.NewPhase("initCPlane", "initialize thz Control plane", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
 		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
 		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
