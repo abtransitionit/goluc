@@ -8,9 +8,11 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	linuxdnfapt "github.com/abtransitionit/golinux/dnfapt"
+	linuxk8s "github.com/abtransitionit/golinux/k8s"
 	liuxoservice "github.com/abtransitionit/golinux/oservice"
 	linuxkernel "github.com/abtransitionit/golinux/oskernel"
 	"github.com/abtransitionit/gotask/dnfapt"
+	taskk8s "github.com/abtransitionit/gotask/k8s"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/oservice"
 	taskoskernel "github.com/abtransitionit/gotask/oskernel"
@@ -20,26 +22,32 @@ import (
 
 // Package variables
 var (
-	logger  = logx.GetLogger()
-	wkf     *corephase.Workflow
-	targets []corephase.Target
+	logger        = logx.GetLogger()
+	wkf           *corephase.Workflow
+	targets       []corephase.Target
+	targetsCP     []corephase.Target
+	targetsWorker []corephase.Target
 )
 
 // Package variables : confifg1s
 var (
-	cmdName = "kbe"
-	SDesc   = "This is the KuBernetes Easy workflow."
+	cmdName    = "kbe"
+	SDesc      = "This is the KuBernetes Easy workflow."
+	K8sVersion = "1.32.0"
 )
 
 // Package variables : confifg2
 var (
 	vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmListControlPlaneNode = []string{"o1u", "o3r"}
+	vmListControlPlaneNode = []string{"o1u"}
+	vmListWorkerNode       = []string{"o2a"}
 	// vmListNode            = []string{"o1u", "o2a"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "kind", Version: "latest"},
-		{Name: "kubeadm", Version: "1.32.0"},
-		{Name: "kubectl", Version: "1.32.0"},
+		{Name: "kubeadm", Version: K8sVersion},
+		{Name: "kubectl", Version: K8sVersion},
 		{Name: "helm", Version: "3.17.3"},
 	}
 	sliceDaRepo = linuxdnfapt.SliceDaRepo{
@@ -65,12 +73,28 @@ var (
 		{Name: "crio"},
 		{Name: "kubelet"},
 	}
+	k8sConf = linuxk8s.K8sConf{
+		K8sVersion:     K8sVersion,
+		K8sPodCidr:     "192.168.0.0/16",
+		K8sServiceCidr: "172.16.0.0/16",
+		CrSocketName:   "unix:///var/run/crio/crio.sock",
+	}
 )
 
 func init() {
 	// create the targets slice from vmListNode
 	for _, vmName := range vmListNode {
 		targets = append(targets, &corephase.Vm{NameStr: vmName})
+	}
+
+	// create the targets slice from vmListControlPlaneNode
+	for _, vmName := range vmListControlPlaneNode {
+		targetsCP = append(targetsCP, &corephase.Vm{NameStr: vmName})
+	}
+
+	// create the targets slice from vmListWorkerNode
+	for _, vmName := range vmListWorkerNode {
+		targetsWorker = append(targetsWorker, &corephase.Vm{NameStr: vmName})
 	}
 
 	// create the workflow
@@ -85,10 +109,11 @@ func init() {
 		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"checkVmAccess"}),
 		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
 		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
-		// att this point kubelet service status should be activating only
 		corephase.NewPhase("enableOsService", "enable OS services to start after a reboot", oservice.EnableOsService(sliceOsServiceEnable), []string{"confSelinux"}),
 		corephase.NewPhase("startOsService", "start OS services for current session", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
-		corephase.NewPhase("initCPlane", "initialize thz Control plane", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
+		corephase.NewPhase("resetCPlane", "reset the control plane(s).", taskk8s.ResetCPlane(targetsCP), []string{"startOsService"}),
+		corephase.NewPhase("initCPlane", "reset and then initialize the control plane(s).", taskk8s.InitCPlane(targetsCP, k8sConf), []string{"resetCPlane"}),
+		corephase.NewPhase("initWorker", "initialize the worker(s).", taskk8s.InitWorker(targetsWorker), []string{"initCPlane"}),
 		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
 		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
