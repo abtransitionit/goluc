@@ -12,21 +12,25 @@ import (
 	liuxoservice "github.com/abtransitionit/golinux/oservice"
 	linuxkernel "github.com/abtransitionit/golinux/oskernel"
 	"github.com/abtransitionit/gotask/dnfapt"
+	"github.com/abtransitionit/gotask/gocli"
 	taskk8s "github.com/abtransitionit/gotask/k8s"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/oservice"
 	taskoskernel "github.com/abtransitionit/gotask/oskernel"
 	"github.com/abtransitionit/gotask/selinux"
+	"github.com/abtransitionit/gotask/util"
 	"github.com/abtransitionit/gotask/vm"
 )
 
 // Package variables
 var (
-	logger        = logx.GetLogger()
-	wkf           *corephase.Workflow
-	targets       []corephase.Target
-	targetsCP     []corephase.Target
-	targetsWorker []corephase.Target
+	logger           = logx.GetLogger()
+	wkf              *corephase.Workflow
+	targets          []corephase.Target
+	targetsCP        []corephase.Target
+	targetsWorker    []corephase.Target
+	customRcFileName = ".profile.luc "  // name of the user's custom rc file
+	binFolderPath    = "/usr/local/bin" // location of binaries
 )
 
 // Package variables : confifg1s
@@ -38,16 +42,15 @@ var (
 
 // Package variables : confifg2
 var (
-	vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	vmListNode = []string{"o1u"}
+	// vmListNode            = []string{"o1u", "o2a"}
 	// vmListControlPlaneNode = []string{"o1u", "o3r"}
 	vmListControlPlaneNode = []string{"o1u"}
 	vmListWorkerNode       = []string{"o2a"}
-	// vmListNode            = []string{"o1u", "o2a"}
+	// vmListWorkerNode       = []string{"o2a", "o5d"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
-		{Name: "kind", Version: "latest"},
-		{Name: "kubeadm", Version: K8sVersion},
-		{Name: "kubectl", Version: K8sVersion},
 		{Name: "helm", Version: "3.17.3"},
 	}
 	sliceDaRepo = linuxdnfapt.SliceDaRepo{
@@ -58,6 +61,9 @@ var (
 		{Name: "crio"},
 		{Name: "kubeadm"},
 		{Name: "kubelet"},
+	}
+	sliceDaPackCplane = linuxdnfapt.SliceDaPack{
+		{Name: "kubectl"},
 	}
 	kFilename      = "99-kbe.conf"
 	sliceOsKModule = []string{"overlay", "br_netfilter"}
@@ -105,19 +111,21 @@ func init() {
 		corephase.NewPhase("upgradeOs", "provision OS nodes with latest dnfapt packages and repositories.", dnfapt.UpgradeVmOs, []string{"copyAgent"}),
 		corephase.NewPhase("updateApp", "provision required/missing standard dnfapt packages.", dnfapt.UpdateVmOsApp(listRequiredDaPackage), []string{"upgradeOs"}),
 		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(sliceDaRepo), []string{"updateApp"}),
-		corephase.NewPhase("installDaPackage", "provision Dnfapt package(s).", dnfapt.InstallDaPackage(sliceDaPackNode), []string{"installDaRepository"}),
-		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"checkVmAccess"}),
+		corephase.NewPhase("installDaPackage", "provision Dnfapt package(s) on all nodes.", dnfapt.InstallDaPackage(sliceDaPackNode), []string{"installDaRepository"}),
+		corephase.NewPhase("installDaPackageCplane", "provision Dnfapt package(s) on CPlane only.", dnfapt.InstallDaPackage(sliceDaPackCplane, targetsCP), []string{"installDaPackage"}),
+		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"installDaPackageCplane"}),
 		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
 		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
 		corephase.NewPhase("enableOsService", "enable OS services to start after a reboot", oservice.EnableOsService(sliceOsServiceEnable), []string{"confSelinux"}),
 		corephase.NewPhase("startOsService", "start OS services for current session", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
-		corephase.NewPhase("resetCPlane", "reset the control plane(s).", taskk8s.ResetCPlane(targetsCP), []string{"startOsService"}),
-		corephase.NewPhase("initCPlane", "reset and then initialize the control plane(s).", taskk8s.InitCPlane(targetsCP, k8sConf), []string{"resetCPlane"}),
-		corephase.NewPhase("initWorker", "initialize the worker(s).", taskk8s.InitWorker(targetsWorker), []string{"initCPlane"}),
-		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
-		// corephase.NewPhase("installOsService", "provision Os service(s).", oservice.InstallOsService(listOsService), []string{"installGoCli"}),
-		// corephase.NewPhase("dapack2", "provision OS dnfapt package(s) on VM(s).", internal.CheckSystemStatus, []string{"installGoCli"}),
-		// corephase.NewPhase("darepo", "provision dnfapt repositories.", internal.GenerateReport, []string{"installGoCli"}),
+		corephase.NewPhase("resetCPlane", "reset the control plane(s).", taskk8s.ResetNode(targetsCP), []string{"startOsService"}),
+		corephase.NewPhase("initCPlane", "initialize the control plane(s) (aka. boostrap the cluster).", taskk8s.InitCPlane(targetsCP, k8sConf), []string{"resetCPlane"}),
+		corephase.NewPhase("resetWorker", "reset the workers(s).", taskk8s.ResetNode(targetsWorker), []string{"initCPlane"}),
+		corephase.NewPhase("addWorker", "Add the K8s worker(s) to the K8s cluster.", taskk8s.AddWorker(targetsCP[0], targetsWorker), []string{"resetWorker"}),
+		corephase.NewPhase("confKubectlOnCPlane", "Configure kubectl on the control plane(s).", taskk8s.ConfigureKubectlOnCplane(targetsCP[0]), []string{"resetWorker"}),
+		corephase.NewPhase("installGoCli", "provision Go CLI(s).", gocli.InstallOnVm(listGoCli), []string{"confKubectlOnCPlane"}),
+		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCli"}),
+		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}), // corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
