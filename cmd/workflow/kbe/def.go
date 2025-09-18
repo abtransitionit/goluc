@@ -24,20 +24,21 @@ import (
 
 // Package variables
 var (
-	logger           = logx.GetLogger()
-	wkf              *corephase.Workflow
-	targets          []corephase.Target
-	targetsCP        []corephase.Target
-	targetsWorker    []corephase.Target
-	customRcFileName = ".profile.luc "  // name of the user's custom rc file
-	binFolderPath    = "/usr/local/bin" // location of binaries
+	wkf           *corephase.Workflow
+	targets       []corephase.Target
+	targetsCP     []corephase.Target
+	targetsWorker []corephase.Target
+	logger        = logx.GetLogger()
 )
 
 // Package variables : confifg1s
 var (
-	cmdName    = "kbe"
-	SDesc      = "This is the KuBernetes Easy workflow."
-	K8sVersion = "1.32.0"
+	cmdName          = "kbe"
+	SDesc            = "This is the Kubernetes Easy workflow."
+	K8sVersion       = "1.32.0"
+	K8sVersionShort  = "1.32"
+	customRcFileName = ".profile.luc "  // name of the user's custom rc file
+	binFolderPath    = "/usr/local/bin" // location of binaries
 )
 
 // Package variables : confifg2
@@ -54,8 +55,8 @@ var (
 		{Name: "helm", Version: "3.17.3"},
 	}
 	sliceDaRepo = linuxdnfapt.SliceDaRepo{
-		{Name: "crio", FileName: "kbe-crio", Version: "1.32"},
-		{Name: "k8s", FileName: "kbe-k8s", Version: "1.32"},
+		{Name: "crio", FileName: "kbe-crio", Version: K8sVersionShort},
+		{Name: "k8s", FileName: "kbe-k8s", Version: K8sVersionShort},
 	}
 	sliceDaPackNode = linuxdnfapt.SliceDaPack{
 		{Name: "crio"},
