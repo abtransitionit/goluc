@@ -6,6 +6,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/abtransitionit/goluc/cmd/api"
 	"github.com/abtransitionit/goluc/cmd/do"
 	"github.com/abtransitionit/goluc/cmd/goprj"
 	"github.com/abtransitionit/goluc/cmd/property"
@@ -48,5 +49,6 @@ func init() {
 	rootCmd.AddCommand(property.EpCmd)
 	rootCmd.AddCommand(test.EpCmd)
 	rootCmd.AddCommand(do.EpCmd)
+	rootCmd.AddCommand(api.EpCmd)
 	// rootCmd.AddCommand(prop.PropCmd)
 }

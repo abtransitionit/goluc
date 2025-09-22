@@ -11,6 +11,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow/mco"
+	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -58,6 +59,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	// define the entry point for each workflow
+	EpCmd.AddCommand(ovh.EpCmd)
 	EpCmd.AddCommand(mco.EpCmd)
 	EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(kbe.EpCmd)
