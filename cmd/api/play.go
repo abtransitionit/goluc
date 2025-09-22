@@ -25,13 +25,25 @@ var playCmd = &cobra.Command{
 		logger := logx.GetLogger()
 		logger.Info(playSDesc)
 
-		file, err := ovh.GetAccessTokenFromFile()
+		accessToken, err := ovh.GetAccessTokenFromFile()
+		if err != nil {
+			logger.Errorf("%v", err)
+			os.Exit(1)
+		}
+		clientSecret, err := ovh.GetSAClientSecret()
+		if err != nil {
+			logger.Errorf("%v", err)
+			os.Exit(1)
+		}
+		clientId, err := ovh.GetSAClientId()
 		if err != nil {
 			logger.Errorf("%v", err)
 			os.Exit(1)
 		}
 
-		fmt.Println("Access Token:", file)
+		fmt.Println("Access Token:", accessToken)
+		fmt.Println("Client Secret:", clientSecret)
+		fmt.Println("Client Id:", clientId)
 
 		// // Create client
 		// basedApiEndpoint := "https://jsonplaceholder.typicode.com"
