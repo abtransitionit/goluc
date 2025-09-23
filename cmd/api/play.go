@@ -33,7 +33,8 @@ var playCmd = &cobra.Command{
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		// get list vps
+		// get info concerning the account
+		// listInfo, err := ovh.MeInfo(ctx, logger)
 		listVps, err := ovh.VpsList(ctx, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
@@ -41,6 +42,7 @@ var playCmd = &cobra.Command{
 		}
 
 		// success
+		// logger.Infof("VPS list: %v", listInfo)
 		logger.Infof("VPS list: %v", listVps)
 	},
 }
