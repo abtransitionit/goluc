@@ -1,0 +1,84 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package api
+
+import (
+	"context"
+	"fmt"
+	"net/url"
+	"os"
+
+	"github.com/abtransitionit/gocore/apicli"
+	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/ovh"
+)
+
+func test03(ctx context.Context, logger logx.Logger) {
+	SaId, err := ovh.GetSaId()
+	if err != nil {
+		logger.Errorf("%v", err)
+		os.Exit(1)
+	}
+	SaSecret, err := ovh.GetSaSecret()
+	if err != nil {
+		logger.Errorf("%v", err)
+		os.Exit(1)
+	}
+
+	// creata client
+	domain := "www.ovh.com"
+	verb := "POST"
+	endpoint := "/auth/oauth2/token"
+	client := apicli.NewClient("https://www.ovh.com")
+	// define request parameter
+	req := &apicli.Request{
+		Verb:     verb,
+		Domain:   domain,
+		Endpoint: endpoint,
+		Body: url.Values{
+			"grant_type":    {"client_credentials"},
+			"client_id":     {SaId},
+			"client_secret": {SaSecret},
+			"scope":         {"all"},
+		},
+		Context: ctx,
+		Headers: map[string]string{
+			"Content-Type": "application/x-www-form-urlencoded", // optional; Resty can auto-set if using SetFormDataFromValues
+		},
+	}
+
+	// Prepare a struct to hold the response
+	var tokenResp ovh.AccessToken
+
+	// Execute the request
+	err = client.Do(req, &tokenResp)
+	if err != nil {
+		fmt.Printf("failed to fetch access token: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Print results
+	logger.Infof("Access Token: %s", tokenResp.AccessToken)
+
+	// Save the access token to a file
+	if err := ovh.UpdateToken(tokenResp.AccessToken); err != nil {
+		logger.Infof("Error updating token: %v\n", err)
+	}
+
+	logger.Info("updated Access token successfully in Credential file")
+
+	// logger.Infof"Expires In:", tokenResp.ExpiresIn)
+}
+
+// domain="www.ovh.com"
+// endpoint="/auth/oauth2/token"
+// url="https://${domain}${endpoint}"
+// verb="POST"
+// curl --request ${verb} \
+//   --url "${url}" \
+//   --header 'content-type: application/x-www-form-urlencoded' \
+//   --data scope=all \
+//   --data client_id="${cid}" \
+//   --data client_secret="${cs}" \
+//   --data grant_type=client_credentials

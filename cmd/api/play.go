@@ -4,11 +4,10 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package api
 
 import (
-	"fmt"
-	"os"
+	"context"
+	"time"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/ovh"
 	"github.com/spf13/cobra"
 )
 
@@ -24,40 +23,13 @@ var playCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logger := logx.GetLogger()
 		logger.Info(playSDesc)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel() // Always call cancel to release resources
 
-		accessToken, err := ovh.GetAccessTokenFromFile()
-		if err != nil {
-			logger.Errorf("%v", err)
-			os.Exit(1)
-		}
-		clientSecret, err := ovh.GetSAClientSecret()
-		if err != nil {
-			logger.Errorf("%v", err)
-			os.Exit(1)
-		}
-		clientId, err := ovh.GetSAClientId()
-		if err != nil {
-			logger.Errorf("%v", err)
-			os.Exit(1)
-		}
+		test04(ctx, logger)
+		// test03(ctx, logger)
+		// test01(logger)
 
-		fmt.Println("Access Token:", accessToken)
-		fmt.Println("Client Secret:", clientSecret)
-		fmt.Println("Client Id:", clientId)
-
-		// // Create client
-		// basedApiEndpoint := "https://jsonplaceholder.typicode.com"
-		// client := apicli.NewClient(basedApiEndpoint, nil, nil)
-		// _ = client.Do(
-		// 	context.Background(),
-		// 	"GET",
-		// 	"/posts",
-		// 	nil, // body
-		// 	nil, // output
-		// 	logger,
-		// 	map[string]string{"page": "1"},          // query params
-		// 	map[string]string{"X-Api-Key": "token"}, // headers
-		// )
 	},
 }
 
@@ -70,63 +42,3 @@ func init() {
 	// Make them mutually exclusive
 	playCmd.MarkFlagsMutuallyExclusive("list", "runall")
 }
-
-// testPropertyLocal()
-// testPropertyRemote()
-
-// testScp()
-// testScpAsSudo()
-
-// logx.Info("test Phase testPhaseO1")
-// testPhaseO1()
-
-// logx.Info("test Phase testPhase")
-// testPhase()
-
-// logx.Info("test DeleteFile")
-// testDeleteFile()
-
-// logx.Info("test CanBeSudoAndIsNotRoot")
-// testCanBeSudoAndIsNotRoot()
-
-// logx.Info("test TouchAsSudo")
-// testTouchAsSudo()
-
-// logx.Info("End of test")
-
-// test.CheckCliExits("gpg")
-// // out := test.GeRemoteProperty("o1u", "osfamily")
-// out, err := test.GetPackage1("o1u", "gpg")
-// if err != nil {
-// 	logx.L.Error("%v : %s", err, out)
-// 	return
-// }
-// logx.L.Infof("yo in test : %s", out)
-// local function tested
-// test.TouchFileLocal("/tmp", "titi")
-// test.CheckFileLocalExits("/tmp/test.txt")
-// remote function tested
-// test.TouchFileOnRemote("o1u", "/tmp", "toto")
-// test.CheckFileRemoteExists("o1u", "/tmp/toto")
-
-// test.TestCheckCliExistsOnremote(config.KbeListNode, "gpg")
-// test.TestCheckCliExistsOnremote(config.KbeListNode, "curl")
-
-// url := "https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key"
-// path := "/etc/apt/sources.list.d/kbe-k8s-apt-keyring.gpg"
-// vm := "o1u"
-// test.TestRemoteGetGpgFromUrl(vm, url, path, true)
-// test.TestGetGpgFromUrl(url, path, true)
-
-// test.TestVmAreSshReachable(config.KbeListNode)
-// test.DaAddRepoLocal("kbe-k8s")
-
-// createFileLocal()
-// touchFileRemote("o1u")
-// MoveFileLocal()
-// ListOvhVm()
-// ListMapKey()
-// installGoCli()
-// getPath()
-// fmt.Println(configi.KbeGoCliConfigMap)
-// addLineToFileRemote()

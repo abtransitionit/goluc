@@ -10,17 +10,16 @@ require (
 	github.com/abtransitionit/gocore v0.0.1
 	github.com/abtransitionit/golinux v0.0.1
 	github.com/abtransitionit/gotask v0.0.1
+	github.com/go-resty/resty/v2 v2.16.5
 )
 
 require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jedib0t/go-pretty/v6 v6.6.8 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/opencontainers/selinux v1.12.0 // indirect
-	github.com/ovh/go-ovh v1.9.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
@@ -32,13 +31,9 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
-	golang.org/x/oauth2 v0.18.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/ini.v1 v1.67.0 // indirect
 )
 
 // used in dev mode - removes by CI at tag step - simplify development when working on several inter dependant projects
