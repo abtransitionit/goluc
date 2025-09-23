@@ -12,7 +12,7 @@ import (
 )
 
 func test04(ctx context.Context, logger logx.Logger) {
-	token, err := ovh.GetAccessTokenFromServiceAccount(ctx, logger)
+	token, err := ovh.CreateAccessTokenForServiceAccount(ctx, logger)
 	if err != nil {
 		logger.Errorf("error getting access token: %v", err)
 		os.Exit(1)

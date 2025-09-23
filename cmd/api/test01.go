@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package api
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/abtransitionit/gocore/logx"
@@ -29,9 +28,9 @@ func test01(logger logx.Logger) {
 		os.Exit(1)
 	}
 
-	fmt.Println("Access Token:", accessToken)
-	fmt.Println("Client Secret:", clientSecret)
-	fmt.Println("Client Id:", clientId)
+	logger.Infof("Access Token:", accessToken)
+	logger.Infof("Client Secret:", clientSecret)
+	logger.Infof("Client Id:", clientId)
 
 }
 

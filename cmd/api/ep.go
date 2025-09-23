@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var forceFlag bool
+
 // Description
 var epSDesc = "Test some code."
 var epLDesc = epSDesc + `
@@ -22,4 +24,5 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(playCmd)
+	EpCmd.AddCommand(tokenCmd)
 }

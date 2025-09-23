@@ -5,9 +5,11 @@ package api
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/ovh"
 	"github.com/spf13/cobra"
 )
 
@@ -21,19 +23,27 @@ var playCmd = &cobra.Command{
 	Short: playSDesc,
 	Long:  playLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
+		// define the logger
 		logger := logx.GetLogger()
+
+		// log
 		logger.Info(playSDesc)
+
+		// define a ctx with timeout
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel() // Always call cancel to release resources
+		defer cancel()
 
-		test04(ctx, logger)
-		// test03(ctx, logger)
-		// test01(logger)
+		// get list vps
+		listVps, err := ovh.VpsList(ctx, logger)
+		if err != nil {
+			logger.Errorf("%v", err)
+			os.Exit(1)
+		}
 
+		// success
+		logger.Infof("VPS list: %v", listVps)
 	},
 }
-
-var forceFlag bool
 
 func init() {
 	playCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
@@ -42,3 +52,7 @@ func init() {
 	// Make them mutually exclusive
 	playCmd.MarkFlagsMutuallyExclusive("list", "runall")
 }
+
+// test04(ctx, logger)
+// test03(ctx, logger)
+// test01(logger)
