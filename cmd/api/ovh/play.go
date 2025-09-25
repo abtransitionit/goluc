@@ -34,7 +34,8 @@ var playCmd = &cobra.Command{
 		// sshKeyList(ctx, logger)
 		// DetailMe(ctx, logger)
 		// listVps(ctx, logger)
-		installVps(ctx, logger)
+		// installVps(ctx, logger)
+		vpsGetList(ctx, logger)
 	},
 }
 

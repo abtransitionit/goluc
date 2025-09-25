@@ -96,3 +96,13 @@ func installVps(ctx context.Context, logger logx.Logger) {
 	}
 	jsonx.PrettyPrintColor(vpsInfo)
 }
+
+func vpsGetList(ctx context.Context, logger logx.Logger) {
+	// get list of vps id
+	listVps, err := ovh.GetListVpsFromFile()
+	if err != nil {
+		logger.Errorf("%v", err)
+		os.Exit(1)
+	}
+	jsonx.PrettyPrintColor(listVps)
+}
