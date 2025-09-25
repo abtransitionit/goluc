@@ -1,15 +1,13 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package api
+package ovh
 
 import (
 	"context"
-	"os"
 	"time"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/ovh"
 	"github.com/spf13/cobra"
 )
 
@@ -33,17 +31,10 @@ var playCmd = &cobra.Command{
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		// get info concerning the account
-		// listInfo, err := ovh.MeInfo(ctx, logger)
-		listVps, err := ovh.VpsList(ctx, logger)
-		if err != nil {
-			logger.Errorf("%v", err)
-			os.Exit(1)
-		}
-
-		// success
-		// logger.Infof("VPS list: %v", listInfo)
-		logger.Infof("VPS list: %v", listVps)
+		// sshKeyList(ctx, logger)
+		// DetailMe(ctx, logger)
+		// listVps(ctx, logger)
+		installVps(ctx, logger)
 	},
 }
 

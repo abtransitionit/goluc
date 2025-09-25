@@ -1,10 +1,9 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package api
+package ovh
 
 import (
-	"github.com/abtransitionit/goluc/cmd/api/ovh"
 	"github.com/spf13/cobra"
 )
 
@@ -18,11 +17,12 @@ This command is used to run different tests client API(s).
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "api",
+	Use:   "ovh",
 	Short: epSDesc,
 	Long:  epLDesc,
 }
 
 func init() {
-	EpCmd.AddCommand(ovh.EpCmd)
+	EpCmd.AddCommand(playCmd)
+	EpCmd.AddCommand(tokenCmd)
 }

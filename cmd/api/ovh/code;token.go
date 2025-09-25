@@ -1,10 +1,11 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package api
+package ovh
 
 import (
 	"context"
+	"os"
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ovh"
@@ -38,7 +39,11 @@ var tokenCmd = &cobra.Command{
 			ovh.CheckTokenExist(context.Background(), logger)
 		}
 		if refresh {
-			ovh.RefreshToken(context.Background(), logger)
+			_, err := ovh.RefreshToken(context.Background(), logger)
+			if err != nil {
+				logger.Errorf("%v", err)
+				os.Exit(1)
+			}
 		}
 
 	},
