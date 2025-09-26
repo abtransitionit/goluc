@@ -12,22 +12,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	allFlag   bool
-	fieldFlag string
-)
-
 // Description
-var getSDesc = "Api get the list of OVH VPS."
-var getLDesc = getSDesc + `
-- This command is used to Api get the list of OVH VPS name id.
+var installSDesc = "Api re-install the OVH VPS Os image."
+var installLDesc = installSDesc + `
+- This command is used to Api re-install the OVH VPS Os image.
 `
 
 // root Command
-var getCmd = &cobra.Command{
-	Use:   "get [vpsNameId]",
-	Short: getSDesc,
-	Long:  getLDesc,
+var installCmd = &cobra.Command{
+	Use:   "installos [vpsNameId]",
+	Short: installSDesc,
+	Long:  installLDesc,
 	Args:  cobra.MaximumNArgs(1), // Require 0 or 1 arg: the VPS id
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
@@ -61,7 +56,7 @@ var getCmd = &cobra.Command{
 			// api get the VPS:info
 			vpsInfo, err := ovh.GetFilteredVpsDetail(ctx, logger, id, fieldFlag)
 			if err != nil {
-				logger.Errorf("failed to get detail for VPS: %s: %v", id, err)
+				logger.Errorf("failed to install os on VPS: %s: %v", id, err)
 				// if --all is not set, stop
 				if !allFlag {
 					return
@@ -77,6 +72,6 @@ var getCmd = &cobra.Command{
 
 // fetchFilterDisplayVps fetches VPS detail, applies field filtering, and prints the result
 func init() {
-	getCmd.Flags().BoolVar(&allFlag, "all", false, "Get all VPSs with details")
-	getCmd.Flags().StringVar(&fieldFlag, "field", "", "Display only a specific field (e.g. displayName, memoryLimit)")
+	installCmd.Flags().BoolVar(&allFlag, "all", false, "Get all VPSs with details")
+	installCmd.Flags().StringVar(&fieldFlag, "field", "", "Display only a specific field (e.g. displayName, memoryLimit)")
 }
