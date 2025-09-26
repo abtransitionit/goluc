@@ -10,7 +10,7 @@ import (
 
 func sshKeyList(ctx context.Context, logger logx.Logger) {
 	// get ssh key id
-	sshKeyId, err := ovh.SshKeyGetIdFromFile()
+	sshKeyId, err := ovh.SshKeyGetIdFromFileCached()
 	if err != nil {
 		logger.Errorf("%v", err)
 		os.Exit(1)

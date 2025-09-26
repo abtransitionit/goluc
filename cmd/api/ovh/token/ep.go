@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package ovh
+package token
 
 import (
 	"context"
@@ -13,11 +13,16 @@ import (
 )
 
 // Description
-var tokenSDesc = "manage the OAuth2 OVH token related to the Servcie Account (aka. Client)."
-var tokenLDesc = tokenSDesc + ` xxx.`
+var tokenSDesc = "manage the OAuth2 OVH token."
+var tokenLDesc = tokenSDesc + `
+- This command is used to genereate the token used as the bearer in any OVH client's request.
+- The token is created using credentials related to a service account (aka. Client).
+- This credentials (client id/secret) are stored in a local json file in the current working directory.
+- The token is stored in a local json file in the current working directory.
+`
 
 // root Command
-var tokenCmd = &cobra.Command{
+var EpCmd = &cobra.Command{
 	Use:   "token",
 	Short: tokenSDesc,
 	Long:  tokenLDesc,
@@ -50,6 +55,6 @@ var tokenCmd = &cobra.Command{
 }
 
 func init() {
-	tokenCmd.Flags().BoolP("check", "c", false, "display infos on token")
-	tokenCmd.Flags().BoolP("refresh", "r", false, "Refresh a token (replace the existing one in the credential file)")
+	EpCmd.Flags().BoolP("check", "c", false, "check if the token exists in the credential file")
+	EpCmd.Flags().BoolP("refresh", "r", false, "Api Refresh the token (make an API call to get a new token and replace the existing one in the credential file)")
 }

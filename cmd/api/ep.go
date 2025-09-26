@@ -11,9 +11,9 @@ import (
 var forceFlag bool
 
 // Description
-var epSDesc = "Test some code."
+var epSDesc = "request some API(s)"
 var epLDesc = epSDesc + `
-This command is used to run different tests client API(s).
+- This command is used to run action(s) on specific resource(s) using a specific client'srequest.
 `
 
 // root Command

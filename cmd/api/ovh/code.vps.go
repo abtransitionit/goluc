@@ -2,7 +2,6 @@ package ovh
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/abtransitionit/gocore/jsonx"
@@ -46,63 +45,22 @@ func listVps(ctx context.Context, logger logx.Logger) {
 	}
 }
 
-func installVps(ctx context.Context, logger logx.Logger) {
-	// get ssh key id
-	sshKeyId, err := ovh.SshKeyGetIdFromFile()
-	if err != nil {
-		logger.Errorf("%v", err)
-		os.Exit(1)
-	}
-
-	// api get ssh detail
-	sshKeyDetail, err := ovh.SshKeyGetDetail(ctx, logger, sshKeyId)
-	if err != nil {
-		logger.Errorf("%v", err)
-		os.Exit(1)
-	}
-
-	// api get ssh public key
-	sshPubKey, err := ovh.SshKeyGetPublic(ctx, logger, sshKeyDetail)
-	if err != nil {
-		logger.Errorf("%v", err)
-		os.Exit(1)
-	}
-
-	// get OS image id
-	imageId, err := ovh.GetOsImageId("vps-9c33782a.vps.ovh.net")
-	if err != nil {
-		logger.Errorf("Error:", err)
-		os.Exit(1)
-	}
-	fmt.Println("OS Image ID:", imageId)
-	os.Exit(0)
-
-	// define the reinstall parameter
-	reinstallParam := ovh.VpsReinstallParam{
-		DoNotSendPassword: true,
-		ImageId:           imageId,
-		PublicSshKey:      sshPubKey, // example
-	}
-
-	vpsId := "vps-9c33782a.vps.ovh.net"
-	jsonx.PrettyPrintColor(reinstallParam)
-	fmt.Println(vpsId)
-
-	// reinstall the vps via api
-	vpsInfo, err := ovh.VpsReinstall(ctx, logger, vpsId, reinstallParam)
-	if err != nil {
-		logger.Errorf("%v", err)
-		os.Exit(1)
-	}
-	jsonx.PrettyPrintColor(vpsInfo)
-}
-
 func vpsGetList(ctx context.Context, logger logx.Logger) {
-	// get list of vps id
+	// get list of vps
 	listVps, err := ovh.GetListVpsFromFile()
 	if err != nil {
 		logger.Errorf("%v", err)
 		os.Exit(1)
 	}
+	// get list of os image
 	jsonx.PrettyPrintColor(listVps)
+}
+
+func vpsGetImageIdHandler(ctx context.Context, logger logx.Logger, vpsNameId string) {
+	id, err := ovh.GetVpsImageId(vpsNameId)
+	if err != nil {
+		logger.Errorf("%v", err)
+		return
+	}
+	logger.Infof("Image ID: %s", id)
 }
