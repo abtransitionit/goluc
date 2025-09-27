@@ -5,6 +5,7 @@ package vps
 
 import (
 	"context"
+	"os"
 
 	"github.com/abtransitionit/gocore/jsonx"
 	"github.com/abtransitionit/gocore/logx"
@@ -30,7 +31,7 @@ var installCmd = &cobra.Command{
 		logger := logx.GetLogger()
 		logger.Infof(getSDesc)
 
-		// define VPS(s) to process
+		// 1 - define VPS(s) to process
 		var vpsNameIdSlice []string
 		if allFlag {
 			// api get the list of vps
@@ -51,21 +52,17 @@ var installCmd = &cobra.Command{
 			vpsNameIdSlice = []string{args[0]}
 		}
 
-		// loop over the slice
+		// 4 - process each VPS
 		for _, id := range vpsNameIdSlice {
-			// api get the VPS:info
-			vpsInfo, err := ovh.GetFilteredVpsDetail(ctx, logger, id, fieldFlag)
+			logger.Infof("Processing VPS: %s", id)
+			jsonResponse, err := ovh.VpsReinstallHelper(ctx, logger, id)
 			if err != nil {
-				logger.Errorf("failed to install os on VPS: %s: %v", id, err)
-				// if --all is not set, stop
-				if !allFlag {
-					return
-				}
-				continue
+				logger.Errorf("failed to re-install VPS: %v", err)
+				os.Exit(1)
 			}
 
-			// Display VPS detail
-			jsonx.PrettyPrintColor(vpsInfo)
+			// 5 - print the response
+			jsonx.PrettyPrintColor(jsonResponse)
 		}
 	},
 }

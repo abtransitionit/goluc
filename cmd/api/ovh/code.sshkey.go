@@ -10,22 +10,15 @@ import (
 
 func sshKeyList(ctx context.Context, logger logx.Logger) {
 	// get ssh key id
-	sshKeyId, err := ovh.SshKeyGetIdFromFileCached()
+	sshKeyId, err := ovh.GetSshKeyIdFromFileCached()
 	if err != nil {
 		logger.Errorf("%v", err)
 		os.Exit(1)
 	}
 	logger.Infof("SshKeyId: %s", sshKeyId)
 
-	// get ssh detail
-	sshKeyDetail, err := ovh.SshKeyGetDetail(ctx, logger, sshKeyId)
-	if err != nil {
-		logger.Errorf("%v", err)
-		os.Exit(1)
-	}
-
 	// get ssh public key
-	sshPubKey, err := ovh.SshKeyGetPublic(ctx, logger, sshKeyDetail)
+	sshPubKey, err := ovh.SshKeyGetPublicKey(ctx, logger, sshKeyId)
 	if err != nil {
 		logger.Errorf("%v", err)
 		os.Exit(1)

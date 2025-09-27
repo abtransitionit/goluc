@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package ovh
 
 import (
+	"github.com/abtransitionit/goluc/cmd/api/ovh/test"
 	"github.com/abtransitionit/goluc/cmd/api/ovh/token"
 	"github.com/abtransitionit/goluc/cmd/api/ovh/vps"
 	"github.com/spf13/cobra"
@@ -27,4 +28,5 @@ var EpCmd = &cobra.Command{
 func init() {
 	EpCmd.AddCommand(vps.EpCmd)
 	EpCmd.AddCommand(token.EpCmd)
+	EpCmd.AddCommand(test.EpCmd)
 }

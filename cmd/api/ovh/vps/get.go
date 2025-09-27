@@ -5,6 +5,7 @@ package vps
 
 import (
 	"context"
+	"os"
 
 	"github.com/abtransitionit/gocore/jsonx"
 	"github.com/abtransitionit/gocore/logx"
@@ -56,10 +57,16 @@ var getCmd = &cobra.Command{
 			vpsNameIdSlice = []string{args[0]}
 		}
 
-		// loop over the slice
+		// process each vps
 		for _, id := range vpsNameIdSlice {
-			// api get the VPS:info
-			vpsInfo, err := ovh.GetFilteredVpsDetail(ctx, logger, id, fieldFlag)
+			// api get the VPS:detail
+			vpsDetail, err := ovh.VpsGetDetail(ctx, logger, id)
+			if err != nil {
+				logger.Errorf("failed to get detail for VPS: %s: %v", id, err)
+				os.Exit(1)
+			}
+			// filter the VPS:detail
+			vpsInfo, err := jsonx.GetFilteredJson(ctx, logger, vpsDetail, fieldFlag)
 			if err != nil {
 				logger.Errorf("failed to get detail for VPS: %s: %v", id, err)
 				// if --all is not set, stop
