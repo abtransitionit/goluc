@@ -7,19 +7,14 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
-	"github.com/abtransitionit/goluc/cmd/workflow/kind"
-	"github.com/abtransitionit/goluc/cmd/workflow/om"
-	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
-var workflowSDesc = "Manage the Operations and Maintenance (O&M)of a systems, software and tools using workflows."
+var workflowSDesc = "update a system to be production grade and security proof."
 var workflowLDesc = workflowSDesc + "\n" + `
-This command allows you to act on various systems, software or tools, on your local
-machine or on remote hosts (ie. VMs or containers).
+This command allows to add security concerns to system to be production grade and security proof.
 `
 
 // root Command
@@ -50,9 +45,5 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	// define the entry point for each workflow
-	EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(kbe.EpCmd)
-	EpCmd.AddCommand(kind.EpCmd)
-	EpCmd.AddCommand(om.EpCmd)
-	EpCmd.AddCommand(ovh.EpCmd)
 }

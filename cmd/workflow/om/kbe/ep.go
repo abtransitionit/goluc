@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package mco
+package kbe
 
 import (
 	"github.com/spf13/cobra"

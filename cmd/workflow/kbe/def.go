@@ -43,13 +43,14 @@ var (
 
 // Package variables : confifg2
 var (
-	// vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-	vmListNode = []string{"o1u"}
+	vmListNode = []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+	// vmListNode = []string{"o1u"}
 	// vmListNode            = []string{"o1u", "o2a"}
 	// vmListControlPlaneNode = []string{"o1u", "o3r"}
 	vmListControlPlaneNode = []string{"o1u"}
-	vmListWorkerNode       = []string{"o2a"}
+	vmListWorkerNode       = []string{"o2a", "o3r", "o4f", "o5d"}
 	// vmListWorkerNode       = []string{"o2a", "o5d"}
+	// vmListWorkerNode       = []string{"o2a"}
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "helm", Version: "3.17.3"},

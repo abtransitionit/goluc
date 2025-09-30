@@ -1,32 +1,29 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package workflow
+package om
 
 import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
-	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
-	"github.com/abtransitionit/goluc/cmd/workflow/kind"
-	"github.com/abtransitionit/goluc/cmd/workflow/om"
-	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
+	"github.com/abtransitionit/goluc/cmd/workflow/om/kbe"
+	"github.com/abtransitionit/goluc/cmd/workflow/om/luc"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
-var workflowSDesc = "Manage the Operations and Maintenance (O&M)of a systems, software and tools using workflows."
-var workflowLDesc = workflowSDesc + "\n" + `
+var omSDesc = "Manage the Operations and MMaintenance (O&M) of systems, softwares and tools using workflows."
+var omLDesc = omSDesc + "\n" + `
 This command allows you to act on various systems, software or tools, on your local
 machine or on remote hosts (ie. VMs or containers).
 `
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "wkf",
-	Short: workflowSDesc,
-	Long:  workflowLDesc,
+	Use:   "om",
+	Short: omSDesc,
+	Long:  omLDesc,
 	Example: fmt.Sprintf(`
   # manage KIND workflow
   %[1]s workflow kind
@@ -38,7 +35,7 @@ var EpCmd = &cobra.Command{
   %[1]s workflow kbe
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.Infof("%s", workflowSDesc)
+		logx.Infof("%s", omSDesc)
 		// manage argument
 		if len(args) == 0 {
 			cmd.Help()
@@ -50,9 +47,6 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	// define the entry point for each workflow
-	EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(kbe.EpCmd)
-	EpCmd.AddCommand(kind.EpCmd)
-	EpCmd.AddCommand(om.EpCmd)
-	EpCmd.AddCommand(ovh.EpCmd)
+	EpCmd.AddCommand(luc.EpCmd)
 }

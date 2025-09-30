@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package mco
+package luc
 
 import (
 	"context"
@@ -24,8 +24,8 @@ var (
 
 // Package variables : confifg1
 var (
-	cmdName = "mco"
-	SDesc   = "This is the LUC maintenace workflow."
+	cmdName = "luc"
+	SDesc   = "LUC operations and maintenace workflow."
 )
 
 // Package variables : confifg2
