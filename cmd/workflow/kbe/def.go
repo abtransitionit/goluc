@@ -11,6 +11,7 @@ import (
 	linuxk8s "github.com/abtransitionit/golinux/k8s"
 	liuxoservice "github.com/abtransitionit/golinux/oservice"
 	linuxkernel "github.com/abtransitionit/golinux/oskernel"
+	"github.com/abtransitionit/gotask/cilium"
 	"github.com/abtransitionit/gotask/dnfapt"
 	"github.com/abtransitionit/gotask/gocli"
 	taskk8s "github.com/abtransitionit/gotask/k8s"
@@ -55,6 +56,7 @@ var (
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "helm", Version: "3.17.3"},
 	}
+
 	sliceDaRepo = linuxdnfapt.SliceDaRepo{
 		{Name: "crio", FileName: "kbe-crio", Version: K8sVersionShort},
 		{Name: "k8s", FileName: "kbe-k8s", Version: K8sVersionShort},
@@ -81,6 +83,9 @@ var (
 		{Name: "crio"},
 		{Name: "kubelet"},
 	}
+	// sliceHelmRepo = helm.HelmRepo{
+	// 	{Name: "cilium", Version: "1.17"}, // compatible with K8s 1.32.x-1.33.x
+	// }
 	k8sConf = linuxk8s.K8sConf{
 		K8sVersion:     K8sVersion,
 		K8sPodCidr:     "192.168.0.0/16",
@@ -127,7 +132,9 @@ func init() {
 		corephase.NewPhase("confKubectlOnCPlane", "Configure kubectl on the control plane(s).", taskk8s.ConfigureKubectlOnCplane(targetsCP[0]), []string{"resetWorker"}),
 		corephase.NewPhase("installGoCli", "provision Go CLI(s).", gocli.InstallOnVm(listGoCli), []string{"confKubectlOnCPlane"}),
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCli"}),
-		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}), // corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
+		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
+		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
+		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium.", cilium.InstallCniCilium, []string{"setPathEnvar"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
