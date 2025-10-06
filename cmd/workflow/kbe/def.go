@@ -5,6 +5,7 @@ package kbe
 
 import (
 	coregocli "github.com/abtransitionit/gocore/gocli"
+	core_helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
 	linuxdnfapt "github.com/abtransitionit/golinux/dnfapt"
@@ -15,6 +16,7 @@ import (
 	"github.com/abtransitionit/gotask/dnfapt"
 	"github.com/abtransitionit/gotask/gocli"
 	taskk8s "github.com/abtransitionit/gotask/k8s"
+	helm "github.com/abtransitionit/gotask/k8s-helm"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/oservice"
 	taskoskernel "github.com/abtransitionit/gotask/oskernel"
@@ -83,9 +85,11 @@ var (
 		{Name: "crio"},
 		{Name: "kubelet"},
 	}
-	// sliceHelmRepo = helm.HelmRepo{
-	// 	{Name: "cilium", Version: "1.17"}, // compatible with K8s 1.32.x-1.33.x
-	// }
+	sliceHelmRepo = []core_helm.HelmRepo{
+		{Name: "cilium"},
+		{Name: "kdabsh"},
+	}
+
 	k8sConf = linuxk8s.K8sConf{
 		K8sVersion:     K8sVersion,
 		K8sPodCidr:     "192.168.0.0/16",
@@ -133,8 +137,8 @@ func init() {
 		corephase.NewPhase("installGoCli", "provision Go CLI(s).", gocli.InstallOnVm(listGoCli), []string{"confKubectlOnCPlane"}),
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCli"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
-		// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),
-		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium.", cilium.InstallCniCilium, []string{"setPathEnvar"}),
+		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
+		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium.", cilium.InstallCniCilium, []string{"setCilium"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
@@ -158,3 +162,4 @@ func init() {
 // 		DstFolder: "/usr/local/bin",
 // 	},
 // }
+// corephase.NewPhase("installGoCli", "provision Go CLI(s).", taskgocli.InstallOnVm(listGoCli), []string{"updateApp"}),

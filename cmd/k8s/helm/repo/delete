@@ -1,0 +1,77 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package repo
+
+import (
+	"fmt"
+
+	helm "github.com/abtransitionit/gocore/k8s-helm"
+	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/internal"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var deleteSDesc = "delete a repo."
+var deleteLDesc = deleteSDesc + `
+- This command delete the helm repo by just updating the Helm client configuration file in the user's home directory.
+`
+
+// root Command
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: deleteSDesc,
+	Long:  deleteLDesc,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the repository, got %d", len(args))
+		}
+		return nil
+	},
+	Example: fmt.Sprintf(`
+  # delete helm repo
+  %[1]s repo delete myrepo
+  `, internal.CliName),
+	Run: func(cmd *cobra.Command, args []string) {
+		// define ctx and logger
+		logger := logx.GetLogger()
+		logger.Info(deleteSDesc)
+		// get args
+		repoName := args[0]
+		// Get the CLI to install the dnfapt package
+		cli, err := repo.addSingleRepo(ctx, logger, helm.HelmRepo{Name: repoName, Url: ""})
+		if err != nil {
+			return "", err
+		}
+
+		// play the CLI
+		logger.Debugf("%s:%s installing package: %s", vmName, osFamily, daPkg.Name)
+		_, err = run.RunOnVm(vmName, cli)
+		if err != nil {
+			return "", err
+		}
+		cli := fmt.Sprintf(`helm repo remove %s`, repoName)
+		// play cli
+		var output string
+		var err error
+
+		if localFlag {
+			// run remotely
+			logger.Debugf("running on local helm client: %s", cli)
+			output, err = helm.QueryHelm("", cli)
+		} else {
+			// run locally
+			remoteHelmHost := "o1u"
+			logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
+			output, err = helm.QueryHelm(remoteHelmHost, cli)
+		}
+
+		if err != nil {
+			logger.Errorf("failed to run helm command: %s: %w", cli, err)
+			return
+		}
+
+		logger.Infof("output: %s", output)
+	},
+}

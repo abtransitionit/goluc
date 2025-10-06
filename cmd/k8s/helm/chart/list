@@ -1,0 +1,53 @@
+/*
+Copyright © 2025 Amar BELGACEM abtransitionit@hotmail.com
+*/
+package chart
+
+import (
+	"github.com/abtransitionit/gocore/logx"
+	"github.com/spf13/cobra"
+)
+
+var listSDesc = "List [Helm] charts available in a [Helm chart] repository"
+
+// Parent command
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: listSDesc,
+	Run: func(cmd *cobra.Command, args []string) {
+		// define ctx and logger
+		logger := logx.GetLogger()
+		logger.Info(listSDesc)
+		cmd.Help()
+
+		// // action : count the number of flag passed
+		// nbFlag := 0
+		// cmd.Flags().Visit(func(*pflag.Flag) { nbFlag++ })
+		// // error : exit : the number of flag(Helm Repo) must be exactly 1
+		// if nbFlag != 1 {
+		// 	fmt.Fprintln(os.Stderr, "❌ Error: you must specify a flag (ie. a Helm chart repository).")
+		// 	return
+		// }
+		// // printscreen
+		// fmt.Println("\n🟦", chartListShortDesc)
+		// // action : list Helm charts for the Helm repo associated with the flag
+		// // 👉 : *repo.FlagVar denote the user input boolean:flag
+		// for _, repo := range config.ListHelmRepo {
+		// 	if repo.FlagVar != nil && *repo.FlagVar {
+		// 		helmRepoName := repo.Name
+		// 		cli := fmt.Sprintf(`helm search repo %s`, helmRepoName)
+		// 		output, cerr, err := config.PlayQueryHelm(cli)
+		// 		if err != nil {
+		// 			fmt.Fprintln(os.Stderr, cerr)
+		// 		}
+		// 		fmt.Println(output)
+		// 	}
+		// }
+	},
+}
+
+// func init() {
+// 	for _, repo := range config.ListHelmRepo {
+// 		listCmd.Flags().BoolVar(repo.FlagVar, repo.Name, false, repo.Description)
+// 	}
+// }
