@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var omSDesc = "Manage the Operations and MMaintenance (O&M) of systems, softwares and tools using workflows."
+var omSDesc = "Access to operations and maintenance (O&M) tools."
 var omLDesc = omSDesc + "\n" + `
 This command allows you to act on various systems, software or tools, on your local
 machine or on remote hosts (ie. VMs or containers).

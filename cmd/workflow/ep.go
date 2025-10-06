@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var workflowSDesc = "Manage the Operations and Maintenance (O&M)of a systems, software and tools using workflows."
+var workflowSDesc = "Manage systems, software or tools using a workflow."
 var workflowLDesc = workflowSDesc + "\n" + `
 This command allows you to act on various systems, software or tools, on your local
 machine or on remote hosts (ie. VMs or containers).

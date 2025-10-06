@@ -37,7 +37,7 @@ var (
 // Package variables : confifg1
 var (
 	cmdName = "ovh"
-	SDesc   = "This is the OVH workflow."
+	SDesc   = "Manage OVH VPS."
 )
 
 // Package variables : confifg2

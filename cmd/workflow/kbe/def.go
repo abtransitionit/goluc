@@ -37,7 +37,7 @@ var (
 // Package variables : confifg1s
 var (
 	cmdName          = "kbe"
-	SDesc            = "This is the Kubernetes Easy workflow."
+	SDesc            = "Manage Kubernetes clusters."
 	K8sVersion       = "1.32.0"
 	K8sVersionShort  = "1.32"
 	customRcFileName = ".profile.luc "  // name of the user's custom rc file
