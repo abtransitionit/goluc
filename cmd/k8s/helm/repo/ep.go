@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package repo
 
 import (
-	"github.com/abtransitionit/gocore/logx"
 	"github.com/spf13/cobra"
 )
 
@@ -21,9 +20,6 @@ var EpCmd = &cobra.Command{
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		// define ctx and logger
-		logger := logx.GetLogger()
-		logger.Info(epSDesc)
 		cmd.Help()
 	},
 }
@@ -33,5 +29,6 @@ func init() {
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 	EpCmd.AddCommand(addCmd)
 	EpCmd.AddCommand(listCmd)
+	EpCmd.AddCommand(listChartCmd)
 	EpCmd.AddCommand(deleteCmd)
 }

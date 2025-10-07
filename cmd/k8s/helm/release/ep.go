@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package realease
+package release
 
 import (
 	"github.com/abtransitionit/gocore/logx"
@@ -27,8 +27,8 @@ var EpCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	EpCmd.AddCommand(addCmd)
-	EpCmd.AddCommand(listCmd)
-	EpCmd.AddCommand(deleteCmd)
-}
+// func init() {
+// 	EpCmd.AddCommand(createCmd)
+// 	EpCmd.AddCommand(listCmd)
+// 	EpCmd.AddCommand(deleteCmd)
+// }

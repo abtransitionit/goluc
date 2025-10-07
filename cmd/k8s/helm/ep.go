@@ -5,7 +5,8 @@ package helm
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/chart"
-	xrelease "github.com/abtransitionit/goluc/cmd/k8s/helm/release"
+	"github.com/abtransitionit/goluc/cmd/k8s/helm/conf"
+	"github.com/abtransitionit/goluc/cmd/k8s/helm/release"
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
 	"github.com/spf13/cobra"
 )
@@ -27,6 +28,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(repo.EpCmd)
-	EpCmd.AddCommand(xrelease.EpCmd)
+	EpCmd.AddCommand(release.EpCmd)
 	EpCmd.AddCommand(chart.EpCmd)
+	EpCmd.AddCommand(conf.EpCmd)
 }

@@ -29,8 +29,8 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 	EpCmd.AddCommand(describeCmd)
 	EpCmd.AddCommand(listCmd)
-	EpCmd.AddCommand(installCmd)
 	EpCmd.AddCommand(valueCmd)
 }

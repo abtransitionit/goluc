@@ -8,14 +8,14 @@ import (
 )
 
 // Description
-var addSDesc = "add a helm repo."
-var addLDesc = addSDesc
+var listSDesc = "list helm repos."
+var listLDesc = listSDesc
 
 // root Command
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: addSDesc,
-	Long:  addLDesc,
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: listSDesc,
+	Long:  listLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

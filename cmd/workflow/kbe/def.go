@@ -57,6 +57,7 @@ var (
 	listRequiredDaPackage = []string{"gnupg"} // gnupg/{gpg}
 	listGoCli             = coregocli.SliceGoCli{
 		{Name: "helm", Version: "3.17.3"},
+		{Name: "cilium", Version: "0.18.7"},
 	}
 
 	sliceDaRepo = linuxdnfapt.SliceDaRepo{
@@ -124,7 +125,7 @@ func init() {
 		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(sliceDaRepo), []string{"updateApp"}),
 		corephase.NewPhase("installDaPackage", "provision Dnfapt package(s) on all nodes.", dnfapt.InstallDaPackage(sliceDaPackNode), []string{"installDaRepository"}),
 		corephase.NewPhase("installDaPackageCplane", "provision Dnfapt package(s) on CPlane only.", dnfapt.InstallDaPackage(sliceDaPackCplane, targetsCP), []string{"installDaPackage"}),
-		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"installDaPackageCplane"}),
+		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"installDaPackage"}),
 		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
 		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
 		corephase.NewPhase("enableOsService", "enable OS services to start after a reboot", oservice.EnableOsService(sliceOsServiceEnable), []string{"confSelinux"}),
@@ -134,11 +135,11 @@ func init() {
 		corephase.NewPhase("resetWorker", "reset the workers(s).", taskk8s.ResetNode(targetsWorker), []string{"initCPlane"}),
 		corephase.NewPhase("addWorker", "Add the K8s worker(s) to the K8s cluster.", taskk8s.AddWorker(targetsCP[0], targetsWorker), []string{"resetWorker"}),
 		corephase.NewPhase("confKubectlOnCPlane", "Configure kubectl on the control plane(s).", taskk8s.ConfigureKubectlOnCplane(targetsCP[0]), []string{"resetWorker"}),
-		corephase.NewPhase("installGoCli", "provision Go CLI(s).", gocli.InstallOnVm(listGoCli), []string{"confKubectlOnCPlane"}),
-		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCli"}),
+		corephase.NewPhase("installGoCliCplane", "provision Go CLI(s).", gocli.InstallGoCliOnVm(listGoCli, targetsCP), []string{"confKubectlOnCPlane"}),
+		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCliCplane"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
-		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium.", cilium.InstallCniCilium, []string{"setCilium"}),
+		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium on all nodes.", cilium.InstallCniCilium, []string{"installHelmRepo"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")

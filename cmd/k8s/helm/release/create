@@ -1,0 +1,91 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package chart
+
+import (
+	"context"
+	"fmt"
+
+	helm "github.com/abtransitionit/gocore/k8s-helm"
+	"github.com/abtransitionit/gocore/list"
+	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/internal"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var createSDesc = "create a [helm] release from a [helm] chart."
+
+var listLDesc = createSDesc
+
+// root Command
+var listCmd = &cobra.Command{
+	Use:   "create",
+	Short: createSDesc,
+	Long:  listLDesc,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the repository (in the whitelist) to list the charts from, got %d", len(args))
+		}
+		return nil
+	},
+	Example: fmt.Sprintf(`
+	# create the release kbe-cilium-prod from chart named cilium in repo named cilium 
+  %[1]s chart list cilium
+  `, internal.CliName),
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// define ctx and logger
+		logger := logx.GetLogger()
+		logger.Info(createSDesc)
+		ctx := context.Background()
+
+		// get repo key from args
+		repoKey := args[0]
+
+		// check provided name exists in the whitelist and get url
+		repoObj, ok := helm.MapHelmRepoReference[repoKey]
+		if !ok {
+			logger.Errorf("repository '%s' is not in the allowed helm repository whitelist", repoKey)
+			return
+		}
+
+		// define var needed by cli
+		repo := helm.HelmRepo{
+			Name: repoObj.Name,
+		}
+		var err error
+
+		// define cli
+		cli, err := release.creaete(ctx, logger)
+		if err != nil {
+			logger.Errorf("failed to build helm command: %v", err)
+			return
+		}
+
+		// run cli on local or remote
+		var output string
+		if localFlag {
+			logger.Debugf("running on local helm client: %s", cli)
+			output, err = helm.QueryHelm("", cli, logger)
+		} else {
+			remoteHelmHost := "o1u"
+			logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
+			output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
+		}
+
+		if err != nil {
+			logger.Errorf("failed to run helm command: %s: %w", cli, err)
+			return
+		}
+		// fmt.Print(output)
+		list.PrettyPrintTable(output)
+
+	},
+}
+
+func init() {
+	listCmd.Flags().BoolP("installed", "i", false, "show installed Helm repos")
+	listCmd.Flags().BoolP("whitelist", "w", false, "show installable repos (organization whitelist)")
+}

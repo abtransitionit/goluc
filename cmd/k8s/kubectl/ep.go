@@ -4,10 +4,10 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kubectl
 
 import (
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/resource"
 	"github.com/spf13/cobra"
 )
 
@@ -25,8 +25,8 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	EpCmd.AddCommand(list.EpCmd)
 	EpCmd.AddCommand(ns.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(pod.EpCmd)
-	EpCmd.AddCommand(resource.EpCmd)
 }
