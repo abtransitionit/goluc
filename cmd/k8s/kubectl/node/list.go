@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package node
 
 import (
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
@@ -12,7 +11,7 @@ import (
 )
 
 // Description
-var listSDesc = "list k8s nodes."
+var listSDesc = "list all nodes."
 var listLDesc = listSDesc
 
 // root Command
@@ -24,30 +23,16 @@ var ListCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// define cli
-		cli, err := kubectl.Resource{Type: "node"}.List()
+		// get list
+		output, err := kubectl.ListNode(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 
-		// run cli on local or remote
-		var output string
-		if localFlag {
-			logger.Debugf("running on local kubectl client: %s", cli)
-			output, err = helm.QueryHelm("", cli, logger)
-		} else {
-			remoteHelmHost := "o1u"
-			logger.Debugf("running on remote kubectl client: %s : %s", remoteHelmHost, cli)
-			output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
-		}
-
-		if err != nil {
-			logger.Errorf("failed to run helm command: %s: %w", cli, err)
-			return
-		}
-
+		// print
 		list.PrettyPrintTable(output)
+
 	},
 }
 

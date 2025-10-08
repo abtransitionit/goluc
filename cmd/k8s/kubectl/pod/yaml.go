@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package node
+package pod
 
 import (
 	"bufio"
@@ -19,32 +19,26 @@ import (
 )
 
 // Description
-var describeSDesc = "display single node details."
-var describeLDesc = describeSDesc
+var yamlSDesc = "display a single pod manifest."
+var yamlLDesc = yamlSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
+var YamlCmd = &cobra.Command{
+	Use:   "yaml",
+	Short: yamlSDesc,
+	Long:  yamlLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListNode(localFlag, "o1u", logger)
+		output, err := kubectl.ListPod(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 
-		// print list
+		// output
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID to describe
@@ -59,17 +53,21 @@ var DescribeCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-		fmt.Println(id, output)
 
 		// get resource property from ID and output
-		nodeName, err := list.GetFieldByID(output, id, 0)
+		podName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
+		podNs, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get pod namespace from ID: %s: %v", id, err)
+			return
+		}
 
 		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Describe()
+		cli, err := kubectl.Resource{Type: "pod", Name: podName, Ns: podNs}.Yaml()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -87,5 +85,5 @@ var DescribeCmd = &cobra.Command{
 }
 
 func init() {
-	DescribeCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
+	YamlCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 }

@@ -19,20 +19,14 @@ import (
 )
 
 // Description
-var describeSDesc = "display single node details."
-var describeLDesc = describeSDesc
+var yamlSDesc = "display a single node manifest."
+var yamlLDesc = yamlSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
+var YamlCmd = &cobra.Command{
+	Use:   "yaml",
+	Short: yamlSDesc,
+	Long:  yamlLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
@@ -69,7 +63,7 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Describe()
+		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Yaml()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -87,5 +81,5 @@ var DescribeCmd = &cobra.Command{
 }
 
 func init() {
-	DescribeCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
+	YamlCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 }

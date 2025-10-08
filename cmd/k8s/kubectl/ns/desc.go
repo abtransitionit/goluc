@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package node
+package ns
 
 import (
 	"bufio"
@@ -19,7 +19,7 @@ import (
 )
 
 // Description
-var describeSDesc = "display single node details."
+var describeSDesc = "display single namespace details."
 var describeLDesc = describeSDesc
 
 // root Command
@@ -27,23 +27,17 @@ var DescribeCmd = &cobra.Command{
 	Use:   "desc",
 	Short: describeSDesc,
 	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListNode(localFlag, "o1u", logger)
+		output, err := kubectl.ListNs(localFlag, "o1u", logger)
+		// cli, err := kubectl.Resource{Type: "ns"}.List()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-
 		// print list
 		list.PrettyPrintTable(output)
 
@@ -62,14 +56,14 @@ var DescribeCmd = &cobra.Command{
 		fmt.Println(id, output)
 
 		// get resource property from ID and output
-		nodeName, err := list.GetFieldByID(output, id, 0)
+		nsName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
 		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Describe()
+		cli, err := kubectl.Resource{Type: "ns", Name: nsName}.Describe()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
