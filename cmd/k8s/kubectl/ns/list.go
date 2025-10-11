@@ -15,7 +15,7 @@ var listSDesc = "list all cluster namespaces."
 var listLDesc = listSDesc
 
 // root Command
-var listCmd = &cobra.Command{
+var ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: listSDesc,
 	Long:  listLDesc,
@@ -36,5 +36,5 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
+	ListCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 }

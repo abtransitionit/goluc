@@ -25,7 +25,7 @@ var valueCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(listSDesc)
+		logger.Info(chartValueShortDesc)
 		cmd.Help()
 
 		// fmt.Println("\n🟦", chartValueShortDesc)

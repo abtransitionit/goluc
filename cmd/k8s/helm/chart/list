@@ -1,10 +1,9 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package repo
+package chart
 
 import (
-	"context"
 	"fmt"
 
 	helm "github.com/abtransitionit/gocore/k8s-helm"
@@ -15,15 +14,15 @@ import (
 )
 
 // Description
-var listChartSDesc = "list [helm] charts in a chart repository."
+var listSDesc = "list [helm] charts in a chart repository."
 
-var listChartLDesc = listChartSDesc
+var listLDesc = listSDesc
 
 // root Command
-var listChartCmd = &cobra.Command{
-	Use:   "listChart",
-	Short: listChartSDesc,
-	Long:  listChartLDesc,
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: listSDesc,
+	Long:  listLDesc,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
 			return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the repository (in the whitelist) to list the charts from, got %d", len(args))
@@ -38,8 +37,8 @@ var listChartCmd = &cobra.Command{
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(listChartSDesc)
-		ctx := context.Background()
+		logger.Info(listSDesc)
+		// ctx := context.Background()
 
 		// get repo key from args
 		repoKey := args[0]
@@ -58,7 +57,7 @@ var listChartCmd = &cobra.Command{
 		var err error
 
 		// define cli
-		cli, err := repo.ListChart(ctx, logger)
+		cli, err := repo.ListChart()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -86,6 +85,6 @@ var listChartCmd = &cobra.Command{
 }
 
 func init() {
-	listChartCmd.Flags().BoolP("installed", "i", false, "show installed Helm repos")
-	listChartCmd.Flags().BoolP("whitelist", "w", false, "show installable repos (organization whitelist)")
+	listCmd.Flags().BoolP("installed", "i", false, "show installed Helm repos")
+	listCmd.Flags().BoolP("whitelist", "w", false, "show installable repos (organization whitelist)")
 }

@@ -7,6 +7,7 @@ import (
 	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/run"
 	"github.com/spf13/cobra"
 )
 
@@ -31,16 +32,23 @@ var envCmd = &cobra.Command{
 			return
 		}
 
-		// run cli on local or remote
-		var output string
-		if localFlag {
-			logger.Debugf("running on local helm client: %s", cli)
-			output, err = helm.QueryHelm("", cli, logger)
-		} else {
-			remoteHelmHost := "o1u"
-			logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
-			output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
+		// play cli
+		output, err := run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
+		if err != nil {
+			logger.Errorf("failed to run command: %s: %w", cli, err)
+			return
 		}
+
+		// // run cli on local or remote
+		// var output string
+		// if localFlag {
+		// 	logger.Debugf("running on local helm client: %s", cli)
+		// 	output, err = helm.QueryHelm("", cli, logger)
+		// } else {
+		// 	remoteHelmHost := "o1u"
+		// 	logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
+		// 	output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
+		// }
 
 		if err != nil {
 			logger.Errorf("failed to run helm command: %s: %w", cli, err)

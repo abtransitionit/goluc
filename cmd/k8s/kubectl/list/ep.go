@@ -5,6 +5,7 @@ package list
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,7 @@ func init() {
 	podListCmd.Use = "pod"
 	podListCmd.Short = "List pods"
 
-	nsListCmd := *pod.ListCmd
+	nsListCmd := *ns.ListCmd
 	nsListCmd.Use = "ns"
 	nsListCmd.Short = "List namespaces"
 

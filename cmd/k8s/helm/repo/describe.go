@@ -19,25 +19,24 @@ import (
 )
 
 // Description
-var deleteSDesc = "delete a repo."
-var deleteLDesc = deleteSDesc + `
-- This command delete the helm repo by just updating the Helm client configuration file in the user's home directory.
-`
+var listChartSDesc = "list [helm] charts in a chart repository."
+
+var listChartLDesc = listChartSDesc
 
 // root Command
-var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: deleteSDesc,
-	Long:  deleteLDesc,
+var DescribeCmd = &cobra.Command{
+	Use:   "desc",
+	Short: listChartSDesc,
+	Long:  listChartLDesc,
 	Example: fmt.Sprintf(`
-  # add helm repo
-  %[1]s repo add myrepo https://charts.bitnami.com/bitnami	
+# list chart in repo cilium 
+  %[1]s chart list cilium
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(deleteSDesc)
+		logger.Info(listChartSDesc)
 		// ctx := context.Background()
 
 		// get list of installed repos
@@ -70,10 +69,8 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		fmt.Println("\nDeleting repo: ", repoName)
-
 		// define cli
-		cli, err := helm.HelmRepo{Name: repoName}.Delete()
+		cli, err := helm.HelmRepo{Name: repoName}.ListChart()
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -89,4 +86,9 @@ var deleteCmd = &cobra.Command{
 		list.PrettyPrintTable(output)
 
 	},
+}
+
+func init() {
+	DescribeCmd.Flags().BoolP("installed", "i", false, "show installed Helm repos")
+	DescribeCmd.Flags().BoolP("whitelist", "w", false, "show installable repos (organization whitelist)")
 }

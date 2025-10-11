@@ -5,6 +5,7 @@ package chart
 
 import (
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
 	"github.com/spf13/cobra"
 )
 
@@ -29,8 +30,11 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	repoListCmd := *repo.DescribeCmd
+	repoListCmd.Use = "list"
+
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 	EpCmd.AddCommand(describeCmd)
-	EpCmd.AddCommand(listCmd)
+	EpCmd.AddCommand(&repoListCmd)
 	EpCmd.AddCommand(valueCmd)
 }

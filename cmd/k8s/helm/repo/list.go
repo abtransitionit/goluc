@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package repo
 
 import (
-	"context"
 	"fmt"
 
 	helm "github.com/abtransitionit/gocore/k8s-helm"
@@ -15,7 +14,7 @@ import (
 )
 
 // Description
-var listSDesc = "list helm repositories that exist in the Helm client configuration file."
+var listSDesc = "list installed helm repositories (ie. that exist in the Helm client configuration file)."
 var listLDesc = listSDesc
 
 // root Command
@@ -38,7 +37,7 @@ var listCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 		logger.Info(listSDesc)
-		ctx := context.Background()
+		// ctx := context.Background()
 
 		// Read flags
 		showInstalled, _ := cmd.Flags().GetBool("installed")
@@ -58,29 +57,10 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// Here we want to list installed repos - define var needed by cli
-		repo := helm.HelmRepo{}
-
-		// define cli
-		cli, err := repo.List(ctx, logger)
+		// Here we want to list installed repos - get list
+		output, err := helm.ListRepo(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
-			return
-		}
-
-		// run cli on local or remote
-		var output string
-		if localFlag {
-			logger.Debugf("running on local helm client: %s", cli)
-			output, err = helm.QueryHelm("", cli, logger)
-		} else {
-			remoteHelmHost := "o1u"
-			logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
-			output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
-		}
-
-		if err != nil {
-			logger.Errorf("failed to run helm command: %s: %w", cli, err)
 			return
 		}
 

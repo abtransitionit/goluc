@@ -29,6 +29,6 @@ func init() {
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 	EpCmd.AddCommand(addCmd)
 	EpCmd.AddCommand(listCmd)
-	EpCmd.AddCommand(listChartCmd)
+	EpCmd.AddCommand(DescribeCmd)
 	EpCmd.AddCommand(deleteCmd)
 }
