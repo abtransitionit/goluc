@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var forceFlag bool
+var localFlag bool
 
 // Description
 var epSDesc = "managing helm release."
@@ -27,8 +27,9 @@ var EpCmd = &cobra.Command{
 	},
 }
 
-// func init() {
-// 	EpCmd.AddCommand(createCmd)
-// 	EpCmd.AddCommand(listCmd)
-// 	EpCmd.AddCommand(deleteCmd)
-// }
+func init() {
+	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
+	EpCmd.AddCommand(createCmd)
+	EpCmd.AddCommand(listCmd)
+	EpCmd.AddCommand(deleteCmd)
+}

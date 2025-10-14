@@ -25,6 +25,7 @@ var envCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 		logger.Info(epSDesc)
+
 		// define cli
 		cli, err := helm.GetEnv()
 		if err != nil {
@@ -38,17 +39,6 @@ var envCmd = &cobra.Command{
 			logger.Errorf("failed to run command: %s: %w", cli, err)
 			return
 		}
-
-		// // run cli on local or remote
-		// var output string
-		// if localFlag {
-		// 	logger.Debugf("running on local helm client: %s", cli)
-		// 	output, err = helm.QueryHelm("", cli, logger)
-		// } else {
-		// 	remoteHelmHost := "o1u"
-		// 	logger.Debugf("running on remote helm client: %s : %s", remoteHelmHost, cli)
-		// 	output, err = helm.QueryHelm(remoteHelmHost, cli, logger)
-		// }
 
 		if err != nil {
 			logger.Errorf("failed to run helm command: %s: %w", cli, err)

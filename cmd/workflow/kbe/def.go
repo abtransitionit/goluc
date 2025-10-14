@@ -5,6 +5,7 @@ package kbe
 
 import (
 	coregocli "github.com/abtransitionit/gocore/gocli"
+	core_cilium "github.com/abtransitionit/gocore/k8s-cilium"
 	core_helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
@@ -12,10 +13,10 @@ import (
 	linuxk8s "github.com/abtransitionit/golinux/k8s"
 	liuxoservice "github.com/abtransitionit/golinux/oservice"
 	linuxkernel "github.com/abtransitionit/golinux/oskernel"
-	"github.com/abtransitionit/gotask/cilium"
 	"github.com/abtransitionit/gotask/dnfapt"
 	"github.com/abtransitionit/gotask/gocli"
 	taskk8s "github.com/abtransitionit/gotask/k8s"
+	task_cilium "github.com/abtransitionit/gotask/k8s-cilium"
 	helm "github.com/abtransitionit/gotask/k8s-helm"
 	"github.com/abtransitionit/gotask/luc"
 	"github.com/abtransitionit/gotask/oservice"
@@ -97,6 +98,10 @@ var (
 		K8sServiceCidr: "172.16.0.0/16",
 		CrSocketName:   "unix:///var/run/crio/crio.sock",
 	}
+	ciliumConf = core_cilium.CiliumConf{
+		K8sPodCidr:   k8sConf.K8sPodCidr,
+		K8sApiServer: "o1u",
+	}
 )
 
 func init() {
@@ -139,7 +144,7 @@ func init() {
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCliCplane"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
-		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium on all nodes.", cilium.InstallCniCilium, []string{"installHelmRepo"}),
+		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium on all nodes.", task_cilium.InstallCniCilium, []string{"installHelmRepo"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")

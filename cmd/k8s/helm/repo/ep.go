@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var forceFlag bool
 var localFlag bool
 
 // Description

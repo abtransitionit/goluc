@@ -4,9 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cilium
 
 import (
-	"fmt"
-
 	cilium "github.com/abtransitionit/gocore/k8s-cilium"
+	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/spf13/cobra"
 )
@@ -33,8 +32,8 @@ var statusCmd = &cobra.Command{
 			return
 		}
 
-		// fmt.Print(output)
-		fmt.Println(output)
+		// fmt.Println(output)
+		list.PrettyPrintTable(output)
 
 	},
 }

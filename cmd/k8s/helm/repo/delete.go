@@ -50,7 +50,7 @@ var deleteCmd = &cobra.Command{
 		// print
 		list.PrettyPrintTable(output)
 
-		// Ask user which ID to describe
+		// Ask user which ID (to choose) from the printed list
 		fmt.Print("\nWhich item do you want to describe (enter ID): ")
 
 		// convert user input to int
@@ -63,7 +63,7 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		// get resource property from ID and output
+		// define resource property from ID and output
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
