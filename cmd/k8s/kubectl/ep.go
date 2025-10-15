@@ -8,6 +8,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/spf13/cobra"
 )
 
@@ -29,4 +30,5 @@ func init() {
 	EpCmd.AddCommand(ns.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(pod.EpCmd)
+	EpCmd.AddCommand(sa.EpCmd)
 }

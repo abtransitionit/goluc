@@ -7,6 +7,7 @@ import (
 	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -30,8 +31,22 @@ var deleteCmd = &cobra.Command{
 			logger.Errorf("failed to list helm repo: %v", err)
 			return
 		}
-
-		// print the list
+		// print
 		list.PrettyPrintTable(output)
+
+		// no action is needed based on the number of row
+		rowCount := list.CountNbLine(output)
+		if rowCount == 1 {
+			logger.Warn("no item to delete")
+			return
+		}
+
+		// Ask user which ID (to choose) from the printed list
+		id, err := ui.AskUserInt("\nWhich item do you want to delete (enter ID): ")
+		if err != nil {
+			logger.Errorf("invalid ID: %v", err)
+			return
+		}
+		logger.Infof("deleting item: %s", id)
 	},
 }

@@ -6,11 +6,9 @@ package node
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/run"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/spf13/cobra"
 )
@@ -52,24 +50,16 @@ var YamlCmd = &cobra.Command{
 			return
 		}
 
-		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Yaml()
+		// define object from property
+		node := kubectl.Resource{Type: "node", Name: nodeName}
+
+		// get detail
+		output, err = kubectl.YamlNode(localFlag, "o1u", node, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 
-		// play cli
-		output, err = run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
-		if err != nil {
-			logger.Errorf("failed to run command: %s: %w", cli, err)
-			return
-		}
-
 		fmt.Println(output)
 	},
-}
-
-func init() {
-	YamlCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
 }

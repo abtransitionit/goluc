@@ -16,9 +16,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// flags
+var filePathFlag string
+
 // Description
 var createSDesc = "create a [helm] release from a [helm] chart."
-
 var createLDesc = createSDesc
 
 // root Command
@@ -36,7 +38,7 @@ var createCmd = &cobra.Command{
 		logger := logx.GetLogger()
 		logger.Info(createSDesc)
 
-		// get the list of helm repositories
+		// 1 - get the list of helm repositories
 		output, err := helm.ListRepo(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to list helm repo: %v", err)
@@ -63,7 +65,7 @@ var createCmd = &cobra.Command{
 		// define object from the resource property
 		helmRepo := helm.HelmRepo{Name: repoName}
 
-		// get the list of charts in this repo
+		// 2 - get the list of charts in this repo
 		output, err = helm.ListChart(localFlag, "o1u", helmRepo, logger)
 		if err != nil {
 			logger.Errorf("failed to list helm charts: %v", err)
@@ -95,7 +97,7 @@ var createCmd = &cobra.Command{
 		// define object from the resource property
 		helmChart := helm.HelmChart{FullName: chartName, Version: chartVersion, Repo: helmRepo}
 
-		// get the list of k8s namespaces
+		// 3 - get the list of k8s namespaces
 		output, err = kubectl.ListNs(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to list helm repo: %v", err)
@@ -126,10 +128,16 @@ var createCmd = &cobra.Command{
 			return
 		}
 
-		// define object from the resource property
-		helmRelease := helm.HelmRelease{Name: helmReleaseName, Repo: helmRepo, Chart: helmChart, Namespace: k8sNsName}
+		// 4 - define object from the resource property
+		helmRelease := helm.HelmRelease{
+			Name:      helmReleaseName,
+			Repo:      helmRepo,
+			Chart:     helmChart,
+			Namespace: k8sNsName,
+			ValueFile: filePathFlag,
+		}
 
-		// create release in k8s
+		// 5 - create release in k8s
 		output, err = helm.CreateRelease(localFlag, "o1u", helmRelease, logger)
 		if err != nil {
 			logger.Errorf("failed to create helm release: %v", err)
@@ -142,6 +150,5 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	createCmd.Flags().BoolP("installed", "i", false, "show installed Helm repos")
-	createCmd.Flags().BoolP("whitelist", "w", false, "show installable repos (organization whitelist)")
+	createCmd.Flags().StringVarP(&filePathFlag, "file", "f", "", "The path to the values file")
 }

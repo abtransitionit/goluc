@@ -47,6 +47,13 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
+		// no action is needed based on the number of row
+		rowCount := list.CountNbLine(output)
+		if rowCount == 1 {
+			logger.Warn("no item to delete")
+			return
+		}
+
 		// print
 		list.PrettyPrintTable(output)
 

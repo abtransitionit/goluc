@@ -9,7 +9,6 @@ import (
 	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/run"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
@@ -64,19 +63,13 @@ var addCmd = &cobra.Command{
 			return
 		}
 
-		fmt.Println("\nAdding repo: ", repoName)
+		// define object from the resource property
+		helmRepo := helm.HelmRepo{Name: repoName, Url: repoUrl}
 
-		// define cli
-		cli, err := helm.HelmRepo{Name: repoName, Url: repoUrl}.Add()
+		// Add repo
+		output, err = helm.AddRepo(localFlag, "o1u", helmRepo, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
-			return
-		}
-
-		// play cli
-		output, err = run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
-		if err != nil {
-			logger.Errorf("failed to run command: %s: %w", cli, err)
 			return
 		}
 

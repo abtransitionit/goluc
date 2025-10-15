@@ -69,7 +69,3 @@ var DescribeCmd = &cobra.Command{
 		fmt.Println(output)
 	},
 }
-
-func init() {
-	DescribeCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
-}

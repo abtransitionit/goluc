@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package ns
+package sa
 
 import (
 	"github.com/spf13/cobra"
@@ -11,12 +11,12 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "manage k8s namespaces."
+var epSDesc = "manage k8s ServiceAccount."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "ns",
+	Use:   "sa",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {

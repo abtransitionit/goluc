@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package ns
+package sa
 
 import (
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
@@ -11,7 +11,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all cluster namespaces."
+var listSDesc = "list all ServiceAccount."
 var listLDesc = listSDesc
 
 // root Command
@@ -24,13 +24,14 @@ var ListCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListNs(localFlag, "o1u", logger)
-		// cli, err := kubectl.Resource{Type: "ns"}.List()
+		output, err := kubectl.ListSa(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-		// print list
+
+		// print
 		list.PrettyPrintTable(output)
+
 	},
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +41,12 @@ func init() {
 	nsListCmd.Use = "ns"
 	nsListCmd.Short = "List namespaces"
 
+	saListCmd := *sa.ListCmd
+	saListCmd.Use = "sa"
+	saListCmd.Short = "List serviceAccounts"
+
 	EpCmd.AddCommand(&nodeListCmd)
 	EpCmd.AddCommand(&podListCmd)
 	EpCmd.AddCommand(&nsListCmd)
+	EpCmd.AddCommand(&saListCmd)
 }

@@ -69,7 +69,3 @@ var YamlCmd = &cobra.Command{
 
 	},
 }
-
-func init() {
-	YamlCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "uses by default the remote Helm client unless the flag is provided (it will use the local Helm client)")
-}
