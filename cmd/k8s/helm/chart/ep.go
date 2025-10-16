@@ -38,4 +38,5 @@ func init() {
 	EpCmd.AddCommand(createCmd)
 	EpCmd.AddCommand(&repoListCmd)
 	EpCmd.AddCommand(valueCmd)
+	EpCmd.AddCommand(kindCmd)
 }

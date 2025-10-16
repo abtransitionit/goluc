@@ -24,7 +24,6 @@ var describeCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 		logger.Info(describeSDesc)
-		cmd.Help()
 
 	},
 }

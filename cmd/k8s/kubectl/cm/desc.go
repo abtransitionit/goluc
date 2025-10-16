@@ -1,35 +1,33 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sa
+package cm
 
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/run"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var yamlSDesc = "display the manifest for a single ServiceAccount."
-var yamlLDesc = yamlSDesc
+var describeSDesc = "display details for a single ConfigMap."
+var describeLDesc = describeSDesc
 
 // root Command
-var YamlCmd = &cobra.Command{
-	Use:   "yaml",
-	Short: yamlSDesc,
-	Long:  yamlLDesc,
+var DescribeCmd = &cobra.Command{
+	Use:   "desc",
+	Short: describeSDesc,
+	Long:  describeLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListSa(localFlag, "o1u", logger)
+		output, err := kubectl.ListCm(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -45,24 +43,25 @@ var YamlCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
-		saName, err := list.GetFieldByID(output, id, 0)
+		// define object properties from ID and output
+		cmName, err := list.GetFieldByID(output, id, 1)
+		if err != nil {
+			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			return
+		}
+		cmNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
-		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Yaml()
+		// define an object from its properties
+		cm := kubectl.Resource{Type: "cm", Name: cmName, Ns: cmNs}
+
+		// operate on this object
+		output, err = kubectl.DescribeCm(localFlag, "o1u", cm, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
-			return
-		}
-
-		// play cli
-		output, err = run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
-		if err != nil {
-			logger.Errorf("failed to run command: %s: %w", cli, err)
 			return
 		}
 

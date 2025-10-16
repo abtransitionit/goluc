@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var describeSDesc = "display single node details."
+var describeSDesc = "display details for a single ServiceAccount."
 var describeLDesc = describeSDesc
 
 // root Command

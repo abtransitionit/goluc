@@ -47,6 +47,28 @@ var deleteCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-		logger.Infof("deleting item: %s", id)
+		// defrine resource property from ID and output
+		releaseName, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
+			return
+		}
+		nsName, err := list.GetFieldByID(output, id, 1)
+		if err != nil {
+			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
+			return
+		}
+		// define object from the resource property
+		helmRelease := helm.HelmRelease{Name: releaseName, Namespace: nsName}
+
+		// delete the helm object
+		output, err = helm.DeleteRelease(localFlag, "o1u", helmRelease, logger)
+		if err != nil {
+			logger.Errorf("failed to list helm charts: %v", err)
+			return
+		}
+
+		// print
+		list.PrettyPrintTable(output)
 	},
 }

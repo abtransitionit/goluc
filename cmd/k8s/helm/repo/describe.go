@@ -15,24 +15,24 @@ import (
 )
 
 // Description
-var listChartSDesc = "list [helm] charts in a chart repository."
+var describeSDesc = "list [helm] charts in a chart repository."
 
-var listChartLDesc = listChartSDesc
+var describeLDesc = describeSDesc
 
 // root Command
 var DescribeCmd = &cobra.Command{
 	Use:   "desc",
-	Short: listChartSDesc,
-	Long:  listChartLDesc,
+	Short: describeSDesc,
+	Long:  describeLDesc,
 	Example: fmt.Sprintf(`
-# list chart in repo cilium 
+  # list chart in repo cilium 
   %[1]s chart list cilium
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(listChartSDesc)
+		logger.Info(describeSDesc)
 		// ctx := context.Background()
 
 		// get list of installed repos

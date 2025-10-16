@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var yamlSDesc = "display a single node manifest."
+var yamlSDesc = "display manifest for a single ServiceAccount."
 var yamlLDesc = yamlSDesc
 
 // root Command

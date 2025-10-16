@@ -1,36 +1,32 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package release
+package cm
 
 import (
-	"github.com/abtransitionit/gocore/logx"
 	"github.com/spf13/cobra"
 )
 
+// var
 var localFlag bool
 
 // Description
-var epSDesc = "managing helm release."
+var epSDesc = "manage k8s ConfigMap."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "release",
+	Use:   "cm",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		// define ctx and logger
-		logger := logx.GetLogger()
-		logger.Info(epSDesc)
 		cmd.Help()
 	},
 }
 
 func init() {
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
-	EpCmd.AddCommand(createCmd)
-	EpCmd.AddCommand(listCmd)
-	EpCmd.AddCommand(describeCmd)
-	EpCmd.AddCommand(deleteCmd)
+	EpCmd.AddCommand(ListCmd)
+	EpCmd.AddCommand(DescribeCmd)
+	EpCmd.AddCommand(YamlCmd)
 }

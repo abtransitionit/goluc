@@ -1,22 +1,20 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sa
+package cm
 
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/run"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var yamlSDesc = "display the manifest for a single ServiceAccount."
+var yamlSDesc = "display manifest for a single ConfigMap."
 var yamlLDesc = yamlSDesc
 
 // root Command
@@ -46,23 +44,24 @@ var YamlCmd = &cobra.Command{
 		}
 
 		// define resource property from ID and output
-		saName, err := list.GetFieldByID(output, id, 0)
+		saName, err := list.GetFieldByID(output, id, 1)
+		if err != nil {
+			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			return
+		}
+		saNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
-		// define cli
-		cli, err := kubectl.Resource{Type: "node", Name: nodeName}.Yaml()
+		// define object from property
+		sa := kubectl.Resource{Type: "sa", Name: saName, Ns: saNs}
+
+		// get detail
+		output, err = kubectl.YamlSa(localFlag, "o1u", sa, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
-			return
-		}
-
-		// play cli
-		output, err = run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
-		if err != nil {
-			logger.Errorf("failed to run command: %s: %w", cli, err)
 			return
 		}
 

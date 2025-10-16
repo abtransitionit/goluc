@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package release
+package chart
 
 import (
 	"fmt"
@@ -18,33 +18,33 @@ import (
 
 // flags
 var (
-	filePathFlag    string
-	chartPathFlag   string
-	releaseNameFlag string
+	filePathFlag  string
+	chartPathFlag string
 )
 
 // Description
-var createSDesc = "create a [helm] release from a [helm] chart in a [k8s] namespace."
-var createLDesc = createSDesc
+var kindSDesc = "list the kind of object a chart will create into the K8s cluster."
+var kindLDesc = kindSDesc
 
 // root Command
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: createSDesc,
-	Long:  createLDesc,
+var kindCmd = &cobra.Command{
+	Use:   "listKind",
+	Short: kindSDesc,
+	Long:  kindLDesc,
 	Example: fmt.Sprintf(`
-	# create the release kbe-cilium-prod from chart named cilium in repo named cilium 
-  %[1]s chart list cilium
+  # list the kind of object that will be created in the cluster for the chart: cilium
+  %[1]s chart listKind cilium/cilium
+  %[1]s chart listKind ~/wkspc/chart/nlos
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(createSDesc)
+		logger.Info(kindSDesc)
 
 		// check parameters
-		if releaseNameFlag == "" {
-			logger.Error("release name is required (--name)")
+		if chartPathFlag == "" {
+			logger.Error("chart localisation is required (--path)")
 			return
 		}
 
@@ -67,11 +67,6 @@ var createCmd = &cobra.Command{
 		}
 
 		// 14 - define resource property from ID and output
-		k8sNsName, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
-			return
-		}
 
 		// 2 - create the release if flag is set to use a chart on the FS
 		if chartPathFlag != "" {
@@ -80,16 +75,9 @@ var createCmd = &cobra.Command{
 			helmChart := helm.HelmChart{
 				FullName: chartPathFlag,
 			}
-			// 22 - define object from the resource property
-			helmRelease := helm.HelmRelease{
-				Name:      releaseNameFlag,
-				Namespace: k8sNsName,
-				Chart:     helmChart,
-				ValueFile: filePathFlag,
-			}
 
 			// 23 - create the release
-			output, err = helm.CreateRelease(localFlag, "o1u", helmRelease, logger)
+			output, err = helm.ListChartKind(localFlag, "o1u", helmChart, logger)
 			if err != nil {
 				logger.Errorf("failed to create helm release: %v", err)
 				return
@@ -162,17 +150,8 @@ var createCmd = &cobra.Command{
 		// define object from the resource property
 		helmChart := helm.HelmChart{FullName: chartName, Version: chartVersion, Repo: helmRepo}
 
-		// 4 - define object from the resource property
-		helmRelease := helm.HelmRelease{
-			Name:      releaseNameFlag,
-			Repo:      helmRepo,
-			Chart:     helmChart,
-			Namespace: k8sNsName,
-			ValueFile: filePathFlag,
-		}
-
 		// create the release
-		output, err = helm.CreateRelease(localFlag, "o1u", helmRelease, logger)
+		output, err = helm.ListChartKind(localFlag, "o1u", helmChart, logger)
 		if err != nil {
 			logger.Errorf("failed to create helm release: %v", err)
 			return
@@ -184,9 +163,7 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	createCmd.Flags().StringVarP(&filePathFlag, "file", "f", "", "The path to the values file")
-	createCmd.Flags().StringVarP(&chartPathFlag, "path", "p", "", "Path to a local unpacked chart directory")
-	createCmd.MarkFlagRequired("name")
-	createCmd.Flags().StringVarP(&releaseNameFlag, "name", "n", "", "Name of the Helm release (required)")
-
+	kindCmd.Flags().StringVarP(&filePathFlag, "file", "f", "", "The path to the values file")
+	kindCmd.Flags().StringVarP(&chartPathFlag, "path", "p", "", "Path to a local unpacked chart directory")
+	kindCmd.MarkFlagRequired("name")
 }
