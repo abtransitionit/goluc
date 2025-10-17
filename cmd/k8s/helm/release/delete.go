@@ -31,8 +31,6 @@ var deleteCmd = &cobra.Command{
 			logger.Errorf("failed to list helm repo: %v", err)
 			return
 		}
-		// print
-		list.PrettyPrintTable(output)
 
 		// no action is needed based on the number of row
 		rowCount := list.CountNbLine(output)
@@ -40,6 +38,9 @@ var deleteCmd = &cobra.Command{
 			logger.Warn("no item to delete")
 			return
 		}
+
+		// print
+		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nWhich item do you want to delete (enter ID): ")
