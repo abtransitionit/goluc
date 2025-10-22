@@ -34,3 +34,7 @@ func init() {
 	EpCmd.AddCommand(describeCmd)
 	EpCmd.AddCommand(deleteCmd)
 }
+
+// go run . k8s helm  release create  -d --name kbe-toto -p '~/wkspc/chart/mxtest' -f '~/wkspc/chart/myval.yaml'
+// go run . k8s helm  release list
+// go run . k8s helm  release delete

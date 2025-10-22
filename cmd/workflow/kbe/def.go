@@ -73,7 +73,7 @@ var (
 	sliceDaPackCplane = linuxdnfapt.SliceDaPack{
 		{Name: "kubectl"},
 	}
-	kFilename      = "99-kbe.conf"
+	kernelFilename = "99-kbe.conf"
 	sliceOsKModule = []string{"overlay", "br_netfilter"}
 	sliceOsKParam  = linuxkernel.SliceOsKParam{
 		{Kvp: "net.ipv4.ip_forward=1", Description: "Enable IPv4 packet forwarding - core kernel parameter"},
@@ -130,8 +130,8 @@ func init() {
 		corephase.NewPhase("installDaRepository", "provision Dnfapt package repositor(y)(ies).", dnfapt.InstallDaRepository(sliceDaRepo), []string{"updateApp"}),
 		corephase.NewPhase("installDaPackage", "provision Dnfapt package(s) on all nodes.", dnfapt.InstallDaPackage(sliceDaPackNode), []string{"installDaRepository"}),
 		corephase.NewPhase("installDaPackageCplane", "provision Dnfapt package(s) on CPlane only.", dnfapt.InstallDaPackage(sliceDaPackCplane, targetsCP), []string{"installDaPackage"}),
-		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kFilename), []string{"installDaPackage"}),
-		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kFilename), []string{"loadOsKernelModule"}),
+		corephase.NewPhase("loadOsKernelModule", "load OS kernel module(s).", taskoskernel.LoadOsKModule(sliceOsKModule, kernelFilename), []string{"installDaPackage"}),
+		corephase.NewPhase("loadOsKernelParam", "set OS kernel paramleter(s).", taskoskernel.LoadOsKParam(sliceOsKParam, kernelFilename), []string{"loadOsKernelModule"}),
 		corephase.NewPhase("confSelinux", "Configure Selinux.", selinux.ConfigureSelinux(), []string{"loadOsKernelParam"}),
 		corephase.NewPhase("enableOsService", "enable OS services to start after a reboot", oservice.EnableOsService(sliceOsServiceEnable), []string{"confSelinux"}),
 		corephase.NewPhase("startOsService", "start OS services for current session", oservice.StartOsService(sliceOsServiceStart), []string{"confSelinux"}),
@@ -144,7 +144,7 @@ func init() {
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCliCplane"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
-		corephase.NewPhase("setCilium", "install and configure the CNI: Cilium on all nodes.", task_cilium.InstallCniCilium, []string{"installHelmRepo"}),
+		corephase.NewPhase("createCiliumRelease", "install and configure the CNI: Cilium on all nodes.", task_cilium.InstallCniCilium, []string{"installHelmRepo"}),
 	)
 	if err != nil {
 		logger.ErrorWithStack(err, "failed to build workflow: %v")
