@@ -165,9 +165,9 @@ var createCmd = &cobra.Command{
 		}
 		// 3 - create or dryCreate the release
 		if dryRun {
-			output, err = helm.DryCreateRelease(localFlag, "o1u", helmRelease, logger)
+			output, err = helmRelease.DryCreate(localFlag, "o1u", logger)
 		} else {
-			output, err = helm.CreateRelease(localFlag, "o1u", helmRelease, logger)
+			output, err = helmRelease.Create(localFlag, "o1u", logger)
 		}
 		if err != nil {
 			logger.Errorf("failed to create helm release: %v", err)

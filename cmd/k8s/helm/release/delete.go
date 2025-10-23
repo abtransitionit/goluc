@@ -26,7 +26,7 @@ var deleteCmd = &cobra.Command{
 		logger.Info(createSDesc)
 
 		// list release
-		output, err := helm.ListRelease(localFlag, "o1u", logger)
+		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to list helm repo: %v", err)
 			return
@@ -63,7 +63,7 @@ var deleteCmd = &cobra.Command{
 		helmRelease := helm.HelmRelease{Name: releaseName, Namespace: nsName}
 
 		// delete the helm object
-		output, err = helm.DeleteRelease(localFlag, "o1u", helmRelease, logger)
+		output, err = helmRelease.Delete(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to list helm charts: %v", err)
 			return

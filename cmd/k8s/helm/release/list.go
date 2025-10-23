@@ -27,7 +27,7 @@ var listCmd = &cobra.Command{
 		// ctx := context.Background()
 
 		// get list
-		output, err := helm.ListRelease(localFlag, "o1u", logger)
+		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return

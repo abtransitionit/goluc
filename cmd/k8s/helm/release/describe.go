@@ -36,7 +36,7 @@ var describeCmd = &cobra.Command{
 		// ctx := context.Background()
 
 		// get list of installed releases
-		output, err := helm.ListRelease(localFlag, "o1u", logger)
+		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -75,7 +75,7 @@ var describeCmd = &cobra.Command{
 		helmRelease := helm.HelmRelease{Name: releaseName, Namespace: releaseK8sNs}
 
 		// operate on this object
-		output, err = helm.DescribeRelease(localFlag, "o1u", helmRelease, logger)
+		output, err = helmRelease.Describe(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to list helm charts: %v", err)
 			return

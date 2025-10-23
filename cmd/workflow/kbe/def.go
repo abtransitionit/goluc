@@ -91,7 +91,13 @@ var (
 		{Name: "cilium"},
 		{Name: "kdabsh"},
 	}
-
+	sliceHelmRelease = []core_helm.HelmRelease{
+		{
+			Name:      "kbe-mxtest",
+			Chart:     core_helm.HelmChart{FullName: "~/wkspc/chart/mxtest"},
+			Namespace: "default",
+		},
+	}
 	k8sConf = linuxk8s.K8sConf{
 		K8sVersion:     K8sVersion,
 		K8sPodCidr:     "192.168.0.0/16",
@@ -144,6 +150,7 @@ func init() {
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCliCplane"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
+		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo2(sliceHelmRepo, targetsCP), []string{"setPathEnvar"}),
 		corephase.NewPhase("createCiliumRelease", "install and configure the CNI: Cilium on all nodes.", task_cilium.InstallCniCilium, []string{"installHelmRepo"}),
 	)
 	if err != nil {
