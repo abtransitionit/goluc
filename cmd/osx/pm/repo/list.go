@@ -129,9 +129,7 @@ var listCmd = &cobra.Command{
 			logger.Errorf("failed to list repos: %v", err)
 			return
 		}
-		// logger.Info(output)
 		fmt.Println(output)
-		list.PrettyPrintTable(output)
 
 	},
 }
