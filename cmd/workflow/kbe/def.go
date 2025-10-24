@@ -150,7 +150,7 @@ func init() {
 		corephase.NewPhase("createRcFile", "create a custom RC file in user's home.", util.CreateCustomRcFile(customRcFileName), []string{"installGoCliCplane"}),
 		corephase.NewPhase("setPathEnvar", "configure PATH envvar into current user's custom RC file.", util.SetPath(binFolderPath, customRcFileName), []string{"createRcFile"}),
 		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo(sliceHelmRepo), []string{"setPathEnvar"}),
-		corephase.NewPhase("installHelmRepo", "install Helm chart repositories.", helm.InstallHelmRepo2(sliceHelmRepo, targetsCP), []string{"setPathEnvar"}),
+		// corephase.NewPhase("installHelmRepo2", "install Helm chart repositories.", helm.InstallHelmRepo2(sliceHelmRepo, targetsCP), []string{"setPathEnvar"}),
 		corephase.NewPhase("createCiliumRelease", "install and configure the CNI: Cilium on all nodes.", task_cilium.InstallCniCilium, []string{"installHelmRepo"}),
 	)
 	if err != nil {

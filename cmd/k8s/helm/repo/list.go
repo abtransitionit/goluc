@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var listSDesc = "list installed helm repositories (ie. that exist in the Helm client configuration file)."
+var listSDesc = "list installed helm repositories (ie. that exist in the Helm client configuration file) or in the whitelist (ie. authorized Helm repo)."
 var listLDesc = listSDesc
 
 // root Command
@@ -57,7 +57,7 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// Here we want to list installed repos - get list
+		// list installed repos
 		output, err := helm.ListRepo(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)

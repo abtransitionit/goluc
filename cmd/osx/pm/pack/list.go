@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package repo
+package pack
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var listSDesc = "list installed helm repositories (ie. that exist in the Helm client configuration file)."
+var listSDesc = "list installed native os packages."
 var listLDesc = listSDesc
 
 // root Command

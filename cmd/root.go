@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/do"
 	"github.com/abtransitionit/goluc/cmd/goprj"
 	"github.com/abtransitionit/goluc/cmd/k8s"
+	"github.com/abtransitionit/goluc/cmd/osx"
 	"github.com/abtransitionit/goluc/cmd/property"
 	"github.com/abtransitionit/goluc/cmd/test"
 	"github.com/abtransitionit/goluc/cmd/workflow"
@@ -52,5 +53,6 @@ func init() {
 	rootCmd.AddCommand(do.EpCmd)
 	rootCmd.AddCommand(api.EpCmd)
 	rootCmd.AddCommand(k8s.EpCmd)
+	rootCmd.AddCommand(osx.EpCmd)
 	// rootCmd.AddCommand(prop.PropCmd)
 }
