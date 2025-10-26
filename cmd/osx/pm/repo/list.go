@@ -5,7 +5,6 @@ package repo
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -52,7 +51,7 @@ var listCmd = &cobra.Command{
 			showInstalled = true
 		}
 
-		// list whitelist repos
+		// 1 - list whitelist repos
 		if showWhitelist {
 			logger.Info("Installable repositories (ie. organization whitelist):")
 
@@ -62,7 +61,8 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// define list Vms
+		// 1 - list installed repos
+		// 11 - define list Vms
 		vmNames := []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
 
 		// no action is needed based on the number of row
@@ -72,7 +72,7 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// print the list
+		// 12 - print the list
 		formatedString = "NAME\n" + strings.Join(vmNames, "\n")
 		list.PrettyPrintTable(formatedString)
 
@@ -111,25 +111,31 @@ var listCmd = &cobra.Command{
 
 		logger.Debugf("family/distro: %s / %s", osFamily, osDistro)
 
-		// choose repo manager
+		// 13 - get the  package manager
 		repo := da.Repo{Name: "some-repo"} // TODO: from flag/args
-		switch osFamily {
-		case "debian":
-			repo.Mgr = &da.AptManager{Repo: &repo}
-		case "rhel", "fedora":
-			repo.Mgr = &da.DnfManager{Repo: &repo, Distro: osDistro}
-		default:
-			logger.Errorf("unsupported OS family/distro: %s", osFamily, osDistro)
-			return
-		}
-
-		// Get list repo
-		output, err := repo.List(context.Background(), false, vmName, logger)
+		out, err := repo.GetCliBuilder(osFamily, osDistro)
 		if err != nil {
-			logger.Errorf("failed to list repos: %v", err)
+			logger.Errorf("failed to get package manager: %v", err)
 			return
 		}
-		fmt.Println(output)
+		logger.Errorf("%v", out)
+		// switch osFamily {
+		// case "debian":
+		// 	repo.Cbd = &da.AptManager{Repo: &repo}
+		// case "rhel", "fedora":
+		// 	repo.Cbd = &da.DnfManager{Repo: &repo, Distro: osDistro}
+		// default:
+		// 	logger.Errorf("unsupported OS family/distro: %s", osFamily, osDistro)
+		// 	return
+		// }
+
+		// // Get list repo
+		// output, err := repo.List(context.Background(), false, vmName, logger)
+		// if err != nil {
+		// 	logger.Errorf("failed to list repos: %v", err)
+		// 	return
+		// }
+		// fmt.Println(output)
 
 	},
 }
