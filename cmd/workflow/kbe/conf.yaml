@@ -1,23 +1,24 @@
 cmdName: kbe
 description: Manage Kubernetes clusters.
-k8sVersion: 1.32.0
-k8sVersionShort: 1.32
 customRcFileName: ".profile.luc"
 binFolderPath: "/usr/local/bin"
+
 
 node:
   controlPlane: ["o1u"]
   worker: ["o2a", "o3r", "o4f", "o5d"]
 
-go:
-  cli:
-    - { name: "helm", version: "3.17.3" }
-    - { name: "cilium", version: "0.18.7" }
+goCli:
+  cluster:
+  - { name: "cilium", version: "0.18.7" }
+  controlPlane:
+  - { name: "helm", version: "3.17.3" }
     
 da:
-  repos:
-    - { name: "crio", fileName: "kbe-crio", version: "1.32" }
-    - { name: "k8s", fileName: "kbe-k8s", version: "1.32" }
+  repo:
+    node:
+      - { name: "crio", fileName: "kbe-crio", version: "1.32" }
+      - { name: "k8s", fileName: "kbe-k8s", version: "1.32" }
   package:
     node:
       - { name: "crio" }
@@ -38,6 +39,9 @@ helm:
       namespace: "default"
 
 cluster:
-  PodCidr: "192.168.0.0/16"
-  ServiceCidr: "172.16.0.0/16"
+  podCidr: "192.168.0.0/16"
+  serviceCidr: "172.16.0.0/16"
   crSocketName: "unix:///var/run/crio/crio.sock"
+  version: 
+    full: 1.32.0
+    short: 1.32

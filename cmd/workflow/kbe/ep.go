@@ -25,5 +25,5 @@ var EpCmd = &cobra.Command{
 func init() {
 	EpCmd.AddCommand(runCmd)
 	EpCmd.AddCommand(showCmd)
-	EpCmd.AddCommand(testCmd)
+	EpCmd.AddCommand(confCmd)
 }

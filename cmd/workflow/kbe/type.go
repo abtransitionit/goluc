@@ -13,7 +13,6 @@ import (
 type Config struct {
 	CmdName          string `yaml:"cmdName"`
 	Description      string `yaml:"description"`
-	K8sVersion       string `yaml:"k8sVersion"`
 	K8sVersionShort  string `yaml:"k8sVersionShort"`
 	CustomRcFileName string `yaml:"customRcFileName"`
 	BinFolderPath    string `yaml:"binFolderPath"`
@@ -23,15 +22,24 @@ type Config struct {
 		Worker       []string `yaml:"worker"`
 	} `yaml:"node"`
 
-	Go struct {
-		Cli []struct {
+	GoCli struct {
+		Cluster []struct {
 			Name    string `yaml:"name"`
 			Version string `yaml:"version"`
-		} `yaml:"cli"`
-	} `yaml:"go"`
+		} `yaml:"cluster"`
+		ControlPlane []struct {
+			Name    string `yaml:"name"`
+			Version string `yaml:"version"`
+		} `yaml:"controlPlane"`
+	} `yaml:"goCli"`
 
 	Da struct {
-		Repo []struct {
+		Repo struct {
+			Node []struct {
+				Name     string `yaml:"name"`
+				FileName string `yaml:"fileName"`
+				Version  string `yaml:"version"`
+			} `yaml:"node"`
 			Name     string `yaml:"name"`
 			FileName string `yaml:"fileName"`
 			Version  string `yaml:"version"`
@@ -61,8 +69,12 @@ type Config struct {
 	} `yaml:"helm"`
 
 	Cluster struct {
-		PodCidr      string `yaml:"PodCidr"`
-		ServiceCidr  string `yaml:"ServiceCidr"`
+		Version struct {
+			Long  string `yaml:"full"`
+			Short string `yaml:"short"`
+		} `yaml:"version"`
+		PodCidr      string `yaml:"podCidr"`
+		ServiceCidr  string `yaml:"serviceCidr"`
 		CrSocketName string `yaml:"crSocketName"`
 	} `yaml:"cluster"`
 }
