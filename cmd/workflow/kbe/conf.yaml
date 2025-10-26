@@ -1,25 +1,43 @@
-k8sVersion: "1.32.0"
+cmdName: kbe
+description: Manage Kubernetes clusters.
+k8sVersion: 1.32.0
+k8sVersionShort: 1.32
 customRcFileName: ".profile.luc"
 binFolderPath: "/usr/local/bin"
 
-nodes:
+node:
   controlPlane: ["o1u"]
   worker: ["o2a", "o3r", "o4f", "o5d"]
 
-dnfapt:
+go:
+  cli:
+    - { name: "helm", version: "3.17.3" }
+    - { name: "cilium", version: "0.18.7" }
+    
+da:
   repos:
     - { name: "crio", fileName: "kbe-crio", version: "1.32" }
     - { name: "k8s", fileName: "kbe-k8s", version: "1.32" }
-  packages:
-    - { name: "crio" }
-    - { name: "kubeadm" }
-    - { name: "kubelet" }
+  package:
+    node:
+      - { name: "crio" }
+      - { name: "kubeadm" }
+      - { name: "kubelet" }
+    controlPlane:  
+      - { name: "kubectl" }
+    required:
+      - { name: "gnupg" }
 
 helm:
-  repos:
+  repo:
     - { name: "cilium" }
     - { name: "kdabsh" }
-  releases:
+  release:
     - name: "kbe-mxtest"
       chart: "~/wkspc/chart/mxtest"
       namespace: "default"
+
+cluster:
+  PodCidr: "192.168.0.0/16"
+  ServiceCidr: "172.16.0.0/16"
+  crSocketName: "unix:///var/run/crio/crio.sock"

@@ -7,27 +7,64 @@ package kbe
 import (
 	"os"
 
-	core_helm "github.com/abtransitionit/gocore/k8s-helm"
-	"github.com/abtransitionit/golinux/da"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	K8sVersion       string
-	CustomRcFileName string
-	BinFolderPath    string
-	Nodes            struct {
-		ControlPlane []string
-		Worker       []string
-	}
-	Dnfapt struct {
-		Repos    []da.Repo
-		Packages []da.Package
-	}
+	CmdName          string `yaml:"cmdName"`
+	Description      string `yaml:"description"`
+	K8sVersion       string `yaml:"k8sVersion"`
+	K8sVersionShort  string `yaml:"k8sVersionShort"`
+	CustomRcFileName string `yaml:"customRcFileName"`
+	BinFolderPath    string `yaml:"binFolderPath"`
+
+	Nodes struct {
+		ControlPlane []string `yaml:"controlPlane"`
+		Worker       []string `yaml:"worker"`
+	} `yaml:"node"`
+
+	Go struct {
+		Cli []struct {
+			Name    string `yaml:"name"`
+			Version string `yaml:"version"`
+		} `yaml:"cli"`
+	} `yaml:"go"`
+
+	Da struct {
+		Repo []struct {
+			Name     string `yaml:"name"`
+			FileName string `yaml:"fileName"`
+			Version  string `yaml:"version"`
+		} `yaml:"repo"`
+		Package struct {
+			ControlPlane []struct {
+				Name string `yaml:"name"`
+			} `yaml:"controlPlane"`
+			Node []struct {
+				Name string `yaml:"name"`
+			} `yaml:"node"`
+			Required []struct {
+				Name string `yaml:"name"`
+			} `yaml:"required"`
+		} `yaml:"package"`
+	} `yaml:"da"`
+
 	Helm struct {
-		Repos    []core_helm.HelmRepo
-		Releases []core_helm.HelmRelease
-	}
+		Repo []struct {
+			Name string `yaml:"name"`
+		} `yaml:"repo"`
+		Release []struct {
+			Name      string `yaml:"name"`
+			Chart     string `yaml:"chart"`
+			Namespace string `yaml:"namespace"`
+		} `yaml:"release"`
+	} `yaml:"helm"`
+
+	Cluster struct {
+		PodCidr      string `yaml:"PodCidr"`
+		ServiceCidr  string `yaml:"ServiceCidr"`
+		CrSocketName string `yaml:"crSocketName"`
+	} `yaml:"cluster"`
 }
 
 // Description: load yaml file. and return a struct
