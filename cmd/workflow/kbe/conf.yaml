@@ -1,0 +1,25 @@
+k8sVersion: "1.32.0"
+customRcFileName: ".profile.luc"
+binFolderPath: "/usr/local/bin"
+
+nodes:
+  controlPlane: ["o1u"]
+  worker: ["o2a", "o3r", "o4f", "o5d"]
+
+dnfapt:
+  repos:
+    - { name: "crio", fileName: "kbe-crio", version: "1.32" }
+    - { name: "k8s", fileName: "kbe-k8s", version: "1.32" }
+  packages:
+    - { name: "crio" }
+    - { name: "kubeadm" }
+    - { name: "kubelet" }
+
+helm:
+  repos:
+    - { name: "cilium" }
+    - { name: "kdabsh" }
+  releases:
+    - name: "kbe-mxtest"
+      chart: "~/wkspc/chart/mxtest"
+      namespace: "default"
