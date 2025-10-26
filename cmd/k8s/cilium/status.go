@@ -26,14 +26,13 @@ var statusCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// display status
-		output, err := cilium.DisplayStatus(localFlag, "o1u", logger)
+		output, err := cilium.Cilium{}.DisplayStatus(localFlag, "o1u", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 
-		// fmt.Println(output)
-		list.PrettyPrintTable(output)
+		list.PrettyPrintTableWithSkipLine(output, 1)
 
 	},
 }

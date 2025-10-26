@@ -5,6 +5,7 @@ package repo
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -109,33 +110,21 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		logger.Debugf("family/distro: %s / %s", osFamily, osDistro)
-
-		// 13 - get the  package manager
-		repo := da.Repo{Name: "some-repo"} // TODO: from flag/args
-		out, err := repo.GetCliBuilder(osFamily, osDistro)
+		// get the  package manager
+		repo := &da.Repo{Name: "some-repo"} // TODO: from flag/args
+		err = repo.GetCliBuilder(osFamily, osDistro)
 		if err != nil {
-			logger.Errorf("failed to get package manager: %v", err)
+			fmt.Printf("Failed to get CLI builder: %v\n", err)
 			return
 		}
-		logger.Errorf("%v", out)
-		// switch osFamily {
-		// case "debian":
-		// 	repo.Cbd = &da.AptManager{Repo: &repo}
-		// case "rhel", "fedora":
-		// 	repo.Cbd = &da.DnfManager{Repo: &repo, Distro: osDistro}
-		// default:
-		// 	logger.Errorf("unsupported OS family/distro: %s", osFamily, osDistro)
-		// 	return
-		// }
 
-		// // Get list repo
-		// output, err := repo.List(context.Background(), false, vmName, logger)
-		// if err != nil {
-		// 	logger.Errorf("failed to list repos: %v", err)
-		// 	return
-		// }
-		// fmt.Println(output)
+		// Get list repo
+		output, err := repo.List(context.Background(), false, vmName, logger)
+		if err != nil {
+			logger.Errorf("failed to list repos: %v", err)
+			return
+		}
+		fmt.Println(output)
 
 	},
 }
