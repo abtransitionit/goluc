@@ -1,10 +1,8 @@
-cmdName: kbe
-description: Manage Kubernetes clusters.
 customRcFileName: ".profile.luc"
 binFolderPath: "/usr/local/bin"
 
-
 node:
+  all: ["o1u", "o2a", "o3r", "o4f", "o5d"]
   controlPlane: ["o1u"]
   worker: ["o2a", "o3r", "o4f", "o5d"]
 
@@ -19,7 +17,7 @@ da:
     node:
       - { name: "crio", fileName: "kbe-crio", version: "1.32" }
       - { name: "k8s", fileName: "kbe-k8s", version: "1.32" }
-  package:
+  pkg:
     node:
       - { name: "crio" }
       - { name: "kubeadm" }
@@ -42,6 +40,4 @@ cluster:
   podCidr: "192.168.0.0/16"
   serviceCidr: "172.16.0.0/16"
   crSocketName: "unix:///var/run/crio/crio.sock"
-  version: 
-    full: 1.32.0
-    short: 1.32
+  k8sVersion:   "1.32.0"

@@ -10,10 +10,10 @@ import (
 // root Command
 var EpCmd = &cobra.Command{
 	Use:   cmdName,
-	Short: SDesc,
+	Short: sDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		logger.Infof("%s", SDesc)
+		logger.Infof("%s", sDesc)
 
 		// Default action
 		cmd.Help()

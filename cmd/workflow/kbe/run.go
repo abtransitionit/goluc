@@ -85,12 +85,6 @@ var runCmd = &cobra.Command{
 }
 
 func init() {
-	// var err error
-	// wkf, err = corephase.NewWorkflowFromPhases()
-	// if err != nil {
-	// 	logger.ErrorWithNoStack(err, "failed to build workflow")
-	// }
-
 	runCmd.Flags().StringSliceVarP(&skipPhaseRange, "skip-phase", "s", []string{}, "Phase(s) to skip by ID during execution")
 	runCmd.Flags().StringSliceVarP(&retainPhaseRange, "retain-phase", "r", []string{}, "Phase(s) to retain by ID during execution")
 	runCmd.Flags().BoolVar(&force, "force", false, "Security flag required to execute the workflow")
@@ -99,3 +93,9 @@ func init() {
 
 // skipPhases or retainPhases is a string that will be converted to an int slice by The Execute functions
 // possible value "2-3", "2-", "-5", "1,2,3"
+
+// var err error
+// wkf, err = corephase.NewWorkflowFromPhases()
+// if err != nil {
+// 	logger.ErrorWithNoStack(err, "failed to build workflow")
+// }

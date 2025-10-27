@@ -8,18 +8,20 @@ import (
 	"os"
 
 	"gopkg.in/yaml.v3"
+
+	linuxdnfapt "github.com/abtransitionit/golinux/dnfapt"
+	linuxk8s "github.com/abtransitionit/golinux/k8s"
 )
 
 type Config struct {
-	CmdName          string `yaml:"cmdName"`
-	Description      string `yaml:"description"`
 	K8sVersionShort  string `yaml:"k8sVersionShort"`
 	CustomRcFileName string `yaml:"customRcFileName"`
 	BinFolderPath    string `yaml:"binFolderPath"`
 
-	Nodes struct {
+	Node struct {
 		ControlPlane []string `yaml:"controlPlane"`
 		Worker       []string `yaml:"worker"`
+		All          []string `yaml:"all"`
 	} `yaml:"node"`
 
 	GoCli struct {
@@ -35,25 +37,15 @@ type Config struct {
 
 	Da struct {
 		Repo struct {
-			Node []struct {
-				Name     string `yaml:"name"`
-				FileName string `yaml:"fileName"`
-				Version  string `yaml:"version"`
-			} `yaml:"node"`
-			Name     string `yaml:"name"`
-			FileName string `yaml:"fileName"`
-			Version  string `yaml:"version"`
+			Node     linuxdnfapt.SliceDaRepo `yaml:"node"`
+			Name     string                  `yaml:"name"`
+			FileName string                  `yaml:"fileName"`
+			Version  string                  `yaml:"version"`
 		} `yaml:"repo"`
-		Package struct {
-			ControlPlane []struct {
-				Name string `yaml:"name"`
-			} `yaml:"controlPlane"`
-			Node []struct {
-				Name string `yaml:"name"`
-			} `yaml:"node"`
-			Required []struct {
-				Name string `yaml:"name"`
-			} `yaml:"required"`
+		Pkg struct {
+			ControlPlane linuxdnfapt.SliceDaPack `yaml:"controlPlane"`
+			Node         linuxdnfapt.SliceDaPack `yaml:"node"`
+			Required     linuxdnfapt.SliceDaPack `yaml:"required"`
 		} `yaml:"package"`
 	} `yaml:"da"`
 
@@ -68,19 +60,11 @@ type Config struct {
 		} `yaml:"release"`
 	} `yaml:"helm"`
 
-	Cluster struct {
-		Version struct {
-			Long  string `yaml:"full"`
-			Short string `yaml:"short"`
-		} `yaml:"version"`
-		PodCidr      string `yaml:"podCidr"`
-		ServiceCidr  string `yaml:"serviceCidr"`
-		CrSocketName string `yaml:"crSocketName"`
-	} `yaml:"cluster"`
+	Cluster linuxk8s.K8sConf `yaml:"cluster"`
 }
 
 // Description: load yaml file. and return a struct
-func LoadConfig(path string) (*Config, error) {
+func loadConfig(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
