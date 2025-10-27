@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
+	"github.com/abtransitionit/goluc/cmd/workflow/kindn"
 	"github.com/abtransitionit/goluc/cmd/workflow/om"
 	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
 	"github.com/abtransitionit/goluc/internal"
@@ -55,4 +56,5 @@ func init() {
 	EpCmd.AddCommand(kind.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
 	EpCmd.AddCommand(ovh.EpCmd)
+	EpCmd.AddCommand(kindn.EpCmd)
 }

@@ -4,7 +4,7 @@ module github.com/abtransitionit/goluc
 go 1.24.2
 
 // prod mode
-require github.com/spf13/cobra v1.9.1
+require github.com/spf13/cobra v1.10.1
 
 require (
 	github.com/abtransitionit/gocore v0.0.1
