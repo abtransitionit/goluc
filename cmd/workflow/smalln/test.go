@@ -1,18 +1,14 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kindn
+package smalln
 
 import (
-	"log"
 	"path"
-	"path/filepath"
 	"runtime"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/phase"
 	"github.com/abtransitionit/gocore/viperx"
-	"github.com/abtransitionit/gocore/yamlx"
 	"github.com/spf13/cobra"
 )
 
@@ -50,17 +46,6 @@ var testCmd = &cobra.Command{
 		logger.Infof("services: %v", services)
 		logger.Infof("envVars: %v", envVars)
 
-		// log
-		_, file, _, _ = runtime.Caller(0) // because it is not called directly but through GetSection
-		workflowPath := filepath.Join(path.Dir(file), "phase.yaml")
-		logger.Infof("Package: %s", workflowPath)
-
-		workflow, err := yamlx.LoadFile[phase.Workflow2](workflowPath)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		workflow.Print()
 		return nil
 
 	},

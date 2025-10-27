@@ -1,0 +1,196 @@
+phases:
+  checkVmAccess:
+    description: Check node is SSH reachable
+    node: all
+    fn: checkVmAccess
+    dependencies: []
+
+  copyAgent:
+    description: Copy LUC CLI agent
+    node: all
+    fn: copyAgent
+    dependencies:
+      - checkVmAccess
+
+  upgradeOs:
+    description: Upgrade native OS packages and repositories to version latest
+    node: all
+    fn: upgradeOs
+    dependencies:
+      - copyAgent
+
+  updateApp:
+    description: Provision required/missing native standard OS packages
+    node: all
+    fn: updateApp
+    params:
+      daPkgKey: da.pkg.node
+    dependencies:
+      - upgradeOs
+
+  installDaRepository:
+    description: Provision native OS package repository(ies)
+    node: all
+    fn: installDaRepository
+    params:
+      repoKey: da.repo.node
+    dependencies:
+      - updateApp
+
+  installDaPackage:
+    description: Provision native OS package(s)
+    node: all
+    fn: installDaPackage
+    params:
+      pkgKey: da.pkg.node
+    dependencies:
+      - installDaRepository
+
+  installDaPackageCplane:
+    description: Provision native OS package(s) for control plane
+    node: controlPlane
+    fn: installDaPackageCplane
+    params:
+      pkgKey: da.pkg.controlPlane
+      targetsKey: controlPlaneNodes
+    dependencies:
+      - installDaPackage
+
+  loadOsKernelModule:
+    description: Load OS kernel module(s)
+    node: all
+    fn: loadOsKernelModule
+    params:
+      modulesKey: osKernelModules
+      kernelFileKey: kernelFilename
+    dependencies:
+      - installDaPackage
+      - installDaPackageCplane
+
+  loadOsKernelParam:
+    description: Set OS kernel parameter(s)
+    node: all
+    fn: loadOsKernelParam
+    params:
+      paramsKey: osKernelParams
+      kernelFileKey: kernelFilename
+    dependencies:
+      - loadOsKernelModule
+
+  confSelinux:
+    description: Configure SELinux
+    node: all
+    fn: confSelinux
+    dependencies:
+      - loadOsKernelParam
+
+  enableOsService:
+    description: Enable OS services to start after a reboot
+    node: all
+    fn: enableOsService
+    params:
+      serviceKey: osServiceEnable
+    dependencies:
+      - confSelinux
+
+  startOsService:
+    description: Start OS services for current session
+    node: all
+    fn: startOsService
+    params:
+      serviceKey: osServiceStart
+    dependencies:
+      - confSelinux
+      - enableOsService
+
+  resetCPlane:
+    description: Reset the control plane node(s)
+    node: controlPlane
+    fn: resetCPlane
+    params:
+      targetsKey: controlPlaneNodes
+    dependencies:
+      - startOsService
+
+  initCPlane:
+    description: Initialize/bootstrap the cluster
+    node: controlPlane
+    fn: initCPlane
+    params:
+      targetsKey: controlPlaneNodes
+      clusterKey: clusterConfig
+    dependencies:
+      - resetCPlane
+
+  resetWorker:
+    description: Reset the worker node(s)
+    node: worker
+    fn: resetWorker
+    params:
+      targetsKey: workerNodes
+    dependencies:
+      - initCPlane
+
+  addWorker:
+    description: Add worker node(s) to the cluster
+    node: worker
+    fn: addWorker
+    params:
+      masterNodeKey: controlPlaneNodes[0]
+      targetsKey: workerNodes
+    dependencies:
+      - resetWorker
+
+  confKubectlOnCPlane:
+    description: Configure kubectl
+    node: controlPlane
+    fn: confKubectlOnCPlane
+    params:
+      masterNodeKey: controlPlaneNodes[0]
+    dependencies:
+      - resetWorker
+
+  installGoCliCplane:
+    description: Provision Go CLI(s)
+    node: controlPlane
+    fn: installGoCliCplane
+    params:
+      goCliKey: goCli
+      targetsKey: controlPlaneNodes
+    dependencies:
+      - confKubectlOnCPlane
+
+  createRcFile:
+    description: Create a custom RC file in user's home
+    node: controlPlane
+    fn: createRcFile
+    params:
+      rcFileNameKey: customRcFileName
+    dependencies:
+      - installGoCliCplane
+
+  setPathEnvar:
+    description: Configure PATH envvar into current user's custom RC file
+    node: controlPlane
+    fn: setPathEnvar
+    params:
+      binFolderPathKey: binFolderPath
+      rcFileNameKey: customRcFileName
+    dependencies:
+      - createRcFile
+
+  installHelmRepo:
+    description: Install Helm chart repositories
+    node: controlPlane
+    fn: installHelmRepo
+    params:
+      helmRepoKey: helmRepo
+    dependencies:
+      - setPathEnvar
+
+  createCiliumRelease:
+    description: Install and configure the CNI Cilium
+    node: controlPlane
+    fn: createCiliumRelease
+    dependencies:
+      - installHelmRepo

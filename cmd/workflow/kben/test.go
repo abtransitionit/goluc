@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kindn
+package kben
 
 import (
 	"log"
@@ -30,28 +30,15 @@ var testCmd = &cobra.Command{
 			return err
 		}
 
-		// The keys are already scoped to "workflow.kindn" by GetSection
-		nodes := v.GetStringSlice("node")
-		requiredPkgs := v.GetStringSlice("da.pkg.required")
-		goCliList := v.Get("goCli")
-		services := v.Get("service")
-		envVars := v.Get("envar")
+		// log
+		logger.Infof("node.all: %v", v.GetStringSlice("node.all"))
+		logger.Infof("da.repo.node: %v", v.Get("da.repo.node"))
+		logger.Infof("da.pkg.node: %v", v.Get("da.pkg.node"))
+		logger.Infof("helm > release: %v", v.Get("helm.release"))
+		logger.Infof("cluster: %v", v.Get("cluster"))
 
 		// log
-		pc, file, _, _ := runtime.Caller(0)
-		pkg := path.Dir(runtime.FuncForPC(pc).Name())
-		logger.Infof("Package: %s", pkg)
-		logger.Infof("Package: %s", path.Dir(file))
-
-		// log
-		logger.Infof("nodes: %v", nodes)
-		logger.Infof("requiredPkgs: %v", requiredPkgs)
-		logger.Infof("goCliList: %v", goCliList)
-		logger.Infof("services: %v", services)
-		logger.Infof("envVars: %v", envVars)
-
-		// log
-		_, file, _, _ = runtime.Caller(0) // because it is not called directly but through GetSection
+		_, file, _, _ := runtime.Caller(0) // because it is not called directly but through GetSection
 		workflowPath := filepath.Join(path.Dir(file), "phase.yaml")
 		logger.Infof("Package: %s", workflowPath)
 
@@ -59,7 +46,6 @@ var testCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		workflow.Print()
 		return nil
 

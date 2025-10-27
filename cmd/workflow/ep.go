@@ -9,10 +9,12 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/goluc/cmd/workflow/gotc"
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
+	"github.com/abtransitionit/goluc/cmd/workflow/kben"
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow/kindn"
 	"github.com/abtransitionit/goluc/cmd/workflow/om"
 	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
+	"github.com/abtransitionit/goluc/cmd/workflow/smalln"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -57,4 +59,6 @@ func init() {
 	EpCmd.AddCommand(om.EpCmd)
 	EpCmd.AddCommand(ovh.EpCmd)
 	EpCmd.AddCommand(kindn.EpCmd)
+	EpCmd.AddCommand(kben.EpCmd)
+	EpCmd.AddCommand(smalln.EpCmd)
 }

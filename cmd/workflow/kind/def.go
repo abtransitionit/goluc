@@ -4,8 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
-	"context"
-
 	coregocli "github.com/abtransitionit/gocore/gocli"
 	"github.com/abtransitionit/gocore/logx"
 	corephase "github.com/abtransitionit/gocore/phase"
@@ -18,7 +16,6 @@ import (
 	"github.com/abtransitionit/gotask/oservice"
 	"github.com/abtransitionit/gotask/util"
 	"github.com/abtransitionit/gotask/vm"
-	"github.com/abtransitionit/gotask/workflow"
 )
 
 // Package variables : confifg1
@@ -101,16 +98,16 @@ func init() {
 
 // The adapter function to bridge the type mismatch.
 // It accepts the required PhaseFunc signature and calls the specific ShowPhase.
-func showPhaseAdapter(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
-	// The adapter can access the package-level 'wkf' variable since it's in the same package.
-	// it can also acces external method and feed them with anything that nelongs to KIND
-	err := workflow.ShowPhase(wkf, l)
-	if err != nil {
-		return "", err
-	}
-	// Return the required string and a nil error on success.
-	return "Workflow plan displayed.", nil
-}
+// func showPhaseAdapter(ctx context.Context, l logx.Logger, cmd ...string) (string, error) {
+// 	// The adapter can access the package-level 'wkf' variable since it's in the same package.
+// 	// it can also acces external method and feed them with anything that nelongs to KIND
+// 	err := workflow.ShowPhase(wkf, l)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	// Return the required string and a nil error on success.
+// 	return "Workflow plan displayed.", nil
+// }
 
 // install on debian: packageName = "gnupg" / cliName = "gpg" (to check existence)
 // install packageName = "uidmap" on all except debian

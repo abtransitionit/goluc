@@ -1,10 +1,9 @@
 workflow:
-  kindn:
+  smalln:
 
     node:
-      all:
-        - o1u
-        - o2a
+      - o1u
+      - o2a
 
     da:
       pkg:

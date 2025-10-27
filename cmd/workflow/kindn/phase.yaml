@@ -1,0 +1,102 @@
+phases:
+  checkVmAccess:
+    description: Check if VMs are SSH reachable
+    node: all
+    fn: checkVmAccess
+    dependencies: []
+
+  copyAgent:
+    description: Copy LUC CLI agent to all VMs
+    node: all
+    fn: copyAgent
+    dependencies:
+      - checkVmAccess
+
+  upgradeOs:
+    description: Provision OS nodes with latest dnfapt packages and repositories
+    node: all
+    fn: upgradeOs
+    dependencies:
+      - copyAgent
+
+  updateApp:
+    description: Provision required/missing standard dnfapt packages
+    node: all
+    fn: updateApp
+    params:
+      daPkgKey: da.pkg.required
+    dependencies:
+      - upgradeOs
+
+  installGoCli:
+    description: Provision Go CLI(s)
+    node: all
+    fn: installGoCli
+    params:
+      goCliKey: goCli
+      targetsKey: node
+    dependencies:
+      - updateApp
+
+  installOsService:
+    description: Provision OS service(s)
+    node: all
+    fn: installOsService
+    params:
+      serviceKey: service
+    dependencies:
+      - installGoCli
+      - setEnvar
+
+  enableLinger:
+    description: Allows user services to be session-independent
+    node: all
+    fn: enableLinger
+    dependencies:
+      - installGoCli
+
+  createRcFile:
+    description: Create a custom RC file in user's home
+    node: all
+    fn: createRcFile
+    params:
+      rcFileNameKey: customRcFileName
+    dependencies:
+      - enableLinger
+
+  setPathEnvar:
+    description: Configure PATH envvar into current user's custom RC file
+    node: all
+    fn: setPathEnvar
+    params:
+      binFolderPathKey: binFolderPath
+      rcFileNameKey: customRcFileName
+    dependencies:
+      - createRcFile
+
+  setEnvar:
+    description: Define envvars into current user's custom RC file
+    node: all
+    fn: setEnvar
+    params:
+      rcFileNameKey: customRcFileName
+      envVarsKey: envar
+    dependencies:
+      - setPathEnvar
+
+  startOsService:
+    description: Start OS services needed by the app
+    node: all
+    fn: startOsService
+    params:
+      serviceKey: service
+    dependencies:
+      - installOsService
+      - setEnvar
+
+  setContainerd:
+    description: Sets up a rootless containerd env Linux session independent for the current user
+    node: all
+    fn: setContainerd
+    dependencies:
+      - startOsService
