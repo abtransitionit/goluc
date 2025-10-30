@@ -25,7 +25,7 @@ var testCmd = &cobra.Command{
 		// define logger
 		logger := logx.GetLogger()
 
-		v, err := viperx.GetSection(cmdName)
+		v, err := viperx.GetConfig(cmdName)
 		if err != nil {
 			return err
 		}

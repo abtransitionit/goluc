@@ -1,0 +1,15 @@
+package main
+
+type Workflow struct {
+	Name        string           `yaml:"name"`
+	Description string           `yaml:"description"`
+	MapPhase    map[string]Phase `yaml:"phases"`
+}
+
+type Phase struct {
+	Description  string            `yaml:"description"`
+	Node         string            `yaml:"node"`
+	Fn           string            `yaml:"fn"`
+	Params       map[string]string `yaml:"params"`
+	Dependencies []string          `yaml:"dependencies"`
+}

@@ -70,4 +70,96 @@ workflow.kindn.example_key = "global_value".
 ```
 
 - flag > env var > project-local YAML (`./conf.yaml`) > global YAML (`~/wkspc/.config/goluc/workflow/conf.yaml`) > defaults.
-# reference
+
+
+#  Node and NodeSet
+## definition
+In the workflow YAML, each phase has a field:
+
+```yaml
+Node: all
+```
+
+- A **node** represents a VM where a workflow phase will run.
+- A **NodeSet** is a **named group of nodes**.
+
+
+**NodeSet** are define in `conf.yaml` than referenced in `phase.yaml`. For example:
+
+```yaml
+# conf.yaml
+Node:
+  all:
+    - worker1
+    - worker2
+    - dbserver
+
+  frontend:
+    - frontend1
+    - frontend2
+```
+
+Then in your phase:
+
+```yaml
+# phase.yaml
+Node: all   # will later expand to -> worker1, worker2, dbserver
+```
+
+
+## What is NodeSet resolution
+
+It’s the process of **replacing a NodeSet name with the actual list of nodes it represents**.
+
+### Example
+In the code `ResolveNodeSets` :
+
+```go
+func (wf *Workflow2) ResolveNodeSets(v *viper.Viper, logger logx.Logger)
+```
+
+Currently, only logs something like:
+
+```
+NodeSet "all" → [worker1, worker2, dbserver]
+```
+
+After full resolution:
+
+* Each `Phase2.Node` that uses a NodeSet name should be replaced (or mapped) to the list of nodes.
+* Your workflow engine can then run the phase on all these nodes.
+
+---
+
+### 4️⃣ Why is this important?
+
+Without NodeSet resolution:
+
+* You can’t easily run a phase on multiple nodes.
+* Every phase would have to manually list its nodes.
+* Parallel or distributed execution becomes tricky.
+
+With NodeSet resolution:
+
+* You define node groups once.
+* Phases can simply reference the group.
+* Execution engine can iterate over actual nodes automatically.
+
+---
+
+💡 **Example workflow after NodeSet resolution**:
+
+Before:
+
+```yaml
+Node: all
+```
+
+After resolution:
+
+```go
+Phase2.NodeList = []string{"worker1", "worker2", "dbserver"}
+```
+
+Then your execution engine can loop over `NodeList` for the phase.
+

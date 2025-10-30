@@ -19,7 +19,7 @@ var EpCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get config (package+global+local)
-		v, err := viperx.GetSection(cmdName)
+		v, err := viperx.GetConfig(cmdName)
 		if err != nil {
 			return err
 		}
@@ -38,5 +38,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(testCmd)
-	EpCmd.AddCommand(printCmd)
+	EpCmd.AddCommand(printcCmd)
+	EpCmd.AddCommand(printwCmd)
+	EpCmd.AddCommand(runCmd)
 }

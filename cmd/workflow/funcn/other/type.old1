@@ -1,0 +1,8 @@
+package main
+
+type Workflow struct {
+	Function string `yaml:"function"`
+}
+
+// Define a function signature
+type CallableFunc func()

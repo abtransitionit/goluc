@@ -1,31 +1,31 @@
 name: smalln
 description: a small workflow
 phases:
-  checkVmAccess:
+  NodeSsh:
     description: Check if VMs are SSH reachable
     node: all
-    fn: checkVmAccess
+    fn: vm.CheckVmSshAccess
     dependencies: []
 
-  copyAgent:
+  LucAgent:
     description: Copy LUC CLI agent to all VMs
     node: all
-    fn: copyAgent
+    fn: luc.DeployLuc
     dependencies:
-      - checkVmAccess
+      - NodeSsh
 
-  upgradeOs:
+  OsUpgrade:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
-    fn: upgradeOs
+    fn: dnfapt.UpgradeVmOs
     dependencies:
-      - copyAgent
+      - LucAgent
 
-  updateApp:
+  AppUpdate:
     description: Provision required/missing standard dnfapt packages
     node: all
-    fn: updateApp
+    fn: dnfapt.UpdateVmOsApp
     params:
       daPkgKey: da.pkg.required
     dependencies:
-      - upgradeOs
+      - OsUpgrade

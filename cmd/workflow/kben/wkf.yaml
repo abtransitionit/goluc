@@ -1,196 +1,198 @@
+name: kben
+description: create a KBE (Kubernetes Easy) cluster
 phases:
-  checkVmAccess:
+  NodeSsh:
     description: Check node is SSH reachable
     node: all
-    fn: checkVmAccess
+    fn: vm.CheckVmSshAccess
     dependencies: []
 
-  copyAgent:
+  LucAgent:
     description: Copy LUC CLI agent
     node: all
-    fn: copyAgent
+    fn: luc.DeployLuc
     dependencies:
-      - checkVmAccess
+      - NodeSsh
 
-  upgradeOs:
+  OsUpgrade:
     description: Upgrade native OS packages and repositories to version latest
     node: all
-    fn: upgradeOs
+    fn: dnfapt.UpgradeVmOs
     dependencies:
-      - copyAgent
+      - LucAgent
 
-  updateApp:
+  AppUpdate:
     description: Provision required/missing native standard OS packages
     node: all
-    fn: updateApp
+    fn: dnfapt.UpdateVmOsApp
     params:
       daPkgKey: da.pkg.node
     dependencies:
-      - upgradeOs
+      - OsUpgrade
 
-  installDaRepository:
+  DaRepoInstall:
     description: Provision native OS package repository(ies)
     node: all
-    fn: installDaRepository
+    fn: dnfapt.InstallDaRepository
     params:
       repoKey: da.repo.node
     dependencies:
-      - updateApp
+      - AppUpdate
 
-  installDaPackage:
+  DaPkgInstall:
     description: Provision native OS package(s)
     node: all
-    fn: installDaPackage
+    fn: dnfapt.InstallDaPackage
     params:
       pkgKey: da.pkg.node
     dependencies:
-      - installDaRepository
+      - DaRepoInstall
 
-  installDaPackageCplane:
+  DaPkgInstall2:
     description: Provision native OS package(s) for control plane
     node: controlPlane
-    fn: installDaPackageCplane
+    fn: dnfapt.InstallDaPackage
     params:
       pkgKey: da.pkg.controlPlane
       targetsKey: controlPlaneNodes
     dependencies:
-      - installDaPackage
+      - DaPkgInstall
 
-  loadOsKernelModule:
+  KernelModuleLoad:
     description: Load OS kernel module(s)
     node: all
-    fn: loadOsKernelModule
+    fn: taskoskernel.LoadOsKModule
     params:
       modulesKey: osKernelModules
       kernelFileKey: kernelFilename
     dependencies:
-      - installDaPackage
-      - installDaPackageCplane
+      - DaPkgInstall
+      - DaPkgInstall2
 
-  loadOsKernelParam:
+  KernelParamSet:
     description: Set OS kernel parameter(s)
     node: all
-    fn: loadOsKernelParam
+    fn: taskoskernel.LoadOsKParam
     params:
       paramsKey: osKernelParams
       kernelFileKey: kernelFilename
     dependencies:
-      - loadOsKernelModule
+      - KernelModuleLoad
 
-  confSelinux:
+  SelinuxConf:
     description: Configure SELinux
     node: all
-    fn: confSelinux
+    fn: selinux.ConfigureSelinux
     dependencies:
-      - loadOsKernelParam
+      - KernelParamSet
 
-  enableOsService:
+  ServiceEnable:
     description: Enable OS services to start after a reboot
     node: all
-    fn: enableOsService
+    fn: oservice.EnableOsService
     params:
       serviceKey: osServiceEnable
     dependencies:
-      - confSelinux
+      - SelinuxConf
 
-  startOsService:
+  ServiceStart:
     description: Start OS services for current session
     node: all
-    fn: startOsService
+    fn: oservice.StartOsService
     params:
       serviceKey: osServiceStart
     dependencies:
-      - confSelinux
-      - enableOsService
+      - SelinuxConf
+      - ServiceEnable
 
-  resetCPlane:
+  Reset1:
     description: Reset the control plane node(s)
     node: controlPlane
-    fn: resetCPlane
+    fn: taskk8s.ResetNode
     params:
       targetsKey: controlPlaneNodes
     dependencies:
-      - startOsService
+      - ServiceStart
 
-  initCPlane:
+  Init:
     description: Initialize/bootstrap the cluster
     node: controlPlane
-    fn: initCPlane
+    fn: taskk8s.InitCPlane
     params:
       targetsKey: controlPlaneNodes
       clusterKey: clusterConfig
     dependencies:
-      - resetCPlane
+      - Reset1
 
-  resetWorker:
+  Reset2:
     description: Reset the worker node(s)
     node: worker
-    fn: resetWorker
+    fn: taskk8s.ResetNode
     params:
       targetsKey: workerNodes
     dependencies:
-      - initCPlane
+      - Init
 
-  addWorker:
+  Add:
     description: Add worker node(s) to the cluster
     node: worker
-    fn: addWorker
+    fn: taskk8s.AddWorker
     params:
       masterNodeKey: controlPlaneNodes[0]
       targetsKey: workerNodes
     dependencies:
-      - resetWorker
+      - Reset2
 
-  confKubectlOnCPlane:
+  KubectlConf:
     description: Configure kubectl
     node: controlPlane
-    fn: confKubectlOnCPlane
+    fn: taskk8s.ConfigureKubectlOnCplane
     params:
       masterNodeKey: controlPlaneNodes[0]
     dependencies:
-      - resetWorker
+      - Reset2
 
-  installGoCliCplane:
+  GoCli:
     description: Provision Go CLI(s)
     node: controlPlane
-    fn: installGoCliCplane
+    fn: gocli.InstallGoCliOnVm
     params:
       goCliKey: goCli
       targetsKey: controlPlaneNodes
     dependencies:
-      - confKubectlOnCPlane
+      - KubectlConf
 
-  createRcFile:
+  RcFile:
     description: Create a custom RC file in user's home
     node: controlPlane
-    fn: createRcFile
+    fn: util.CreateCustomRcFile
     params:
       rcFileNameKey: customRcFileName
     dependencies:
-      - installGoCliCplane
+      - GoCli
 
-  setPathEnvar:
+  EnvarPath:
     description: Configure PATH envvar into current user's custom RC file
     node: controlPlane
-    fn: setPathEnvar
+    fn: util.SetPath
     params:
       binFolderPathKey: binFolderPath
       rcFileNameKey: customRcFileName
     dependencies:
-      - createRcFile
+      - RcFile
 
-  installHelmRepo:
+  HelmRepo:
     description: Install Helm chart repositories
     node: controlPlane
-    fn: installHelmRepo
+    fn: helm.InstallHelmRepo
     params:
       helmRepoKey: helmRepo
     dependencies:
-      - setPathEnvar
+      - EnvarPath
 
-  createCiliumRelease:
+  Cilium:
     description: Install and configure the CNI Cilium
     node: controlPlane
-    fn: createCiliumRelease
+    fn: task_cilium.InstallCniCilium
     dependencies:
-      - installHelmRepo
+      - HelmRepo

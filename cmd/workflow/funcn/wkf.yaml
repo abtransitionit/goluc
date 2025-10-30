@@ -1,0 +1,22 @@
+name: kben
+description: create a KBE (Kubernetes Easy) cluster
+phases:
+  NodeSsh:
+    description: Check node is SSH reachable
+    node: all
+    fn: vm.CheckVmSshAccess
+    dependencies: []
+
+  LucAgent:
+    description: Copy LUC CLI agent
+    node: all
+    fn: luc.DeployLuc
+    dependencies:
+      - NodeSsh
+
+  OsUpgrade:
+    description: Upgrade native OS packages and repositories to version latest
+    node: all
+    fn: dnfapt.UpgradeVmOs
+    dependencies:
+      - LucAgent

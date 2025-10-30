@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kindn
+package funcn
 
 import (
 	"github.com/abtransitionit/gocore/logx"
@@ -37,7 +37,7 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
-	EpCmd.AddCommand(testCmd)
-	EpCmd.AddCommand(printwCmd)
 	EpCmd.AddCommand(printcCmd)
+	EpCmd.AddCommand(printwCmd)
+	EpCmd.AddCommand(runCmd)
 }
