@@ -8,6 +8,7 @@ import (
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/goluc/cmd/workflow/funcn"
+	"github.com/abtransitionit/goluc/cmd/workflow/tiern"
 
 	// "github.com/abtransitionit/goluc/cmd/workflow/gotc"
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
@@ -66,4 +67,5 @@ func init() {
 	EpCmd.AddCommand(kben.EpCmd)
 	EpCmd.AddCommand(smalln.EpCmd)
 	EpCmd.AddCommand(funcn.EpCmd)
+	EpCmd.AddCommand(tiern.EpCmd)
 }

@@ -1,22 +1,31 @@
 name: funcn
 description: create a KBE (Kubernetes Easy) cluster
 phases:
-  NodeSsh:
+  APhase:
     description: Check node is SSH reachable
     node: all
     fn: vm.CheckVmSshAccess
     dependencies: []
 
-  LucAgent:
+  BPhase:
     description: Copy LUC CLI agent
     node: all
     fn: luc.DeployLuc
     dependencies:
-      - NodeSsh
+      - APhase
 
-  OsUpgrade:
-    description: Upgrade native OS packages and repositories to version latest
+  CPhase:
+    description: Copy LUC CLI agent
     node: all
-    fn: dnfapt.UpgradeVmOs
+    fn: luc.DeployLuc
     dependencies:
-      - LucAgent
+      - APhase
+
+  DPhase:
+    description: Copy LUC CLI agent
+    node: all
+    fn: luc.DeployLuc
+    dependencies:
+      - BPhase
+      - CPhase
+

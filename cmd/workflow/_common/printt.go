@@ -6,32 +6,34 @@ package common
 import (
 	"fmt"
 
-	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
+
+	"github.com/abtransitionit/gocore/list"
+	"github.com/abtransitionit/gocore/phase2"
 )
 
-func GetPrintcCmd(cmdName string) *cobra.Command {
+func GetPrinttCmd(cmdName string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "printc",
-		Short: "display the worflow's config",
+		Use:   "printt",
+		Short: "display the worflow with tiers",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// define logger
 			// logger := logx.GetLogger()
 
-			// get the config yaml
-			config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
+			// get the workflow yaml
+			workflow, err := phase2.GetWorkflow(cmdName)
 			if err != nil {
-				return err
+				return fmt.Errorf("getting workflow: %w", err)
 			}
 
 			// get table
-			table, err := config.GetTable()
+			table, err := workflow.GetTableTier()
 			if err != nil {
 				return fmt.Errorf("getting table: %w", err)
 			}
 
 			// print
-			fmt.Println(table)
+			list.PrettyPrintTable(table)
 
 			// success
 			return nil

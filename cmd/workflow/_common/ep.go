@@ -10,7 +10,7 @@ import (
 )
 
 // NewWorkflowCmd returns a base cobra.Command configured with logging, config, and default RunE.
-func GetEpCmd(cmdName, shortDesc string, theCde *cobra.Command) *cobra.Command {
+func GetEpCmd(cmdName, shortDesc string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   cmdName,
 		Short: shortDesc,
@@ -18,7 +18,7 @@ func GetEpCmd(cmdName, shortDesc string, theCde *cobra.Command) *cobra.Command {
 			logger := logx.GetLogger()
 
 			// Get configuration (package + global + local)
-			v, err := viperx.GetConfig(cmdName)
+			v, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
 			if err != nil {
 				return err
 			}

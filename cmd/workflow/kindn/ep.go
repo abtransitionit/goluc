@@ -9,12 +9,10 @@ import common "github.com/abtransitionit/goluc/cmd/workflow/_common"
 var EpCmd = common.GetEpCmd(
 	cmdName,
 	shortDesc,
-	testCmd,
 )
 
 func init() {
 	EpCmd.AddCommand(common.GetPrintcCmd(cmdName))
 	EpCmd.AddCommand(common.GetPrintwCmd(cmdName))
-	// EpCmd.AddCommand(runCmd)
-	EpCmd.AddCommand(testCmd)
+	EpCmd.AddCommand(common.GetRunCmd(cmdName))
 }

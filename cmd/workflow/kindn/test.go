@@ -25,7 +25,7 @@ var testCmd = &cobra.Command{
 		// define logger
 		logger := logx.GetLogger()
 
-		v, err := viperx.GetConfig(cmdName)
+		v, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
 		if err != nil {
 			return err
 		}

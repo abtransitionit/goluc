@@ -1,0 +1,8 @@
+workflow:
+  funcn:
+
+    node:
+      all:
+        - o1u
+        - o2a
+
