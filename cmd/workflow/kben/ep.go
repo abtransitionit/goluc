@@ -3,41 +3,18 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 package kben
 
-import (
-	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/viperx"
-	"github.com/spf13/cobra"
-)
+import common "github.com/abtransitionit/goluc/cmd/workflow/_common"
 
 // root Command
-var EpCmd = &cobra.Command{
-	Use:   cmdName,
-	Short: shortDesc,
-	RunE: func(cmd *cobra.Command, args []string) error {
-
-		// define logger
-		logger := logx.GetLogger()
-
-		// get config (package+global+local)
-		v, err := viperx.GetConfig(cmdName)
-		if err != nil {
-			return err
-		}
-
-		// Bind flags and env vars
-		viperx.BindFlags(cmd, v, cmdName)
-
-		// log
-		logger.Infof("%s", cmd.Short)
-
-		// Default action
-		cmd.Help()
-		return nil
-	},
-}
+var EpCmd = common.GetEpCmd(
+	cmdName,
+	shortDesc,
+	testCmd,
+)
 
 func init() {
+	EpCmd.AddCommand(common.GetPrintcCmd(cmdName))
+	EpCmd.AddCommand(common.GetPrintwCmd(cmdName))
+	// EpCmd.AddCommand(runCmd)
 	EpCmd.AddCommand(testCmd)
-	EpCmd.AddCommand(printcCmd)
-	EpCmd.AddCommand(printwCmd)
 }

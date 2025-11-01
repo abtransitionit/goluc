@@ -1,0 +1,41 @@
+name: omn
+description: create a KBE (Kubernetes Easy) cluster
+phases:
+    cleanTmp:
+      description: empty the /tmp folder on the VMs
+      fn: luc.CleanTmpOnVm
+      dependencies: []
+    gitDevToMain:
+      description: merge dev to main and push all 4 projects\: gocore, golinux, gotask, goluc
+      fn: gitDevToMain
+      dependencies: []
+    gitDevToPremain:
+      description: merge dev to premain and push all 4 projects\: gocore, golinux, gotask, goluc
+      fn: gitTodo
+      dependencies: []
+    gitPremainToMain:
+      description: merge premain to main and push all 4 projects \: gocore, golinux, gotask, goluc
+      fn: gitTodo
+      dependencies: []
+    buildLuc:
+      description: build LUC for curent and linux platform
+      fn: build
+      dependencies: []
+    deployLuc:
+      description: deploy LUC on all VMs
+      fn: luc.DeployOnVm
+      dependencies: []
+    deployLucLocal:
+      description: deploy LUC Localy (ie. /usr/local/bin)
+      fn: DeployLucLocally
+      dependencies: 
+        - buildLuc
+    deleteLuc:
+      description: delete LUC on all VMs
+      fn: luc.DeleteOnVm
+      dependencies: []
+    deployLuc2:
+      description: deploy LUC on all VMs
+      fn: luc.DeployOnVm
+      dependencies:
+        - buildLuc

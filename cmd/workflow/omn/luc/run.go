@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gotc
+package luc
 
 import (
 	"context"
@@ -93,7 +93,7 @@ func init() {
 
 	runCmd.Flags().StringSliceVarP(&skipPhaseRange, "skip-phase", "s", []string{}, "Phase(s) to skip by ID during execution")
 	runCmd.Flags().StringSliceVarP(&retainPhaseRange, "retain-phase", "r", []string{}, "Phase(s) to retain by ID during execution")
-	runCmd.Flags().BoolVar(&force, "force", false, "Security flag required to execute the workflow")
+	runCmd.Flags().BoolVarP(&force, "force", "f", false, "Security flag required to execute the workflow")
 	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Show the execution plan without executing any phases")
 }
 

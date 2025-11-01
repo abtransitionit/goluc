@@ -1,19 +1,20 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package funcn
+package kindn
 
 import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
 )
 
 // root Command
-var printCmd = &cobra.Command{
-	Use:   "print",
-	Short: "display the worflow",
+var runCmd = &cobra.Command{
+	Use:   "run",
+	Short: "execute the worflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// define logger
 		// logger := logx.GetLogger()
@@ -24,8 +25,14 @@ var printCmd = &cobra.Command{
 			return fmt.Errorf("getting workflow: %w", err)
 		}
 
+		// get the config yaml
+		config, err := viperx.GetConfig(cmdName)
+		if err != nil {
+			return err
+		}
+
 		// print it
-		workflow.Print()
+		workflow.Execute(config)
 		return nil
 
 	},

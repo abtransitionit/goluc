@@ -7,16 +7,18 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
 )
 
 // root Command
 var runCmd = &cobra.Command{
-	Use:   "print",
-	Short: "display the worflow",
+	Use:   "run",
+	Short: "execute the worflow",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// define logger
 		// logger := logx.GetLogger()
+		// ctx := context.Background()
 
 		// get the workflow yaml
 		workflow, err := phase.GetWorkflow()
@@ -24,8 +26,15 @@ var runCmd = &cobra.Command{
 			return fmt.Errorf("getting workflow: %w", err)
 		}
 
+		// get the config yaml
+		config, err := viperx.GetConfig(cmdName)
+		if err != nil {
+			return err
+		}
+
 		// print it
-		workflow.Print()
+		// workflow.Execute2(config, fnRegistry)
+		workflow.Execute(config)
 		return nil
 
 	},

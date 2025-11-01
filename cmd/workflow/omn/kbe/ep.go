@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gotc
+package kbe
 
 import (
 	"github.com/spf13/cobra"
@@ -10,10 +10,10 @@ import (
 // root Command
 var EpCmd = &cobra.Command{
 	Use:   cmdName,
-	Short: SDesc,
+	Short: shortDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		logger.Infof("%s", SDesc)
+		logger.Infof("%s", cmd.Short)
 
 		// Default action
 		cmd.Help()
