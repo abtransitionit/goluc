@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/abtransitionit/gocore/phase"
+	"github.com/abtransitionit/gocore/phase2"
 )
 
 func GetPrintwCmd(cmdName string) *cobra.Command {
@@ -20,7 +20,7 @@ func GetPrintwCmd(cmdName string) *cobra.Command {
 			// logger := logx.GetLogger()
 
 			// get the workflow yaml
-			workflow, err := phase.GetWorkflow(cmdName)
+			workflow, err := phase2.GetWorkflow(cmdName)
 			if err != nil {
 				return fmt.Errorf("getting workflow: %w", err)
 			}
