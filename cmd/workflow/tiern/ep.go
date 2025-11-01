@@ -12,8 +12,9 @@ var EpCmd = common.GetEpCmd(
 )
 
 func init() {
-	EpCmd.AddCommand(common.GetPrintcCmd(cmdName))
-	EpCmd.AddCommand(common.GetPrintwCmd(cmdName))
-	EpCmd.AddCommand(common.GetPrinttCmd(cmdName))
+	// EpCmd.AddCommand(common.GetPrintcCmd(cmdName))
+	// EpCmd.AddCommand(common.GetPrintwCmd(cmdName))
+	// EpCmd.AddCommand(common.GetPrinttCmd(cmdName))
+	EpCmd.AddCommand(common.GetPrintCmd(cmdName))
 	EpCmd.AddCommand(common.GetRunCmd(cmdName))
 }

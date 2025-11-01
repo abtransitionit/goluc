@@ -15,7 +15,7 @@ import (
 func GetPrinttCmd(cmdName string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "printt",
-		Short: "display the worflow with tiers",
+		Short: "display the worflow tiers and phases",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// define logger
 			// logger := logx.GetLogger()
