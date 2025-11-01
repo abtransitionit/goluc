@@ -5,18 +5,18 @@ phases:
     description: Check node is SSH reachable
     node: all
     fn: vm.CheckVmSshAccess
-    dependencies: []
+    Dependency: []
 
   LucAgent:
     description: Copy LUC CLI agent
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - NodeSsh
 
   OsUpgrade:
     description: Upgrade native OS packages and repositories to version latest
     node: all
     fn: dnfapt.UpgradeVmOs
-    dependencies:
+    Dependency:
       - LucAgent

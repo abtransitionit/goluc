@@ -1,31 +1,31 @@
-name: funcn
+name: tiern
 description: create a KBE (Kubernetes Easy) cluster
 phases:
   APhase:
     description: run alone
     node: all
     fn: vm.CheckVmSshAccess
-    dependencies: []
+    Dependency: []
 
   BPhase:
     description: run concurently with C
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - APhase
 
   CPhase:
     description: run concurently with B
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - APhase
 
   DPhase:
     description: run after B and C finish
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - BPhase
       - CPhase
 

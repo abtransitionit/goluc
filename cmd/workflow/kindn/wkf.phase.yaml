@@ -5,20 +5,20 @@ phases:
     description: Check if VMs are SSH reachable
     node: all
     fn: vm.CheckVmSshAccess
-    dependencies: []
+    Dependency: []
 
   LucAgent:
     description: Copy LUC CLI agent to all VMs
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - NodeSsh
 
   OsUpgrade:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
     fn: dnfapt.UpgradeVmOs
-    dependencies:
+    Dependency:
       - LucAgent
 
   AppUpdate:
@@ -27,7 +27,7 @@ phases:
     fn: dnfapt.UpdateVmOsApp
     params:
       daPkgKey: da.pkg.required
-    dependencies:
+    Dependency:
       - OsUpgrade
 
   GoCli:
@@ -37,7 +37,7 @@ phases:
     params:
       goCliKey: goCli
       targetsKey: node
-    dependencies:
+    Dependency:
       - AppUpdate
 
   InstallService:
@@ -46,7 +46,7 @@ phases:
     fn: oservice.InstallOsService
     params:
       serviceKey: service
-    dependencies:
+    Dependency:
       - GoCli
       - EnvarSet
 
@@ -54,7 +54,7 @@ phases:
     description: Allows user services to be session-independent
     node: all
     fn: oservice.EnableLinger
-    dependencies:
+    Dependency:
       - GoCli
 
   RcFile:
@@ -63,7 +63,7 @@ phases:
     fn: util.CreateCustomRcFile
     params:
       rcFileNameKey: customRcFileName
-    dependencies:
+    Dependency:
       - UserService
 
   EnvarPath:
@@ -73,7 +73,7 @@ phases:
     params:
       binFolderPathKey: binFolderPath
       rcFileNameKey: customRcFileName
-    dependencies:
+    Dependency:
       - RcFile
 
   EnvarSet:
@@ -83,7 +83,7 @@ phases:
     params:
       rcFileNameKey: customRcFileName
       envVarsKey: envar
-    dependencies:
+    Dependency:
       - EnvarPath
 
   ServiceStart:
@@ -92,7 +92,7 @@ phases:
     fn: oservice.StartOsService
     params:
       serviceKey: service
-    dependencies:
+    Dependency:
       - InstallService
       - EnvarSet
 
@@ -100,5 +100,5 @@ phases:
     description: Sets up a rootless containerd env Linux session independent for the current user
     node: all
     fn: ctd.SetContainerd
-    dependencies:
+    Dependency:
       - ServiceStart

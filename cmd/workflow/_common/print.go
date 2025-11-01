@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/list"
+	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/phase2"
 	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
@@ -23,6 +24,8 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 		Use:   "print",
 		Short: "Display workflow details (config, phases, or tiers)",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// define logger
+			logger := logx.GetLogger()
 			// at least one flag required
 			if !showConfig && !showPhase && !showTier {
 				return fmt.Errorf("please specify one of: --config, --phase, or --tier")
@@ -40,7 +43,7 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 					return fmt.Errorf("getting config table: %w", err)
 				}
 
-				fmt.Println("== Workflow Config ==")
+				logger.Info("== Workflow Config ==")
 				fmt.Println(table)
 			}
 
@@ -58,7 +61,7 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 						return fmt.Errorf("getting phase table: %w", err)
 					}
 
-					fmt.Println("== Workflow Phases ==")
+					logger.Info("== Workflow Phases ==")
 					list.PrettyPrintTable(table)
 				}
 
@@ -69,7 +72,7 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 						return fmt.Errorf("getting tier table: %w", err)
 					}
 
-					fmt.Println("== Workflow Tiers ==")
+					logger.Info("== Workflow Tiers ==")
 					list.PrettyPrintTable(table)
 				}
 			}

@@ -5,20 +5,20 @@ phases:
     description: Check if VMs are SSH reachable
     node: all
     fn: vm.CheckVmSshAccess
-    dependencies: []
+    Dependency: []
 
   LucAgent:
     description: Copy LUC CLI agent to all VMs
     node: all
     fn: luc.DeployLuc
-    dependencies:
+    Dependency:
       - NodeSsh
 
   OsUpgrade:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
     fn: dnfapt.UpgradeVmOs
-    dependencies:
+    Dependency:
       - LucAgent
 
   AppUpdate:
@@ -27,5 +27,5 @@ phases:
     fn: dnfapt.UpdateVmOsApp
     params:
       daPkgKey: da.pkg.required
-    dependencies:
+    Dependency:
       - OsUpgrade
