@@ -13,7 +13,7 @@ import (
 	"github.com/abtransitionit/gocore/viperx"
 )
 
-func GetRunCmd(cmdName string) *cobra.Command {
+func GetRunCmd(cmdPathName string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "run",
 		Short: "execute the workflow",
@@ -22,13 +22,13 @@ func GetRunCmd(cmdName string) *cobra.Command {
 			logger := logx.GetLogger()
 
 			// get the config
-			config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
+			config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdPathName)
 			if err != nil {
 				return err
 			}
 
 			// get the workflow yaml
-			workflow, err := phase2.GetWorkflow(cmdName)
+			workflow, err := phase2.GetWorkflow(cmdPathName)
 			if err != nil {
 				return fmt.Errorf("getting workflow: %w", err)
 			}

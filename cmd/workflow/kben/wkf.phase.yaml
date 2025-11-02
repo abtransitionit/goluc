@@ -26,7 +26,7 @@ phases:
     node: all
     fn: dnfapt.UpdateVmOsApp
     param:
-      daPkgKey: da.pkg.node
+      - da.pkg.node
     dependency:
       - OsUpgrade
 
@@ -35,7 +35,7 @@ phases:
     node: all
     fn: dnfapt.InstallDaRepository
     param:
-      repoKey: da.repo.node
+      - da.repo.node
     dependency:
       - AppUpdate
 
@@ -44,7 +44,7 @@ phases:
     node: all
     fn: dnfapt.InstallDaPackage
     param:
-      pkgKey: da.pkg.node
+      - da.pkg.node
     dependency:
       - DaRepoInstall
 
@@ -53,8 +53,7 @@ phases:
     node: controlPlane
     fn: dnfapt.InstallDaPackage
     param:
-      pkgKey: da.pkg.controlPlane
-      targetsKey: controlPlaneNodes
+      - da.pkg.controlPlane
     dependency:
       - DaPkgInstall
 
@@ -63,8 +62,8 @@ phases:
     node: all
     fn: taskoskernel.LoadOsKModule
     param:
-      modulesKey: osKernelModules
-      kernelFileKey: kernelFilename
+      - osKernelModules
+      - kernelFilename
     dependency:
       - DaPkgInstall
       - DaPkgInstall2
@@ -74,8 +73,8 @@ phases:
     node: all
     fn: taskoskernel.LoadOsKParam
     param:
-      paramsKey: osKernelParams
-      kernelFileKey: kernelFilename
+      - osKernelParams
+      - kernelFilename
     dependency:
       - KernelModuleLoad
 
@@ -91,7 +90,7 @@ phases:
     node: all
     fn: oservice.EnableOsService
     param:
-      serviceKey: osServiceEnable
+      - osServiceEnable
     dependency:
       - SelinuxConf
 
@@ -100,7 +99,7 @@ phases:
     node: all
     fn: oservice.StartOsService
     param:
-      serviceKey: osServiceStart
+      - osServiceStart
     dependency:
       - SelinuxConf
       - ServiceEnable
@@ -109,8 +108,6 @@ phases:
     description: Reset the control plane node(s)
     node: controlPlane
     fn: taskk8s.ResetNode
-    param:
-      targetsKey: controlPlaneNodes
     dependency:
       - ServiceStart
 
@@ -119,8 +116,7 @@ phases:
     node: controlPlane
     fn: taskk8s.InitCPlane
     param:
-      targetsKey: controlPlaneNodes
-      clusterKey: clusterConfig
+      - clusterConfig
     dependency:
       - Reset1
 
@@ -128,8 +124,6 @@ phases:
     description: Reset the worker node(s)
     node: worker
     fn: taskk8s.ResetNode
-    param:
-      targetsKey: workerNodes
     dependency:
       - Init
 
@@ -138,8 +132,8 @@ phases:
     node: worker
     fn: taskk8s.AddWorker
     param:
-      masterNodeKey: controlPlaneNodes[0]
-      targetsKey: workerNodes
+      - controlPlaneNode
+      - workerNodes
     dependency:
       - Reset2
 
@@ -148,7 +142,7 @@ phases:
     node: controlPlane
     fn: taskk8s.ConfigureKubectlOnCplane
     param:
-      masterNodeKey: controlPlaneNodes[0]
+      - controlPlaneNodes[0]
     dependency:
       - Reset2
 
@@ -157,8 +151,7 @@ phases:
     node: controlPlane
     fn: gocli.InstallGoCliOnVm
     param:
-      goCliKey: goCli
-      targetsKey: controlPlaneNodes
+      - goCli
     dependency:
       - KubectlConf
 
@@ -167,7 +160,7 @@ phases:
     node: controlPlane
     fn: util.CreateCustomRcFile
     param:
-      rcFileNameKey: customRcFileName
+      - customRcFileName
     dependency:
       - GoCli
 
@@ -176,8 +169,8 @@ phases:
     node: controlPlane
     fn: util.SetPath
     param:
-      binFolderPathKey: binFolderPath
-      rcFileNameKey: customRcFileName
+      - binFolderPath
+      - customRcFileName
     dependency:
       - RcFile
 
@@ -186,7 +179,7 @@ phases:
     node: controlPlane
     fn: helm.InstallHelmRepo
     param:
-      helmRepoKey: helmRepo
+      - helmRepo
     dependency:
       - EnvarPath
 

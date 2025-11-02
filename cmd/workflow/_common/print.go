@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func GetPrintCmd(cmdName string) *cobra.Command {
+func GetPrintCmd(cmdPathName string) *cobra.Command {
 	var (
 		showConfig bool
 		showPhase  bool
@@ -33,7 +33,7 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 
 			// --- CONFIG ---
 			if showConfig {
-				config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
+				config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdPathName)
 				if err != nil {
 					return fmt.Errorf("getting config: %w", err)
 				}
@@ -49,7 +49,7 @@ func GetPrintCmd(cmdName string) *cobra.Command {
 
 			// --- WORKFLOW ---
 			if showPhase || showTier {
-				workflow, err := phase2.GetWorkflow(cmdName)
+				workflow, err := phase2.GetWorkflow(cmdPathName)
 				if err != nil {
 					return fmt.Errorf("getting workflow: %w", err)
 				}

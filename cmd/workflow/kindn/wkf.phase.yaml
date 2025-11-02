@@ -25,8 +25,8 @@ phases:
     description: Provision required/missing standard dnfapt packages
     node: all
     fn: dnfapt.UpdateVmOsApp
-    params:
-      daPkgKey: da.pkg.required
+    param:
+      - da.pkg.required
     Dependency:
       - OsUpgrade
 
@@ -34,9 +34,8 @@ phases:
     description: Provision Go CLI(s)
     node: all
     fn: taskgocli.InstallGoCliOnVm
-    params:
-      goCliKey: goCli
-      targetsKey: node
+    param:
+      - goCli
     Dependency:
       - AppUpdate
 
@@ -44,8 +43,8 @@ phases:
     description: Provision OS service(s)
     node: all
     fn: oservice.InstallOsService
-    params:
-      serviceKey: service
+    param:
+      - service
     Dependency:
       - GoCli
       - EnvarSet
@@ -61,8 +60,8 @@ phases:
     description: Create a custom RC file in user's home
     node: all
     fn: util.CreateCustomRcFile
-    params:
-      rcFileNameKey: customRcFileName
+    param:
+      - customRcFileName
     Dependency:
       - UserService
 
@@ -70,9 +69,9 @@ phases:
     description: Configure PATH envvar into current user's custom RC file
     node: all
     fn: util.SetPath
-    params:
-      binFolderPathKey: binFolderPath
-      rcFileNameKey: customRcFileName
+    param:
+      - binFolderPath
+      - customRcFileName
     Dependency:
       - RcFile
 
@@ -80,9 +79,9 @@ phases:
     description: Define envvars into current user's custom RC file
     node: all
     fn: util.SetEnvar
-    params:
-      rcFileNameKey: customRcFileName
-      envVarsKey: envar
+    param:
+      - customRcFileName
+      - envar
     Dependency:
       - EnvarPath
 
@@ -90,8 +89,8 @@ phases:
     description: Start OS services needed by the app
     node: all
     fn: oservice.StartOsService
-    params:
-      serviceKey: service
+    param:
+      - service
     Dependency:
       - InstallService
       - EnvarSet

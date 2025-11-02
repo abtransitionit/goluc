@@ -4,13 +4,17 @@ Copyright © 2025 AB TRANSITION IT
 package common
 
 import (
+	"path/filepath"
+
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
 )
 
 // NewWorkflowCmd returns a base cobra.Command configured with logging, config, and default RunE.
-func GetEpCmd(cmdName, shortDesc string) *cobra.Command {
+func GetEpCmd(cmdPathName, shortDesc string) *cobra.Command {
+	// cmdPath := filepath.Dir(cmdPathName)
+	cmdName := filepath.Base(cmdPathName)
 	cmd := &cobra.Command{
 		Use:   cmdName,
 		Short: shortDesc,
@@ -18,7 +22,7 @@ func GetEpCmd(cmdName, shortDesc string) *cobra.Command {
 			logger := logx.GetLogger()
 
 			// Get configuration (package + global + local)
-			v, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdName)
+			v, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdPathName)
 			if err != nil {
 				return err
 			}
