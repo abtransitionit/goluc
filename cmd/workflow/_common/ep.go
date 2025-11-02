@@ -7,9 +7,12 @@ import (
 	"path/filepath"
 
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/phase2"
 	"github.com/abtransitionit/gocore/viperx"
 	"github.com/spf13/cobra"
 )
+
+var FunctionRegistry = phase2.GetFunctionRegistry()
 
 // NewWorkflowCmd returns a base cobra.Command configured with logging, config, and default RunE.
 func GetEpCmd(cmdPathName, shortDesc string) *cobra.Command {

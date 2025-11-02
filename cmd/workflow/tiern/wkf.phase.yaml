@@ -5,27 +5,27 @@ phases:
     description: run alone
     node: all
     fn: vm.CheckVmSshAccess
-    Dependency: []
+    dependency: []
 
   BPhase:
     description: run concurently with C
     node: all
     fn: luc.DeployLuc
-    Dependency:
+    dependency:
       - APhase
 
   CPhase:
     description: run concurently with B
     node: all
     fn: luc.DeployLuc
-    Dependency:
+    dependency:
       - APhase
 
   DPhase:
     description: run after B and C finish
     node: all
     fn: luc.DeployLuc
-    Dependency:
+    dependency:
       - BPhase
       - CPhase
 

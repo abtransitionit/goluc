@@ -1,0 +1,21 @@
+name: smalln
+description: a small workflow
+phases:
+
+  NodeSsh:
+    description: Check if VMs are SSH reachable
+    node: all
+    fn: vm.CheckVmSshAccess
+    Dependency: []
+
+  OsUpgrade:
+    description: Provision OS nodes with latest dnfapt packages and repositories
+    node: all
+    fn: onpm.UpgradeOs
+    Dependency: []
+
+  AppUpdate:
+    description: Provision required/missing standard dnfapt packages
+    node: all
+    fn: onpm.UpgradePkg
+    Dependency: []

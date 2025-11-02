@@ -2,8 +2,9 @@ workflow:
   smalln:
 
     node:
-      - o1u
-      - o2a
+      all: 
+        - o1u
+        - o2a
 
     da:
       pkg:

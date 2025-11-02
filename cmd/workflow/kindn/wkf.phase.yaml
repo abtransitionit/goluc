@@ -5,20 +5,20 @@ phases:
     description: Check if VMs are SSH reachable
     node: all
     fn: vm.CheckVmSshAccess
-    Dependency: []
+    dependency: []
 
   LucAgent:
     description: Copy LUC CLI agent to all VMs
     node: all
     fn: luc.DeployLuc
-    Dependency:
+    dependency:
       - NodeSsh
 
   OsUpgrade:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
     fn: dnfapt.UpgradeVmOs
-    Dependency:
+    dependency:
       - LucAgent
 
   AppUpdate:
@@ -27,7 +27,7 @@ phases:
     fn: dnfapt.UpdateVmOsApp
     param:
       - da.pkg.required
-    Dependency:
+    dependency:
       - OsUpgrade
 
   GoCli:
@@ -36,7 +36,7 @@ phases:
     fn: taskgocli.InstallGoCliOnVm
     param:
       - goCli
-    Dependency:
+    dependency:
       - AppUpdate
 
   InstallService:
@@ -45,7 +45,7 @@ phases:
     fn: oservice.InstallOsService
     param:
       - service
-    Dependency:
+    dependency:
       - GoCli
       - EnvarSet
 
@@ -53,7 +53,7 @@ phases:
     description: Allows user services to be session-independent
     node: all
     fn: oservice.EnableLinger
-    Dependency:
+    dependency:
       - GoCli
 
   RcFile:
@@ -62,7 +62,7 @@ phases:
     fn: util.CreateCustomRcFile
     param:
       - customRcFileName
-    Dependency:
+    dependency:
       - UserService
 
   EnvarPath:
@@ -72,7 +72,7 @@ phases:
     param:
       - binFolderPath
       - customRcFileName
-    Dependency:
+    dependency:
       - RcFile
 
   EnvarSet:
@@ -82,7 +82,7 @@ phases:
     param:
       - customRcFileName
       - envar
-    Dependency:
+    dependency:
       - EnvarPath
 
   ServiceStart:
@@ -91,7 +91,7 @@ phases:
     fn: oservice.StartOsService
     param:
       - service
-    Dependency:
+    dependency:
       - InstallService
       - EnvarSet
 
@@ -99,5 +99,5 @@ phases:
     description: Sets up a rootless containerd env Linux session independent for the current user
     node: all
     fn: ctd.SetContainerd
-    Dependency:
+    dependency:
       - ServiceStart

@@ -34,7 +34,7 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 			}
 
 			// execute the workflow
-			err = workflow.Execute(config, logger)
+			err = workflow.Execute(config, FunctionRegistry, logger)
 			if err != nil {
 				return fmt.Errorf("executing workflow: %w", err)
 			}

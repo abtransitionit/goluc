@@ -17,14 +17,14 @@ phases:
   OsUpgrade:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
-    fn: dnfapt.UpgradeVmOs
+    fn: onpm.UpgradeOs
     Dependency:
       - LucAgent
 
   AppUpdate:
     description: Provision required/missing standard dnfapt packages
     node: all
-    fn: dnfapt.UpdateVmOsApp
+    fn: onpm.UpgradePkg
     params:
       daPkgKey: da.pkg.required
     Dependency:
