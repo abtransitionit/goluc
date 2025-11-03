@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package common
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -20,6 +21,7 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// define logger
 			logger := logx.GetLogger()
+			ctx := context.Background()
 
 			// get the config
 			config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdPathName)
@@ -34,7 +36,7 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 			}
 
 			// execute the workflow
-			err = workflow.Execute(config, FunctionRegistry, logger)
+			err = workflow.Execute(ctx, config, FunctionRegistry, logger)
 			if err != nil {
 				return fmt.Errorf("executing workflow: %w", err)
 			}

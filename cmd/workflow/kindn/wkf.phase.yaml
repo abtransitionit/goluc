@@ -1,103 +1,103 @@
 name: kindn
 description: create a KIND (Kubernetes in Docker) cluster
 phases:
-  NodeSsh:
+  Ssh:
     description: Check if VMs are SSH reachable
     node: all
-    fn: vm.CheckVmSshAccess
+    fn: CheckSshAccess
     dependency: []
 
-  LucAgent:
+  Agent:
     description: Copy LUC CLI agent to all VMs
     node: all
-    fn: luc.DeployLuc
+    fn: Deploy
     dependency:
-      - NodeSsh
+      - Ssh
 
-  OsUpgrade:
+  Os:
     description: Provision OS nodes with latest dnfapt packages and repositories
     node: all
-    fn: dnfapt.UpgradeVmOs
+    fn: UpgradeOs
     dependency:
-      - LucAgent
+      - Agent
 
-  AppUpdate:
+  Pkg:
     description: Provision required/missing standard dnfapt packages
     node: all
-    fn: dnfapt.UpdateVmOsApp
+    fn: UpdateNativePkg
     param:
       - da.pkg.required
     dependency:
-      - OsUpgrade
+      - Os
 
   GoCli:
     description: Provision Go CLI(s)
     node: all
-    fn: taskgocli.InstallGoCliOnVm
+    fn: InstallGoCli
     param:
       - goCli
     dependency:
-      - AppUpdate
+      - Pkg
 
   InstallService:
     description: Provision OS service(s)
     node: all
-    fn: oservice.InstallOsService
+    fn: InstallService
     param:
       - service
     dependency:
       - GoCli
-      - EnvarSet
+      - Envar
 
   UserService:
     description: Allows user services to be session-independent
     node: all
-    fn: oservice.EnableLinger
+    fn: EnableLinger
     dependency:
       - GoCli
 
-  RcFile:
+  Rc:
     description: Create a custom RC file in user's home
     node: all
-    fn: util.CreateCustomRcFile
+    fn: CreateRc
     param:
       - customRcFileName
     dependency:
       - UserService
 
-  EnvarPath:
+  Path:
     description: Configure PATH envvar into current user's custom RC file
     node: all
-    fn: util.SetPath
+    fn: SetPath
     param:
       - binFolderPath
       - customRcFileName
     dependency:
-      - RcFile
+      - Rc
 
-  EnvarSet:
+  Envar:
     description: Define envvars into current user's custom RC file
     node: all
-    fn: util.SetEnvar
+    fn: DefineEnvar
     param:
       - customRcFileName
       - envar
     dependency:
-      - EnvarPath
+      - Path
 
   ServiceStart:
     description: Start OS services needed by the app
     node: all
-    fn: oservice.StartOsService
+    fn: StartService
     param:
       - service
     dependency:
       - InstallService
-      - EnvarSet
+      - Envar
 
   Containerd:
     description: Sets up a rootless containerd env Linux session independent for the current user
     node: all
-    fn: ctd.SetContainerd
+    fn: SetContainerd
     dependency:
       - ServiceStart

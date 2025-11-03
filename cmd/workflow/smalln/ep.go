@@ -21,6 +21,6 @@ func init() {
 
 	// function mapping
 	// Registry.Add("vm.CheckVmSshAccess", vm.CheckVmSshAccess)
-	common.FunctionRegistry.Add("onpm.UpgradeOs", onpm.UpgradeOs)
-	common.FunctionRegistry.Add("onpm.UpgradePkg", onpm.UpgradePkg)
+	common.FunctionRegistry.Add("UpgradeOs", onpm.UpgradeOs)
+	common.FunctionRegistry.Add("UpdatePkg", onpm.UpgradePkg)
 }
