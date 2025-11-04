@@ -1,24 +1,16 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package workflow
+package workflow2
 
 import (
 	"fmt"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/workflow/funcn"
-	"github.com/abtransitionit/goluc/cmd/workflow/tiern"
-
-	// "github.com/abtransitionit/goluc/cmd/workflow/gotc"
-	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
-	"github.com/abtransitionit/goluc/cmd/workflow/kben"
-	"github.com/abtransitionit/goluc/cmd/workflow/kind"
-	"github.com/abtransitionit/goluc/cmd/workflow/kindn"
-	"github.com/abtransitionit/goluc/cmd/workflow/om"
-	"github.com/abtransitionit/goluc/cmd/workflow/omn"
-	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
-	"github.com/abtransitionit/goluc/cmd/workflow/smalln"
+	"github.com/abtransitionit/goluc/cmd/workflow2/dep"
+	"github.com/abtransitionit/goluc/cmd/workflow2/nodep"
+	"github.com/abtransitionit/goluc/cmd/workflow2/om"
+	"github.com/abtransitionit/goluc/cmd/workflow2/small"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +23,7 @@ machine or on remote hosts (ie. VMs or containers).
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "wkf",
+	Use:   "wkf2",
 	Short: workflowSDesc,
 	Long:  workflowLDesc,
 	Example: fmt.Sprintf(`
@@ -58,14 +50,11 @@ var EpCmd = &cobra.Command{
 func init() {
 	// define the entry point for each workflow
 	// EpCmd.AddCommand(gotc.EpCmd)
-	EpCmd.AddCommand(kbe.EpCmd)
-	EpCmd.AddCommand(kind.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
-	EpCmd.AddCommand(omn.EpCmd)
-	EpCmd.AddCommand(ovh.EpCmd)
-	EpCmd.AddCommand(kindn.EpCmd)
-	EpCmd.AddCommand(kben.EpCmd)
-	EpCmd.AddCommand(smalln.EpCmd)
-	EpCmd.AddCommand(funcn.EpCmd)
-	EpCmd.AddCommand(tiern.EpCmd)
+	// EpCmd.AddCommand(kindn.EpCmd)
+	// EpCmd.AddCommand(kben.EpCmd)
+	EpCmd.AddCommand(small.EpCmd)
+	// EpCmd.AddCommand(funcn.EpCmd)
+	EpCmd.AddCommand(dep.EpCmd)
+	EpCmd.AddCommand(nodep.EpCmd)
 }

@@ -1,7 +1,8 @@
 workflow:
-  smalln:
-    customRcFileName: .profile.luc
-    binFolderPath:    /usr/local/bin
+  small:
+    file: 
+      customRcFileName: .profile.luc
+      binFolderPath:    /usr/local/bin
 
     node:
       all: 

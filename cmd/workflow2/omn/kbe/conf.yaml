@@ -1,4 +1,0 @@
-workflow:
-  kbe:
-    node:
-      local: local

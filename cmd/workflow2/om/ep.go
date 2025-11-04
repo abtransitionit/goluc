@@ -1,21 +1,21 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package omn
+package om
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/workflow/om/kbe"
-	"github.com/abtransitionit/goluc/cmd/workflow/om/luc"
+	"github.com/abtransitionit/goluc/cmd/workflow2/om/luc"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   cmdName,
+	Use:   filepath.Base(cmdPathName),
 	Short: shortDesc,
 	Long:  longDesc,
 	Example: fmt.Sprintf(`
@@ -40,7 +40,6 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
-	// define the entry point for each workflow
-	EpCmd.AddCommand(kbe.EpCmd)
+	// sub cde
 	EpCmd.AddCommand(luc.EpCmd)
 }

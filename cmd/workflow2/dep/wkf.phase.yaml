@@ -1,30 +1,30 @@
-name: tiern
-description: create a KBE (Kubernetes Easy) cluster
+name: dep
+description: example of a workflow with dependency
 phases:
   APhase:
     description: run alone
     node: all
-    fn: vm.CheckVmSshAccess
+    fn: APhaseFn
     dependency: []
 
   BPhase:
     description: run concurently with C
     node: all
-    fn: luc.DeployLuc
+    fn: BPhaseFn
     dependency:
       - APhase
 
   CPhase:
     description: run concurently with B
     node: all
-    fn: luc.DeployLuc
+    fn: CPhaseFn
     dependency:
       - APhase
 
   DPhase:
     description: run after B and C finish
     node: all
-    fn: luc.DeployLuc
+    fn: DPhaseFn
     dependency:
       - BPhase
       - CPhase

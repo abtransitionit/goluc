@@ -1,0 +1,27 @@
+name: nodep
+description: Example of a workflow with no dependency
+phases:
+  APhase:
+    description: run concurently with B, C and D
+    node: all
+    fn: APhaseFn
+    dependency: []
+
+  BPhase:
+    description: run concurently with A, C and D
+    node: all
+    fn: BPhaseFn
+    dependency: []
+
+  CPhase:
+    description: run concurently with A, B and D
+    node: all
+    fn: CPhaseFn
+    dependency: []
+
+  DPhase:
+    description: run concurently with A, B and C
+    node: all
+    fn: DPhaseFn
+    dependency: []
+

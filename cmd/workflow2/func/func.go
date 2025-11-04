@@ -8,8 +8,8 @@ import (
 
 // Package variables : confifg2
 var (
-	cmdName   = "funcn" // the app name - should also be the workflow name
-	shortDesc = "workflow to test function registry."
+	cmdPathName = "funcn" // the app name - should also be the workflow name
+	shortDesc   = "workflow to test function registry."
 )
 
 type closure func(ctx context.Context, l logx.Logger) error

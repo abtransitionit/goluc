@@ -14,6 +14,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/property"
 	"github.com/abtransitionit/goluc/cmd/test"
 	"github.com/abtransitionit/goluc/cmd/workflow"
+	"github.com/abtransitionit/goluc/cmd/workflow2"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -48,6 +49,7 @@ func Execute() {
 func init() {
 	rootCmd.AddCommand(goprj.EpCmd)
 	rootCmd.AddCommand(workflow.EpCmd)
+	rootCmd.AddCommand(workflow2.EpCmd)
 	rootCmd.AddCommand(property.EpCmd)
 	rootCmd.AddCommand(test.EpCmd)
 	rootCmd.AddCommand(do.EpCmd)

@@ -8,7 +8,7 @@ import (
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/onpm"
-	common "github.com/abtransitionit/goluc/cmd/workflow/_common"
+	common "github.com/abtransitionit/goluc/cmd/workflow2/_common"
 )
 
 // root Command

@@ -1,0 +1,8 @@
+workflow:
+  dep:
+
+    node:
+      all:
+        - o1u
+        - o2a
+

@@ -1,4 +1,4 @@
-name: smalln
+name: small
 description: a small workflow
 phases:
   NodeSsh:

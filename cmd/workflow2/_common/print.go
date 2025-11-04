@@ -15,76 +15,96 @@ import (
 
 func GetPrintCmd(cmdPathName string) *cobra.Command {
 	var (
-		showConfig bool
-		showPhase  bool
-		showTier   bool
+		showConfigTxt   bool
+		showConfigTable bool
+		showPhase       bool
+		showTier        bool
 	)
 
-	cmd := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:   "print",
 		Short: "Display workflow details (config, phases, or tiers)",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+
 			// define logger
 			logger := logx.GetLogger()
+
 			// at least one flag required
-			if !showConfig && !showPhase && !showTier {
+			if !showConfigTxt && !showConfigTable && !showPhase && !showTier {
 				return fmt.Errorf("please specify one of: --config, --phase, or --tier")
 			}
 
 			// --- CONFIG ---
-			if showConfig {
-				config, err := viperx.GetConfig("wkf.conf.yaml", "workflow", cmdPathName)
+			if showConfigTable {
+				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
 				if err != nil {
 					return fmt.Errorf("getting config: %w", err)
 				}
 
-				table, err := config.GetTable()
+				configContent, err := config.GetContentAsTable()
 				if err != nil {
-					return fmt.Errorf("getting config table: %w", err)
+					return fmt.Errorf("getting config content: %w", err)
 				}
 
-				logger.Info("== Workflow Config ==")
-				fmt.Println(table)
+				logger.Info("Workflow Config View")
+				list.PrettyPrintTable(configContent)
+			}
+			// --- CONFIG ---
+			if showConfigTxt {
+				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
+				if err != nil {
+					return fmt.Errorf("getting config: %w", err)
+				}
+
+				configContent, err := config.GetContentAsString()
+				if err != nil {
+					return fmt.Errorf("getting config content: %w", err)
+				}
+
+				logger.Info("Workflow Config View")
+				fmt.Println(configContent)
 			}
 
 			// --- WORKFLOW ---
 			if showPhase || showTier {
-				workflow, err := phase2.GetWorkflow(cmdPathName)
+				workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
 				if err != nil {
 					return fmt.Errorf("getting workflow: %w", err)
 				}
 
 				// --- PHASE ---
 				if showPhase {
-					table, err := workflow.GetTablePhase()
+					phaseView, err := workflow.GetPhaseView()
 					if err != nil {
 						return fmt.Errorf("getting phase table: %w", err)
 					}
 
-					logger.Info("== Workflow Phases ==")
-					list.PrettyPrintTable(table)
+					logger.Info("Workflow Phase View")
+					list.PrettyPrintTable(phaseView)
 				}
 
 				// --- TIER ---
 				if showTier {
-					table, err := workflow.GetTableTier()
+					tierView, err := workflow.GetTierView()
 					if err != nil {
 						return fmt.Errorf("getting tier table: %w", err)
 					}
 
-					logger.Info("== Workflow Tiers ==")
-					list.PrettyPrintTable(table)
+					logger.Info("Workflow Tier View")
+					list.PrettyPrintTable(tierView)
 				}
 			}
 
+			// success
 			return nil
 		},
 	}
 
 	// define flags
-	cmd.Flags().BoolVar(&showConfig, "config", false, "Display workflow config")
-	cmd.Flags().BoolVar(&showPhase, "phase", false, "Display workflow phases")
-	cmd.Flags().BoolVar(&showTier, "tier", false, "Display workflow tiers")
+	cobraCmd.Flags().BoolVar(&showConfigTable, "configTable", false, "Display workflow config as txt file")
+	cobraCmd.Flags().BoolVar(&showConfigTxt, "configTxt", false, "Display workflow config as a table")
+	cobraCmd.Flags().BoolVar(&showPhase, "phase", false, "Display workflow phases")
+	cobraCmd.Flags().BoolVar(&showTier, "tier", false, "Display workflow tiers")
 
-	return cmd
+	return cobraCmd
 }

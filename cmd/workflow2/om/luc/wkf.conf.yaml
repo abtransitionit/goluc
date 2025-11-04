@@ -1,0 +1,4 @@
+workflow:
+  luc:
+    node: local
+      
