@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func GetPrintCmd(cmdPathName string) *cobra.Command {
+func GetViewCmd(cmdPathName string) *cobra.Command {
 	var (
 		showConfigTxt   bool
 		showConfigTable bool
@@ -22,8 +22,8 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 	)
 
 	cobraCmd := &cobra.Command{
-		Use:   "print",
-		Short: "Display workflow details (config, phases, or tiers)",
+		Use:   "view",
+		Short: "Display workflow views (config, phases, or tiers)",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 
 			// define logger
@@ -101,10 +101,10 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 	}
 
 	// define flags
-	cobraCmd.Flags().BoolVar(&showConfigTable, "configTable", false, "Display workflow config as txt file")
-	cobraCmd.Flags().BoolVar(&showConfigTxt, "configTxt", false, "Display workflow config as a table")
-	cobraCmd.Flags().BoolVar(&showPhase, "phase", false, "Display workflow phases")
-	cobraCmd.Flags().BoolVar(&showTier, "tier", false, "Display workflow tiers")
+	cobraCmd.Flags().BoolVar(&showConfigTable, "cfgTable", false, "Display workflow config file in a table")
+	cobraCmd.Flags().BoolVar(&showConfigTxt, "cfgTxt", false, "Display workflow config file as a Txt file")
+	cobraCmd.Flags().BoolVar(&showPhase, "wphase", false, "Display workflow phases")
+	cobraCmd.Flags().BoolVar(&showTier, "wtier", false, "Display workflow tiers")
 
 	return cobraCmd
 }

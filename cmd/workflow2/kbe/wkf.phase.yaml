@@ -16,21 +16,21 @@ phases:
     dependency:
       - Ssh
 
-  Os:
+  AlignDistro:
     description: Upgrade native OS packages and repositories to version latest
     node: all
-    fn: UpgradeOs
+    fn: AlignDistro
     dependency:
       - Agent
 
-  Pkg:
+  AlignPkg:
     description: Provision required/missing native standard OS packages
     node: all
     fn: UpdateNativePkg
     param:
       - da.pkg.node
     dependency:
-      - Os
+      - AlignDistro
 
   NativeRepo:
     description: Provision native OS package repository(ies)
@@ -39,7 +39,7 @@ phases:
     param:
       - da.repo.node
     dependency:
-      - Pkg
+      - AlignPkg
 
   NativePkg:
     description: Provision native OS package(s)

@@ -2,8 +2,7 @@ workflow:
   ssh:
 
     node:
-      local: 
-        - local
+      bastion: local
       all: 
         - o1u
         - o2a

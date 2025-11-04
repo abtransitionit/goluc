@@ -7,7 +7,7 @@ import "github.com/spf13/cobra"
 
 func SetInitSubCmd(epCmd *cobra.Command, cmdPathName string) {
 	epCmd.AddCommand(
-		GetPrintCmd(cmdPathName),
+		GetViewCmd(cmdPathName),
 		GetRunCmd(cmdPathName),
 	)
 }

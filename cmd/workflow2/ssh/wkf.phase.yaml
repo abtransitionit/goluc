@@ -2,7 +2,7 @@ name: ssh
 description: test Ssh access
 phases:
   Conf:
-    description: check node is SSH configured in ~/.ssh/config.d/
+    description: check node is locally configured in ~/.ssh/config.d/
     node: local
     fn: CheckSshConf
     param: 

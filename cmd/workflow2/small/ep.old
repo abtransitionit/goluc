@@ -19,7 +19,7 @@ var EpCmd = common.GetEpCmd(
 
 func init() {
 	// sub cde
-	EpCmd.AddCommand(common.GetPrintCmd(cmdName))
+	EpCmd.AddCommand( common.GetViewCmd(cmdName))
 	EpCmd.AddCommand(common.GetRunCmd(cmdName))
 
 	// function mapping
