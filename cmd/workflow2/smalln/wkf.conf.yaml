@@ -1,5 +1,7 @@
 workflow:
   smalln:
+    customRcFileName: .profile.luc
+    binFolderPath:    /usr/local/bin
 
     node:
       all: 
@@ -11,6 +13,10 @@ workflow:
         required:
           - uidmap
           - dbus-user-session
+      repo:
+        node:
+          - { name: crio, fileName: kbe-crio, version: "1.32" }
+          - { name: k8s,  fileName: kbe-k8s,  version: "1.32" }
 
     goCli:
       - name: cni

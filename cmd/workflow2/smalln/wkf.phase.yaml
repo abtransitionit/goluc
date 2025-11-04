@@ -1,0 +1,50 @@
+name: smalln
+description: a small workflow
+phases:
+  NodeSsh:
+    description: Check if VMs are SSH reachable
+    node: all
+    fn: CheckSshAccess
+    dependency: []
+
+  # Os2:
+  #   description: Provision OS nodes with latest dnfapt packages and repositories
+  #   node: all
+  #   fn: UpgradeOs2
+  #   dependency: []
+
+  Path:
+    description: Configure PATH envvar into current user's custom RC file
+    node: controlPlane
+    fn: SetPath
+    param:
+      - binFolderPath
+      - customRcFileName
+    dependency:
+
+  NativeRepo:
+    description: Provision native OS package repository(ies)
+    node: all
+    fn: InstallRepo
+    param:
+      - da.repo.node
+
+  KModule:
+    description: Load Os Kernel modules
+    node: all
+    fn: LoadKModule
+    param:
+      - da.repo.node
+
+  Os:
+    description: Provision OS nodes with latest dnfapt packages and repositories
+    node: all
+    fn: UpgradeOs
+    dependency: []
+
+
+  Pkg:
+    description: Provision required/missing standard dnfapt packages
+    node: all
+    fn: UpdatePkg
+    dependency: []
