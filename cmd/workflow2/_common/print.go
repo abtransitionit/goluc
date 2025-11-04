@@ -34,7 +34,7 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 				return fmt.Errorf("please specify one of: --config, --phase, or --tier")
 			}
 
-			// --- CONFIG AS TABLE ---
+			// --- WORKFLOW CONFIG AS TABLE ---
 			if showConfigTable {
 				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
 				if err != nil {
@@ -46,10 +46,10 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
-				logger.Info("Workflow Config view as table")
+				logger.Info("Workflow Config (table view)")
 				list.PrettyPrintTable(configContent)
 			}
-			// --- CONFIG AS FILE ---
+			// --- WORKFLOW CONFIG AS FILE ---
 			if showConfigFile {
 				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
 				if err != nil {
@@ -61,7 +61,7 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
-				logger.Info("Workflow Config view as file")
+				logger.Info("Workflow Config (file view)")
 				fmt.Println(configContent)
 			}
 
@@ -72,25 +72,25 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting workflow: %w", err)
 				}
 
-				// --- PHASE ---
+				// --- PHASE VIEW---
 				if showPhase {
 					phaseView, err := workflow.GetPhaseView()
 					if err != nil {
 						return fmt.Errorf("getting phase table: %w", err)
 					}
 
-					logger.Info("Workflow Phase View")
+					logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
 					list.PrettyPrintTable(phaseView)
 				}
 
-				// --- TIER ---
+				// --- TIER VIEW---
 				if showTier {
 					tierView, err := workflow.GetTierView()
 					if err != nil {
 						return fmt.Errorf("getting tier table: %w", err)
 					}
 
-					logger.Info("Workflow Tier View")
+					logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
 					list.PrettyPrintTable(tierView)
 				}
 			}

@@ -1,7 +1,8 @@
 workflow:
   kbe:
-    customRcFileName: .profile.luc
-    binFolderPath:    /usr/local/bin
+    file:
+      customRcFileName: .profile.luc
+      binFolderPath:    /usr/local/bin
 
     node:
       all: 
@@ -50,7 +51,7 @@ workflow:
         - { name: kbe-cilium, chart: cilium,  repo:  cilium, version: "0.18.7", namespace: "kube-system" }
 
     cluster:
-      podCidr: "192.168.0.0/16"
+      ^podCidr: "192.168.0.0/16"
       serviceCidr: "172.16.0.0/16"
       crSocketName: unix:///var/run/crio/crio.sock
       k8sVersion:   "1.32.0"
