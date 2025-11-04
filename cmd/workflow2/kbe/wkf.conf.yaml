@@ -5,7 +5,7 @@ workflow:
       binFolderPath:    /usr/local/bin
 
     node:
-      local: localhost 
+      bastion: local 
       all: 
         - o1u
         - o2a

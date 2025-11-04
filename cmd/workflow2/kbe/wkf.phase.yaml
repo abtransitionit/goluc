@@ -3,8 +3,10 @@ description: create KBE (Kubernetes Easy) clusters
 phases:
   Ssh:
     description: Check node is SSH reachable
-    node: all
+    node: bastion
     fn: CheckSshAccess
+    param: 
+      - node.all
     dependency: []
 
   Agent:

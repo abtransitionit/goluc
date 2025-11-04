@@ -20,3 +20,7 @@
 ## Manage a workflow
 Use the CLI from `goluc wkf ...`
 
+## Terminology
+ebay (**e**phemeral **Ba**stion **y**et)
+  - A hardened secured server 
+  - Access internal infrastructure via SSH (or RDP).
