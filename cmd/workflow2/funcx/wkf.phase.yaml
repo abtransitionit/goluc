@@ -1,5 +1,5 @@
-name: funcn
-description: create a KBE (Kubernetes Easy) cluster
+name: funcx
+description: test function registry
 phases:
   NodeSsh:
     description: Check node is SSH reachable

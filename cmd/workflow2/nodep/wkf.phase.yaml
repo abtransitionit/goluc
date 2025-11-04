@@ -1,5 +1,5 @@
 name: nodep
-description: Example of a workflow with no dependency
+description: test a workflow with dependency
 phases:
   APhase:
     description: run concurently with B, C and D

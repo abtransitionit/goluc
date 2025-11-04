@@ -1,5 +1,5 @@
 workflow:
-  kben:
+  kbe:
     customRcFileName: .profile.luc
     binFolderPath:    /usr/local/bin
 

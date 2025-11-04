@@ -29,7 +29,7 @@ var (
 
 // Package variables : confifg2
 var (
-	cmdName = "kind" // the app name - should also be the workflow name
+	cmdName = "kind"
 	sDesc   = "Manage Kind clusters."
 )
 

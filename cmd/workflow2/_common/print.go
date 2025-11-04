@@ -15,7 +15,7 @@ import (
 
 func GetPrintCmd(cmdPathName string) *cobra.Command {
 	var (
-		showConfigTxt   bool
+		showConfigFile  bool
 		showConfigTable bool
 		showPhase       bool
 		showTier        bool
@@ -30,11 +30,11 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 			logger := logx.GetLogger()
 
 			// at least one flag required
-			if !showConfigTxt && !showConfigTable && !showPhase && !showTier {
+			if !showConfigFile && !showConfigTable && !showPhase && !showTier {
 				return fmt.Errorf("please specify one of: --config, --phase, or --tier")
 			}
 
-			// --- CONFIG ---
+			// --- CONFIG AS TABLE ---
 			if showConfigTable {
 				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
 				if err != nil {
@@ -46,11 +46,11 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
-				logger.Info("Workflow Config View")
+				logger.Info("Workflow Config view as table")
 				list.PrettyPrintTable(configContent)
 			}
-			// --- CONFIG ---
-			if showConfigTxt {
+			// --- CONFIG AS FILE ---
+			if showConfigFile {
 				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
 				if err != nil {
 					return fmt.Errorf("getting config: %w", err)
@@ -61,7 +61,7 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
-				logger.Info("Workflow Config View")
+				logger.Info("Workflow Config view as file")
 				fmt.Println(configContent)
 			}
 
@@ -102,7 +102,7 @@ func GetPrintCmd(cmdPathName string) *cobra.Command {
 
 	// define flags
 	cobraCmd.Flags().BoolVar(&showConfigTable, "configTable", false, "Display workflow config as txt file")
-	cobraCmd.Flags().BoolVar(&showConfigTxt, "configTxt", false, "Display workflow config as a table")
+	cobraCmd.Flags().BoolVar(&showConfigFile, "configFile", false, "Display workflow config as a table")
 	cobraCmd.Flags().BoolVar(&showPhase, "phase", false, "Display workflow phases")
 	cobraCmd.Flags().BoolVar(&showTier, "tier", false, "Display workflow tiers")
 

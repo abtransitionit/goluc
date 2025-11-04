@@ -1,10 +1,10 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kben
+package kbe
 
 // Package variables
 var (
-	cmdPathName = "kben" // the app name - should also be the workflow name
-	shortDesc   = "Manage Kubernetes clusters easily (aka. KBE)."
+	cmdPathName = "kbe"
+	shortDesc   = "create KBE (Kubernetes Easy) clusters."
 )

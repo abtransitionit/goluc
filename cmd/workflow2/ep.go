@@ -8,6 +8,9 @@ import (
 
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/goluc/cmd/workflow2/dep"
+	"github.com/abtransitionit/goluc/cmd/workflow2/funcx"
+	"github.com/abtransitionit/goluc/cmd/workflow2/kbe"
+	"github.com/abtransitionit/goluc/cmd/workflow2/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow2/nodep"
 	"github.com/abtransitionit/goluc/cmd/workflow2/om"
 	"github.com/abtransitionit/goluc/cmd/workflow2/small"
@@ -51,10 +54,10 @@ func init() {
 	// define the entry point for each workflow
 	// EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
-	// EpCmd.AddCommand(kindn.EpCmd)
-	// EpCmd.AddCommand(kben.EpCmd)
+	EpCmd.AddCommand(kind.EpCmd)
+	EpCmd.AddCommand(kbe.EpCmd)
 	EpCmd.AddCommand(small.EpCmd)
-	// EpCmd.AddCommand(funcn.EpCmd)
+	EpCmd.AddCommand(funcx.EpCmd)
 	EpCmd.AddCommand(dep.EpCmd)
 	EpCmd.AddCommand(nodep.EpCmd)
 }

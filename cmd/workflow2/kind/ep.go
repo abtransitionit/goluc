@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package nodep
+package kind
 
 import (
 	common "github.com/abtransitionit/goluc/cmd/workflow2/_common"

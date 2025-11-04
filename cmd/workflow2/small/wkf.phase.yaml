@@ -1,5 +1,5 @@
 name: small
-description: a small workflow
+description: manage function execution
 phases:
   NodeSsh:
     description: Check if VMs are SSH reachable

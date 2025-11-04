@@ -1,5 +1,5 @@
-name: kben
-description: create a KBE (Kubernetes Easy) cluster
+name: kbe
+description: create KBE (Kubernetes Easy) clusters
 phases:
   Ssh:
     description: Check node is SSH reachable

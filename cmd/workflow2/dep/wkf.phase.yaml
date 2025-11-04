@@ -1,5 +1,5 @@
 name: dep
-description: example of a workflow with dependency
+description: test a workflow with dependency
 phases:
   APhase:
     description: run alone

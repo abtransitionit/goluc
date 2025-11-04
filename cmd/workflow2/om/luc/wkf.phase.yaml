@@ -1,5 +1,5 @@
 name: luc
-description: Manage LUC build and deploy
+description: manage LUC build and deploy
 phases:
     cleanTmp:
       description: empty the /tmp folder on the VMs
