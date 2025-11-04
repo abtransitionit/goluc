@@ -1,4 +1,5 @@
 workflow:
   luc:
     node: local
+    folder: /tmp
       

@@ -1,10 +1,12 @@
 name: luc
 description: manage LUC build and deploy
 phases:
-    cleanTmp:
+    Folder:
       description: empty the /tmp folder on the VMs
-      fn: luc.CleanTmpOnVm
+      fn: Empty
       dependency: []
+      param: 
+        - folder 
     gitDevToMain:
       description: merge dev to main and push all 4 projects. gocore, golinux, gotask, goluc
       fn: gitDevToMain
@@ -19,23 +21,23 @@ phases:
       dependency: []
     buildLuc:
       description: build LUC for curent and linux platform
-      fn: build
+      fn: buildLuc
       dependency: []
     deployLuc:
       description: deploy LUC on all VMs
-      fn: luc.DeployOnVm
+      fn: deployLuc
       dependency: []
     deployLucLocal:
       description: deploy LUC Localy (ie. /usr/local/bin)
-      fn: DeployLucLocally
+      fn: deployLucLocal
       dependency: 
         - buildLuc
     deleteLuc:
       description: delete LUC on all VMs
-      fn: luc.DeleteOnVm
+      fn: deleteLuc
       dependency: []
     deployLuc2:
       description: deploy LUC on all VMs
-      fn: luc.DeployOnVm
+      fn: deployLuc2
       dependency:
         - buildLuc
