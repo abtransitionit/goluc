@@ -1,0 +1,9 @@
+workflow:
+  nodep:
+
+    node:
+      all:
+        - o1u
+        - o2a
+      local: localhost  
+

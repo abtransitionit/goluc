@@ -1,0 +1,16 @@
+name: ssh
+description: test Ssh access
+phases:
+  Conf:
+    description: Check if Node is SSH configured in ~/.ssh/config.d/
+    node: all
+    fn: CheckSshConf
+    dependency: []
+
+  Access:
+    description: Check if Node is SSH reachable
+    node: all
+    fn: CheckSshReach
+    Dependency:
+      - Conf
+
