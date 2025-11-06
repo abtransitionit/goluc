@@ -85,7 +85,13 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 
 				// --- TIER VIEW---
 				if showTier {
-					tierView, err := workflow.GetTierView(logger)
+					// get tiers
+					tiers, err := workflow.TopoSortByTier(logger)
+					if err != nil {
+						return fmt.Errorf("cannot sort tiers: %w", err)
+					}
+
+					tierView, err := workflow.GetTierView(tiers, logger)
 					if err != nil {
 						return fmt.Errorf("getting tier table: %w", err)
 					}

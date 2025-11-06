@@ -40,8 +40,16 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 				return fmt.Errorf("getting workflow: %w", err)
 			}
 
+			// Detect retain or skip flag used
+			var retainSkipRange string
+			if retainFlag != "" {
+				retainSkipRange = fmt.Sprintf("-r%s", retainFlag)
+			} else if skipFlag != "" {
+				retainSkipRange = fmt.Sprintf("-s%s", skipFlag)
+			}
+
 			// execute the workflow
-			err = workflow.Execute(ctx, config, FunctionRegistry, retainFlag, skipFlag, logger)
+			err = workflow.Execute(ctx, config, FunctionRegistry, retainSkipRange, logger)
 			if err != nil {
 				return fmt.Errorf("executing workflow: %w", err)
 			}
