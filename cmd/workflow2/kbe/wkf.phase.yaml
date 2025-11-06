@@ -3,7 +3,7 @@ description: create KBE (Kubernetes Easy) clusters
 phases:
   Ssh:
     description: Check node is SSH reachable
-    node: bastion
+    node: node.bastion
     fn: CheckSshAccess
     param: 
       - node.all
@@ -11,177 +11,178 @@ phases:
 
   Agent:
     description: Copy LUC CLI agent
-    node: all
+    node: node.bastion
     fn: DeployLuc
+    param: 
+      - node.all
     dependency:
       - Ssh
 
   AlignDistro:
     description: Upgrade native OS packages and repositories to version latest
-    node: all
+    node: node.all
     fn: AlignDistro
     dependency:
       - Agent
 
   AlignPkg:
     description: Provision required/missing native standard OS packages
-    node: all
+    node: node.all
     fn: UpdateNativePkg
     param:
-      - da.pkg.node
+      - onpm.pkg.node
     dependency:
       - AlignDistro
 
   NativeRepo:
     description: Provision native OS package repository(ies)
-    node: all
+    node: node.all
     fn: InstallRepo
     param:
-      - da.repo.node
+      - onpm.repo.node
     dependency:
       - AlignPkg
 
   NativePkg:
     description: Provision native OS package(s)
-    node: all
+    node: node.all
     fn: InstallPkg
     param:
-      - da.pkg.node
+      - onpm.pkg.node
     dependency:
       - NativeRepo
 
   CpNativePkg:
-    description: Provision native OS package(s) for control plane
-    node: controlPlane
+    description: Provision native OS package(s)
+    node: node.cp
     fn: Installpkg
     param:
-      - da.pkg.controlPlane
+      - onpm.pkg.cp
     dependency:
       - NativePkg
 
   KModule:
     description: Load OS kernel module(s)
-    node: all
+    node: node.all
     fn: LoadKModule
     param:
-      - osKernelModules
-      - kernelFilename
+      - kernel.module
+      - file.kernel
     dependency:
       - NativePkg
       - CpNativePkg
 
   KParam:
     description: Set OS kernel parameter(s)
-    node: all
+    node: node.all
     fn: ConfigureKParam
     param:
-      - osKernelParams
-      - kernelFilename
+      - kernel.param
+      - file.kernel
     dependency:
       - KModule
 
   Selinux:
     description: Configure SELinux
-    node: all
+    node: node.all
     fn: ConfigureSelinux
     dependency:
       - KParam
 
   ServiceEnable:
     description: Enable OS services to start after a reboot
-    node: all
+    node: node.all
     fn: EnableService
     param:
-      - osServiceEnable
+      - service.enable
     dependency:
       - Selinux
 
   ServiceStart:
     description: Start OS services for current session
-    node: all
+    node: node.all
     fn: StartService
     param:
-      - osServiceStart
+      - service.start
     dependency:
       - Selinux
       - ServiceEnable
 
-  ResetCP:
+  CpReset:
     description: Reset the control plane node(s)
-    node: controlPlane
+    node: node.cp
     fn: ResetNode
     dependency:
       - ServiceStart
 
   CpInit:
     description: Initialize/bootstrap the cluster
-    node: controlPlane
+    node: node.cp
     fn: InitCPlane
     param:
-      - clusterConfig
+      - cluster
     dependency:
-      - ResetCP
+      - CpReset
 
   WorkerReset:
     description: Reset the worker node(s)
-    node: worker
+    node: node.worker
     fn: ResetNode
     dependency:
       - CpInit
 
   WorkerAdd:
     description: Add worker node(s) to the cluster
-    node: worker
+    node: node.worker
     fn: AddWorker
     param:
-      - controlPlaneNode
-      - workerNodes
+      - node.cp
     dependency:
       - WorkerReset
 
   Kubectl:
     description: Configure kubectl
-    node: kubectl
+    node: node.kubectl
     fn: Configure
     param:
-      - controlPlaneNodes[0]
+      - node.cp
     dependency:
-      - WorkerReset
+      - WorkerAdd
 
-  GoCli:
+  Go:
     description: Provision Go CLI(s)
-    node: controlPlane
+    node: node.cp
     fn: InstallGoCli
     param:
-      - goCli
+      - go.cp
     dependency:
       - Kubectl
 
   Rc:
     description: Create a custom RC file in user's home
-    node: controlPlane
+    node: node.cp
     fn: CreateRc
     param:
-      - customRcFileName
+      - file.crc
     dependency:
-      - GoCli
+      - Go
 
   Path:
     description: Configure PATH envvar into current user's custom RC file
-    node: controlPlane
+    node: node.cp
     fn: SetPath
     param:
-      - binFolderPath
-      - customRcFileName
+      - file.crc
+      - file.binf
     dependency:
       - Rc
 
   Helm:
     description: Install Helm chart repositories
-    node: Helm
+    node: node.helm
     fn: InstallHelmRepo
     param:
-      - helmRepo
+      - helm.repo
     dependency:
       - Path
 

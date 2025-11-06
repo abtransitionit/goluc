@@ -1,50 +1,51 @@
 name: small
 description: manage function execution
 phases:
-  NodeSsh:
-    description: Check if VMs are SSH reachable
-    node: all
+  Ssh:
+    description: Check if Node are SSH reachable
+    node: node.bastion
     fn: CheckSshAccess
-    dependency: []
+    param:
+      - node.all
 
-  # Os2:
-  #   description: Provision OS nodes with latest dnfapt packages and repositories
-  #   node: all
-  #   fn: UpgradeOs2
-  #   dependency: []
+  AlignDistro:
+    description: Upgrade native OS packages and repositories to version latest
+    node: node.all
+    fn: AlignDistro
+    dependency:
+      - Ssh
+
+  AlignPkg:
+    description: Provision required/missing native standard OS packages
+    node: node.all
+    fn: UpdateNativePkg
+    param:
+      - onpm.pkg.node
+    dependency:
+      - AlignDistro
 
   Path:
     description: Configure PATH envvar into current user's custom RC file
-    node: controlPlane
+    node: node.cp
     fn: SetPath
     param:
       - binFolderPath
       - customRcFileName
     dependency:
+      - AlignPkg
 
   NativeRepo:
     description: Provision native OS package repository(ies)
-    node: all
+    node: node.all
     fn: InstallRepo
     param:
-      - da.repo.node
+      - onmp.repo.node
+    dependency:
+      - AlignPkg
 
   KModule:
     description: Load Os Kernel modules
-    node: all
+    node: node.all
     fn: LoadKModule
-    param:
-      - da.repo.node
-
-  Os:
-    description: Provision OS nodes with latest dnfapt packages and repositories
-    node: all
-    fn: UpgradeOs
-    dependency: []
-
-
-  Pkg:
-    description: Provision required/missing standard dnfapt packages
-    node: all
-    fn: UpdatePkg
-    dependency: []
+    dependency:
+      - AlignPkg

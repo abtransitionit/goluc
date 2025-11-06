@@ -14,6 +14,10 @@ import (
 )
 
 func GetRunCmd(cmdPathName string) *cobra.Command {
+	var (
+		retainFlag string
+		skipFlag   string
+	)
 
 	cobraCmd := &cobra.Command{
 		Use:   "run",
@@ -37,7 +41,7 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 			}
 
 			// execute the workflow
-			err = workflow.Execute(ctx, config, FunctionRegistry, logger)
+			err = workflow.Execute(ctx, config, FunctionRegistry, retainFlag, skipFlag, logger)
 			if err != nil {
 				return fmt.Errorf("executing workflow: %w", err)
 			}
@@ -47,5 +51,16 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 		},
 	}
 
+	// define flags
+	cobraCmd.Flags().StringVarP(&retainFlag, "retain", "r", "", "retain only specified tier(s), e.g. 1,2-3")
+	cobraCmd.Flags().StringVarP(&skipFlag, "skip", "s", "", "skip specified tier(s), e.g. 2-4")
+
 	return cobraCmd
 }
+
+// cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
+// 	if retainFlag != "" && skipFlag != "" {
+// 		return fmt.Errorf("--retain and --skip are mutually exclusive")
+// 	}
+// 	return nil
+// }

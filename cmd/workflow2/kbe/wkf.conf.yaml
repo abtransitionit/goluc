@@ -1,8 +1,31 @@
 workflow:
   kbe:
     file:
-      customRcFileName: .profile.luc
-      binFolderPath:    /usr/local/bin
+      crc:  .profile.luc.  # custom RC file
+      binf: /usr/local/bin # binary folder
+      kernel: 99-kbe.conf
+
+    service:
+      start:
+        - crio
+      enable:
+        - crio
+        - kubelet
+
+    kernel:
+      module:
+        - overlay
+        - br_netfilter
+      param:
+        - key: net.ipv4.ip_forward
+          value: 1
+          Description: Enable IPv4 packet forwarding - core kernel parameter
+        - key: net.bridge.bridge-nf-call-iptables
+          value: 1
+          Description: Pass bridged IPv4 traffic to iptables - br_netfilter module parameter
+        - key: net.bridge.bridge-nf-call-ip6tables
+          value: 1
+          Description: Pass bridged IPv6 traffic to iptables - br_netfilter module parameter
 
     node:
       bastion: local 
@@ -12,7 +35,7 @@ workflow:
         - o3r
         - o4f
         - o5d
-      controlPlane:
+      cp:
        - o1u
       worker: 
         - o2a
@@ -24,11 +47,11 @@ workflow:
       kubectl:
         - o1u
 
-    goCli:
-      controlPlane:
+    go:
+      cp:
       - { name: helm, version: "3.17.3" }
         
-    da:
+    onpm:
       repo:
         node:
           - { name: crio, fileName: kbe-crio, version: "1.32" }
@@ -38,7 +61,7 @@ workflow:
           - name: crio
           - name: kubeadm
           - name: kubelet
-        controlPlane:  
+        cp:  
           - name: kubectl
         required:
           - name: gnupg
@@ -52,7 +75,7 @@ workflow:
         - { name: kbe-cilium, chart: cilium,  repo:  cilium, version: "0.18.7", namespace: "kube-system" }
 
     cluster:
-      ^podCidr: "192.168.0.0/16"
-      serviceCidr: "172.16.0.0/16"
-      crSocketName: unix:///var/run/crio/crio.sock
-      k8sVersion:   "1.32.0"
+      - podCidr: "192.168.0.0/16"
+        serviceCidr: "172.16.0.0/16"
+        crSocketName: unix:///var/run/crio/crio.sock
+        k8sVersion:   "1.32.0"

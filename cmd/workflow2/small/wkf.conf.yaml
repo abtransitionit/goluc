@@ -5,11 +5,15 @@ workflow:
       binFolderPath:    /usr/local/bin
 
     node:
+      bastion: 
+        - local
+      cp: 
+        - o1u
       all: 
         - o1u
         - o2a
 
-    da:
+    onpm:
       pkg:
         required:
           - uidmap
@@ -19,7 +23,7 @@ workflow:
           - { name: crio, fileName: kbe-crio, version: "1.32" }
           - { name: k8s,  fileName: kbe-k8s,  version: "1.32" }
 
-    goCli:
+    go:
       - name: cni
         version: "1.7.1"
       - name: containerd

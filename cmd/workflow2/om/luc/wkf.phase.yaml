@@ -2,42 +2,44 @@ name: luc
 description: manage LUC build and deploy
 phases:
     Folder:
-      description: empty the /tmp folder on the VMs
+      description: empty a folder
+      node: bastion
       fn: Empty
       dependency: []
       param: 
         - folder 
-    gitDevToMain:
-      description: merge dev to main and push all 4 projects. gocore, golinux, gotask, goluc
-      fn: gitDevToMain
-      dependency: []
-    gitDevToPremain:
-      description: merge dev to premain and push all 4 projects. gocore, golinux, gotask, goluc
-      fn: gitTodo
-      dependency: []
-    gitPremainToMain:
-      description: merge premain to main and push all 4 projects. gocore, golinux, gotask, goluc
-      fn: gitTodo
-      dependency: []
-    buildLuc:
-      description: build LUC for curent and linux platform
-      fn: buildLuc
-      dependency: []
-    deployLuc:
-      description: deploy LUC on all VMs
-      fn: deployLuc
-      dependency: []
-    deployLucLocal:
-      description: deploy LUC Localy (ie. /usr/local/bin)
-      fn: deployLucLocal
-      dependency: 
-        - buildLuc
-    deleteLuc:
-      description: delete LUC on all VMs
-      fn: deleteLuc
-      dependency: []
-    deployLuc2:
-      description: deploy LUC on all VMs
-      fn: deployLuc2
-      dependency:
-        - buildLuc
+    # gitDevToMain:
+    #   description: merge dev to main and push all 4 projects. gocore, golinux, gotask, goluc
+    #   fn: gitDevToMain
+    #   dependency: []
+    # gitDevToPremain:
+    #   description: merge dev to premain and push all 4 projects. gocore, golinux, gotask, goluc
+    #   fn: gitTodo
+    #   dependency: []
+    # gitPremainToMain:
+    #   description: merge premain to main and push all 4 projects. gocore, golinux, gotask, goluc
+    #   fn: gitTodo
+    #   dependency: []
+    # LucBuild:
+    #   description: build LUC for curent and linux platform
+    #   node: bastion
+    #   fn: LucBuild
+    #   dependency: []
+    # deployLuc:
+    #   description: deploy LUC on all VMs
+    #   fn: deployLuc
+    #   dependency: []
+    # deployLucLocal:
+    #   description: deploy LUC Localy (ie. /usr/local/bin)
+    #   fn: deployLucLocal
+    #   dependency: 
+    #     - LucBuild
+    # deleteLuc:
+    #   description: delete LUC on all VMs
+    #   fn: deleteLuc
+    #   dependency: []
+    # deployLuc2:
+    #   description: deploy LUC on all VMs
+    #   fn: deployLuc2
+    #   dependency:
+    #     - LucBuild

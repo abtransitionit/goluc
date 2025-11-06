@@ -100,7 +100,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 		},
 	}
 
-	// define flags with shortcuts
+	// define flags
 	cobraCmd.Flags().BoolVarP(&showConfigTable, "cfgTable", "c", false, "Display workflow config file in a table")
 	cobraCmd.Flags().BoolVarP(&showConfigTxt, "cfgTxt", "x", false, "Display workflow config file as a Txt file")
 	cobraCmd.Flags().BoolVarP(&showPhase, "wphase", "p", false, "Display workflow phases")
