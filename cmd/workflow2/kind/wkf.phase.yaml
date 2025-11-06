@@ -1,10 +1,12 @@
-name: kindn
+name: kind
 description: create a KIND (Kubernetes in Docker) cluster
 phases:
   Ssh:
-    description: Check if VMs are SSH reachable
-    node: all
+    description: Check if node is SSH reachable
+    node: bastion
     fn: CheckSshAccess
+    param:
+      - node.all
     dependency: []
 
   Agent:

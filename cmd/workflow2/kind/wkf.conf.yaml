@@ -1,7 +1,8 @@
 workflow:
-  kindn:
+  kind:
 
     node:
+      bastion: local
       all:
         - o1u
         - o2a

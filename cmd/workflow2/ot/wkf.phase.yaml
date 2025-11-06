@@ -1,4 +1,4 @@
-name: nodep
+name: ot
 description: test a workflow with dependency
 phases:
   APhase:
