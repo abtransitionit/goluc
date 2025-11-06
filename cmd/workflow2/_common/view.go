@@ -85,7 +85,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 
 				// --- TIER VIEW---
 				if showTier {
-					tierView, err := workflow.GetTierView()
+					tierView, err := workflow.GetTierView(logger)
 					if err != nil {
 						return fmt.Errorf("getting tier table: %w", err)
 					}
