@@ -58,11 +58,12 @@ workflow:
           - { name: k8s,  fileName: kbe-k8s,  version: "1.32" }
       pkg:
         node:
-          - name: crio
-          - name: kubeadm
-          - name: kubelet
-        cp:  
-          - name: kubectl
+          all:
+            - name: crio
+            - name: kubeadm
+            - name: kubelet
+          cp:
+            - name: kubectl
         required:
           - name: gnupg
 

@@ -39,7 +39,7 @@ phases:
     node: node.all
     fn: InstallRepo
     param:
-      - onmp.repo.node
+      - onpm.repo.node
     dependency:
       - AlignPkg
 

@@ -2,17 +2,18 @@ name: ssh
 description: test Ssh access
 phases:
   Conf:
-    description: check node is locally configured in ~/.ssh/config.d/
-    node: local
+    description: check node is SSH configured (aka. ~/.ssh/config.d/)
+    node: node.bastion
     fn: CheckSshConf
     param: 
       - node.all
     dependency: []
 
-  Access:
-    description: check node is SSH reachable
-    node: all
-    fn: CheckSshReach
+  Ssh:
+    description: Check node is SSH reachable
+    node: node.bastion
+    fn: CheckSshAccess
+    param:
+      - node.all
     dependency:
       - Conf
-
