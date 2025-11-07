@@ -107,7 +107,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 
 			}
 
-			// --- PHASE VIEW---
+			// --- FUNCTION VIEW ---
 			if showFunction {
 				registry := phase2.GetFnRegistry()
 
