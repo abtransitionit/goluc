@@ -3,7 +3,7 @@ description: create a KIND (Kubernetes in Docker) cluster
 phases:
   Ssh:
     description: Check if node is SSH reachable
-    node: bastion
+    node: node.bastion
     fn: CheckSshAccess
     param:
       - node.all
@@ -11,30 +11,30 @@ phases:
 
   Agent:
     description: Copy LUC CLI agent to all VMs
-    node: all
+    node: node.all
     fn: Deploy
     dependency:
       - Ssh
 
   Os:
     description: Provision OS nodes with latest dnfapt packages and repositories
-    node: all
+    node: node.all
     fn: UpgradeOs
     dependency:
       - Agent
 
   Pkg:
     description: Provision required/missing standard dnfapt packages
-    node: all
+    node: node.all
     fn: UpdateNativePkg
     param:
       - da.pkg.required
     dependency:
       - Os
 
-  GoCli:
+  Go:
     description: Provision Go CLI(s)
-    node: all
+    node: node.all
     fn: InstallGoCli
     param:
       - goCli
@@ -43,24 +43,24 @@ phases:
 
   InstallService:
     description: Provision OS service(s)
-    node: all
+    node: node.all
     fn: InstallService
     param:
       - service
     dependency:
-      - GoCli
+      - Go
       - Envar
 
   UserService:
     description: Allows user services to be session-independent
-    node: all
+    node: node.all
     fn: EnableLinger
     dependency:
-      - GoCli
+      - Go
 
   Rc:
     description: Create a custom RC file in user's home
-    node: all
+    node: node.all
     fn: CreateRc
     param:
       - customRcFileName
@@ -69,7 +69,7 @@ phases:
 
   Path:
     description: Configure PATH envvar into current user's custom RC file
-    node: all
+    node: node.all
     fn: SetPath
     param:
       - binFolderPath
@@ -79,7 +79,7 @@ phases:
 
   Envar:
     description: Define envvars into current user's custom RC file
-    node: all
+    node: node.all
     fn: DefineEnvar
     param:
       - customRcFileName
@@ -89,7 +89,7 @@ phases:
 
   ServiceStart:
     description: Start OS services needed by the app
-    node: all
+    node: node.all
     fn: StartService
     param:
       - service
@@ -99,7 +99,7 @@ phases:
 
   Containerd:
     description: Sets up a rootless containerd env Linux session independent for the current user
-    node: all
+    node: node.all
     fn: SetContainerd
     dependency:
       - ServiceStart
