@@ -2,7 +2,7 @@ name: kind
 description: create a KIND (Kubernetes in Docker) cluster
 phases:
   Ssh:
-    description: Check if node is SSH reachable
+    description: Check node is SSH reachable
     node: node.bastion
     fn: CheckSshAccess
     param:
@@ -10,11 +10,13 @@ phases:
     dependency: []
 
   Agent:
-    description: Copy LUC CLI agent to all VMs
-    node: node.all
+    description: Copy LUC CLI
+    node: node.bastion
     fn: Deploy
     dependency:
       - Ssh
+    param:
+      - node.all
 
   Os:
     description: Provision OS nodes with latest dnfapt packages and repositories
