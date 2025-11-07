@@ -34,11 +34,18 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 			// define logger
 			logger := logx.GetLogger()
 
-			// at least one 	flag required
-			if !showConfigTxt && !showConfigTable && !showPhase && !showTier && !showFunction {
-				return fmt.Errorf("please specify one of: --config, --phase, or --tier")
-			}
+			// // at least one 	flag required
+			// if !showConfigTxt && !showConfigTable && !showPhase && !showTier && !showFunction {
+			// 	return fmt.Errorf("please specify one of: --config, --phase, or --tier")
+			// }
 
+			// If no flags provided, enable all by default
+			if !showConfigTxt && !showConfigTable && !showPhase && !showTier && !showFunction {
+				showConfigTable = true
+				showPhase = true
+				showTier = true
+				showFunction = true
+			}
 			// --- WORKFLOW CONFIG AS TABLE ---
 			if showConfigTable {
 				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
@@ -52,6 +59,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				}
 
 				logger.Info("Workflow Config (table view)")
+
 				list.PrettyPrintTable(configContent)
 			}
 			// --- WORKFLOW CONFIG AS FILE ---
@@ -124,7 +132,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 					fmt.Fprintf(&b, "%s\t%s\t%s\n", key, pkg, fnName)
 				}
 
-				logger.Info("Function Registry (key + package + function)")
+				logger.Info("Workflow registred Function")
 
 				list.PrettyPrintTable(b.String())
 			}
