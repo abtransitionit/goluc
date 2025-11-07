@@ -70,41 +70,20 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				fmt.Println(configContent)
 			}
 
-			// --- WORKFLOW ---
-			if showPhase || showTier {
+			// --- WORKFLOW PHASE---
+			if showPhase {
 				workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
 				if err != nil {
 					return fmt.Errorf("getting workflow: %w", err)
 				}
-
-				// --- PHASE VIEW---
-				if showPhase {
-					phaseView, err := workflow.GetPhaseView()
-					if err != nil {
-						return fmt.Errorf("getting phase table: %w", err)
-					}
-
-					logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
-					list.PrettyPrintTable(phaseView)
+				// get phases
+				phaseView, err := workflow.GetPhaseView()
+				if err != nil {
+					return fmt.Errorf("getting phase table: %w", err)
 				}
 
-				// --- TIER VIEW---
-				if showTier {
-					// get tiers
-					tiers, err := workflow.TopoSortByTier(logger)
-					if err != nil {
-						return fmt.Errorf("cannot sort tiers: %w", err)
-					}
-
-					tierView, err := workflow.GetTierView(tiers, logger)
-					if err != nil {
-						return fmt.Errorf("getting tier table: %w", err)
-					}
-
-					logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
-					list.PrettyPrintTable(tierView)
-				}
-
+				logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
+				list.PrettyPrintTable(phaseView)
 			}
 
 			// --- FUNCTION VIEW ---
@@ -149,6 +128,62 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 
 				list.PrettyPrintTable(b.String())
 			}
+
+			// --- WORKFLOW TIER ---
+			if showPhase {
+				workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
+				if err != nil {
+					return fmt.Errorf("getting workflow: %w", err)
+				}
+				// get tiers
+				tiers, err := workflow.TopoSortByTier(logger)
+				if err != nil {
+					return fmt.Errorf("cannot sort tiers: %w", err)
+				}
+
+				tierView, err := workflow.GetTierView(tiers, logger)
+				if err != nil {
+					return fmt.Errorf("getting tier table: %w", err)
+				}
+
+				logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
+				list.PrettyPrintTable(tierView)
+			}
+
+			// // --- WORKFLOW ---
+			// if showPhase || showTier {
+			// 	workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
+			// 	if err != nil {
+			// 		return fmt.Errorf("getting workflow: %w", err)
+			// 	}
+
+			// 	// --- PHASE VIEW---
+			// 	if showPhase {
+			// 		phaseView, err := workflow.GetPhaseView()
+			// 		if err != nil {
+			// 			return fmt.Errorf("getting phase table: %w", err)
+			// 		}
+
+			// 		logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
+			// 		list.PrettyPrintTable(phaseView)
+			// 	}
+
+			// 	// --- TIER VIEW---
+			// 	if showTier {
+			// 		// get tiers
+			// 		tiers, err := workflow.TopoSortByTier(logger)
+			// 		if err != nil {
+			// 			return fmt.Errorf("cannot sort tiers: %w", err)
+			// 		}
+
+			// 		tierView, err := workflow.GetTierView(tiers, logger)
+			// 		if err != nil {
+			// 			return fmt.Errorf("getting tier table: %w", err)
+			// 		}
+
+			// 		logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
+			// 		list.PrettyPrintTable(tierView)
+			// 	}
 
 			// success
 			return nil
