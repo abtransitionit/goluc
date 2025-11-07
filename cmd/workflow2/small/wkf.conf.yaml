@@ -1,8 +1,8 @@
 workflow:
   small:
     file: 
-      customRcFileName: .profile.luc
-      binFolderPath:    /usr/local/bin
+      crc: .profile.luc
+      binf:    /usr/local/bin
 
     node:
       bastion: 

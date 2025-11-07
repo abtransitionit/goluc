@@ -29,8 +29,8 @@ phases:
     node: node.cp
     fn: SetPath
     param:
-      - binFolderPath
-      - customRcFileName
+      - file.binf
+      - file.crc
     dependency:
       - AlignPkg
 
