@@ -5,11 +5,6 @@ package common
 
 import (
 	"fmt"
-	"path"
-	"path/filepath"
-	"reflect"
-	"runtime"
-	"strings"
 
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
@@ -47,103 +42,73 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				showTier = true
 				showFunction = true
 			}
-			// --- WORKFLOW CONFIG AS TABLE ---
-			if showConfigTable {
-				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
-				if err != nil {
-					return fmt.Errorf("getting config: %w", err)
-				}
 
+			// 1 - load config YAML
+			config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
+			if err != nil {
+				return fmt.Errorf("getting config: %w", err)
+			}
+
+			// 1 - load workflow YAML
+			workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
+			if err != nil {
+				return fmt.Errorf("getting workflow: %w", err)
+			}
+
+			// 2 - workflow config as table
+			if showConfigTable {
 				configContent, err := config.GetContentAsTable()
 				if err != nil {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
+				// print
 				logger.Info("Workflow Config (table view)")
-
 				list.PrettyPrintTable(configContent)
 			}
-			// --- WORKFLOW CONFIG AS FILE ---
-			if showConfigTxt {
-				config, err := viperx.GetViperx("wkf.conf.yaml", "workflow", cmdPathName, logger)
-				if err != nil {
-					return fmt.Errorf("getting config: %w", err)
-				}
 
+			// 3 - workflow config as text file
+			if showConfigTxt {
 				configContent, err := config.GetContentAsString()
 				if err != nil {
 					return fmt.Errorf("getting config content: %w", err)
 				}
 
+				// print
 				logger.Info("Workflow Config (file view)")
 				fmt.Println(configContent)
 			}
 
-			// --- WORKFLOW PHASE---
+			// 4 - workflow phases
 			if showPhase {
-				workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
-				if err != nil {
-					return fmt.Errorf("getting workflow: %w", err)
-				}
 				// get phases
 				phaseView, err := workflow.GetPhaseView()
 				if err != nil {
 					return fmt.Errorf("getting phase table: %w", err)
 				}
 
+				// print
 				logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
 				list.PrettyPrintTable(phaseView)
 			}
 
-			// --- FUNCTION VIEW ---
+			// 5 - workflow functions
 			if showFunction {
+				// get registry
 				registry := phase2.GetFnRegistry()
 
-				keys := registry.List(filepath.Base(cmdPathName))
-
-				// Build the table as a raw TSV string:
-				// Header
-				var b strings.Builder
-				b.WriteString("Key\tPackage\tFunction\n")
-
-				for _, key := range keys {
-					fn, ok := registry.Get(filepath.Base(cmdPathName), key)
-					if !ok {
-						continue
-					}
-
-					fnVal := reflect.ValueOf(fn)
-					ptr := fnVal.Pointer()
-					rf := runtime.FuncForPC(ptr)
-
-					pkg := "<??>"
-					fnName := "<??>"
-
-					if rf != nil {
-						fullName := rf.Name() // github.com/.../node.CheckSshConf
-
-						// Remove prefix
-						prefix := "github.com/abtransitionit/"
-						fullName = strings.TrimPrefix(fullName, prefix)
-						// define var
-						pkg = path.Dir(fullName)
-						fnName = path.Base(fullName)
-					}
-
-					fmt.Fprintf(&b, "%s\t%s\t%s\n", key, pkg, fnName)
+				// get functions
+				functionView, err := workflow.GetFunctionView(cmdPathName, registry)
+				if err != nil {
+					return fmt.Errorf("getting function table: %w", err)
 				}
-
+				// print
 				logger.Info("Workflow registred Function	")
-
-				list.PrettyPrintTable(b.String())
+				list.PrettyPrintTable(functionView)
 			}
 
-			// --- WORKFLOW TIER ---
+			// 6 - workflow tiers
 			if showPhase {
-				workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
-				if err != nil {
-					return fmt.Errorf("getting workflow: %w", err)
-				}
 				// get tiers
 				tiers, err := workflow.TopoSortByTier(logger)
 				if err != nil {
@@ -155,6 +120,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting tier table: %w", err)
 				}
 
+				// print
 				logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
 				list.PrettyPrintTable(tierView)
 			}
@@ -172,40 +138,3 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 
 	return cobraCmd
 }
-
-// // --- WORKFLOW ---
-// if showPhase || showTier {
-// 	workflow, err := phase2.GetWorkflow("wkf.phase.yaml", cmdPathName, logger)
-// 	if err != nil {
-// 		return fmt.Errorf("getting workflow: %w", err)
-// 	}
-
-// 	// --- PHASE VIEW---
-// 	if showPhase {
-// 		phaseView, err := workflow.GetPhaseView()
-// 		if err != nil {
-// 			return fmt.Errorf("getting phase table: %w", err)
-// 		}
-
-// 		logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
-// 		list.PrettyPrintTable(phaseView)
-// 	}
-
-// 	// --- TIER VIEW---
-// 	if showTier {
-// 		// get tiers
-// 		tiers, err := workflow.TopoSortByTier(logger)
-// 		if err != nil {
-// 			return fmt.Errorf("cannot sort tiers: %w", err)
-// 		}
-
-// 		tierView, err := workflow.GetTierView(tiers, logger)
-// 		if err != nil {
-// 			return fmt.Errorf("getting tier table: %w", err)
-// 		}
-
-// 		logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
-// 		list.PrettyPrintTable(tierView)
-// 	}
-
-// success
