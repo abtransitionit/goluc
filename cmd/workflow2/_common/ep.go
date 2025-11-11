@@ -12,7 +12,7 @@ import (
 
 var FunctionRegistry = phase2.GetFnRegistry()
 
-// NewWorkflowCmd returns a base cobra.Command configured with logging, config, and default RunE.
+// Description: returns a cobra.Command
 func GetEpCmd(cmdPathName, shortDesc string) *cobra.Command {
 	cmdName := filepath.Base(cmdPathName)
 	cobraCmd := &cobra.Command{

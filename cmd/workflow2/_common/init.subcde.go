@@ -5,6 +5,7 @@ package common
 
 import "github.com/spf13/cobra"
 
+// Description: returns the sub cobra.Command
 func SetInitSubCmd(epCmd *cobra.Command, cmdPathName string) {
 	epCmd.AddCommand(
 		GetViewCmd(cmdPathName),

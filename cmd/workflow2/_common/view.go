@@ -6,6 +6,7 @@ package common
 import (
 	"fmt"
 	"path"
+	"path/filepath"
 	"reflect"
 	"runtime"
 	"strings"
@@ -98,7 +99,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 			if showFunction {
 				registry := phase2.GetFnRegistry()
 
-				keys := registry.List()
+				keys := registry.List(filepath.Base(cmdPathName))
 
 				// Build the table as a raw TSV string:
 				// Header
@@ -106,7 +107,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				b.WriteString("Key\tPackage\tFunction\n")
 
 				for _, key := range keys {
-					fn, ok := registry.Get(key)
+					fn, ok := registry.Get(filepath.Base(cmdPathName), key)
 					if !ok {
 						continue
 					}
