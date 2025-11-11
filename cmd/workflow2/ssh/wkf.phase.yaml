@@ -7,7 +7,6 @@ phases:
     fn: CheckSshConf
     param: 
       - node.all
-    dependency: []
 
   Ssh:
     description: Check node is SSH reachable
@@ -15,5 +14,3 @@ phases:
     fn: CheckSshAccess
     param:
       - node.all
-    dependency:
-      - Conf
