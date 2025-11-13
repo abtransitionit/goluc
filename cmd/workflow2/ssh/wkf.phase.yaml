@@ -14,3 +14,5 @@ phases:
     fn: CheckSshAccess
     param:
       - node.all
+    dependency:
+      - Conf
