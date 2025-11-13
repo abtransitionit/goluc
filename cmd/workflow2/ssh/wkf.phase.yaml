@@ -3,7 +3,7 @@ description: test Ssh access
 phases:
   Conf:
     description: check node is SSH configured (aka. ~/.ssh/config.d/)
-    node: node.bastion
+    node: node.test
     fn: CheckSshConf
     param: 
       - node.all

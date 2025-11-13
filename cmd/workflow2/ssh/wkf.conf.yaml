@@ -3,8 +3,11 @@ workflow:
 
     node:
       bastion: local
-      all: 
+      test: 
+        - local
         - o1u
+      all: 
+        - o6u
         - o2t
         - o3r
 
