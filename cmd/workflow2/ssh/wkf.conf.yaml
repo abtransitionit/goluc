@@ -4,7 +4,7 @@ workflow:
     node:
       bastion: local
       all: 
-        - o6u
+        - o1u
         - o2t
         - o3r
 
