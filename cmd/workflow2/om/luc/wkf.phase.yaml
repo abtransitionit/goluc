@@ -7,6 +7,33 @@ phases:
       param: 
         - repo
       node: node.bastion  
+    LucBuildCurrent:
+      description: build LUC for curent platform
+      fn: LucBuildCurrent
+      node: node.bastion  
+    LucBuildLinux:
+      description: build LUC for linux platform
+      fn: LucBuildLinux
+      node: node.bastion  
+    LucDeployNode:
+      description: deploy LUC on nodes (ie. /usr/local/bin) 
+      fn: LucDeployNode
+      node: node.bastion  
+      dependency:
+        - LucBuildLinux
+    LucDeployLocal:
+      description: deploy LUC locally (ie. /usr/local/bin)
+      fn: LucDeployLocal
+      node: node.bastion  
+      dependency:
+        - LucBuildCurrent
+    LucDeleteNode:
+      description: delete LUC on nodes (ie. /usr/local/bin)
+      fn: LucDeleteNode
+      node: node.all
+
+    #  GOOS=linux GOARCH=amd64 go build -C /Users/max/wkspc/git/goluc -ldflags="-s -w" -o /tmp/luca      
+
     # Folder:
     #   description: empty a folder
     #   node: bastion
@@ -23,26 +50,3 @@ phases:
     #   description: merge premain to main and push all 4 projects. gocore, golinux, gotask, goluc
     #   fn: gitTodo
     #   dependency: []
-    # LucBuild:
-    #   description: build LUC for curent and linux platform
-    #   node: bastion
-    #   fn: LucBuild
-    #   dependency: []
-    # deployLuc:
-    #   description: deploy LUC on all VMs
-    #   fn: deployLuc
-    #   dependency: []
-    # deployLucLocal:
-    #   description: deploy LUC Localy (ie. /usr/local/bin)
-    #   fn: deployLucLocal
-    #   dependency: 
-    #     - LucBuild
-    # deleteLuc:
-    #   description: delete LUC on all VMs
-    #   fn: deleteLuc
-    #   dependency: []
-    # deployLuc2:
-    #   description: deploy LUC on all VMs
-    #   fn: deployLuc2
-    #   dependency:
-    #     - LucBuild
