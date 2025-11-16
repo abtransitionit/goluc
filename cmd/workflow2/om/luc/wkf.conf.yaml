@@ -3,4 +3,9 @@ workflow:
     node: 
       bastion: local
     folder: /tmp
-      
+    repo:
+      - gocore
+      - golinux
+      - gotask
+      - goluc
+

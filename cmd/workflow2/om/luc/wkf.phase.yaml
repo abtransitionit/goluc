@@ -1,16 +1,19 @@
 name: luc
 description: manage LUC build and deploy
 phases:
-    Folder:
-      description: empty a folder
-      node: bastion
-      fn: Empty
-      dependency: []
+    Merge:
+      description: merge dev to main and push all 4 projects. gocore, golinux, gotask, goluc
+      fn: MergeDevToMain
       param: 
-        - folder 
-    # gitDevToMain:
-    #   description: merge dev to main and push all 4 projects. gocore, golinux, gotask, goluc
-    #   fn: gitDevToMain
+        - repo
+      node: node.bastion  
+    # Folder:
+    #   description: empty a folder
+    #   node: bastion
+    #   fn: Empty
+    #   dependency: []
+    #   param: 
+    #     - folder 
     #   dependency: []
     # gitDevToPremain:
     #   description: merge dev to premain and push all 4 projects. gocore, golinux, gotask, goluc

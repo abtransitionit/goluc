@@ -1,13 +1,21 @@
 name: kbe
 description: create KBE (Kubernetes Easy) clusters
 phases:
+  Conf:
+    description: check node is SSH configured in target (~/.ssh/config)
+    node: node.bastion
+    fn: CheckSshConf
+    param: 
+      - node.all
+
   Ssh:
     description: Check node is SSH reachable
     node: node.bastion
     fn: CheckSshAccess
-    param: 
+    param:
       - node.all
-    dependency: []
+    dependency:
+      - Conf
 
   Agent:
     description: Copy LUC CLI agent
