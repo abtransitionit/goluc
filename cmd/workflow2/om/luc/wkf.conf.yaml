@@ -8,7 +8,10 @@ workflow:
         - o3r
         - o4f
         - o5d      
-    folder: /tmp
+    folder: 
+      delete: /tmp
+      repo: 
+        - /Users/max/wkspc/git
     repo:
       - gocore
       - golinux

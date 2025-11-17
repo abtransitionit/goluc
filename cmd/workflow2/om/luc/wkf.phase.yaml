@@ -6,6 +6,7 @@ phases:
       fn: MergeDevToMain
       param: 
         - repo
+        - folder.repo
       node: node.bastion  
     LucBuildCurrent:
       description: build LUC for curent platform
