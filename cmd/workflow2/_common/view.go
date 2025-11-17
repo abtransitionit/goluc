@@ -63,7 +63,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				}
 
 				// print
-				logger.Info("Workflow Config (table view)")
+				logger.Infof("Workflow: %s (config table View)", workflow.Name)
 				list.PrettyPrintTable(configContent)
 			}
 
@@ -75,7 +75,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				}
 
 				// print
-				logger.Info("Workflow Config (file view)")
+				logger.Infof("Workflow: %s (config txt View)", workflow.Name)
 				fmt.Println(configContent)
 			}
 
@@ -88,7 +88,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				}
 
 				// print
-				logger.Infof("Workflow %s (Phase View) to %s", workflow.Name, workflow.Description)
+				logger.Infof("Workflow: %s (Phase View)", workflow.Name)
 				list.PrettyPrintTable(phaseView)
 			}
 
@@ -103,7 +103,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 					return fmt.Errorf("getting function table: %w", err)
 				}
 				// print
-				logger.Info("Workflow registred Function	")
+				logger.Infof("Workflow: %s (registred Function)", workflow.Name)
 				list.PrettyPrintTable(functionView)
 			}
 
@@ -121,7 +121,7 @@ func GetViewCmd(cmdPathName string) *cobra.Command {
 				}
 
 				// print
-				logger.Infof("Workflow %s (Tier View) to %s", workflow.Name, workflow.Description)
+				logger.Infof("Workflow: %s (Tier View)", workflow.Name)
 				list.PrettyPrintTable(tierView)
 			}
 
