@@ -13,7 +13,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow2/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow2/nodep"
 	"github.com/abtransitionit/goluc/cmd/workflow2/om"
-	"github.com/abtransitionit/goluc/cmd/workflow2/small"
+	"github.com/abtransitionit/goluc/cmd/workflow2/os"
 	"github.com/abtransitionit/goluc/cmd/workflow2/ssh"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
@@ -55,10 +55,10 @@ func init() {
 	// define the entry point for each workflow
 	// EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(ssh.EpCmd)
+	EpCmd.AddCommand(os.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
 	EpCmd.AddCommand(kind.EpCmd)
 	EpCmd.AddCommand(kbe.EpCmd)
-	EpCmd.AddCommand(small.EpCmd)
 	EpCmd.AddCommand(funcx.EpCmd)
 	EpCmd.AddCommand(dep.EpCmd)
 	EpCmd.AddCommand(nodep.EpCmd)

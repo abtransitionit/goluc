@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package small
+package os
 
 import (
 	common "github.com/abtransitionit/goluc/cmd/workflow2/_common"
@@ -14,6 +14,11 @@ var EpCmd = common.GetEpCmd(
 )
 
 func init() {
+
 	// sub cde
 	common.SetInitSubCmd(EpCmd, cmdPathName)
+
+	// register functions
+	registerFunctions()
+
 }

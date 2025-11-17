@@ -1,0 +1,14 @@
+name: os
+description: test upgrading and updating a linux OS
+phases:
+  UpgradeOs:
+    description: Upgrade a linux OS native repositories and packages to the latest version
+    node: node.test
+    fn: UpgradeOs
+
+  UpdateOs:
+    description: Upgrade a linux OS native repositories and packages to the latest version
+    node: node.test
+    fn: UpdateOs
+    dependency:
+      - UpgradeOs
