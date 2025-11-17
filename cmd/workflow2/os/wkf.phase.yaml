@@ -10,5 +10,7 @@ phases:
     description: Upgrade a linux OS native repositories and packages to the latest version
     node: node.test
     fn: UpdateOs
+    param:
+     - node.all
     dependency:
       - UpgradeOs
