@@ -9,12 +9,14 @@ phases:
       node: node.bastion  
     LucBuildCurrent:
       description: build LUC for curent platform
-      fn: LucBuildCurrent
+      fn: LucBuild
       node: node.bastion  
     LucBuildLinux:
       description: build LUC for linux platform
-      fn: LucBuildLinux
-      node: node.bastion  
+      fn: LucBuild
+      node: node.bastion
+      param:
+        - build.osarch
     LucDeployNode:
       description: deploy LUC on nodes (ie. /usr/local/bin) 
       fn: LucDeployNode

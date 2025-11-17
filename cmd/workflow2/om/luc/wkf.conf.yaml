@@ -14,4 +14,8 @@ workflow:
       - golinux
       - gotask
       - goluc
+    build:
+      osarch: 
+        - linux
+          amd64  
 
