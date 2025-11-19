@@ -6,6 +6,5 @@ workflow:
         - o1u
       all: 
         - o1u
-        - o2a
-        - o3r
+        - o4f
 

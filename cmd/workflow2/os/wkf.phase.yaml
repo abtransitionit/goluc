@@ -3,7 +3,7 @@ description: test upgrading and updating a linux OS
 phases:
   UpgradeOs:
     description: Upgrade a linux OS native repositories and packages to the latest version
-    node: node.test
+    node: node.all
     fn: UpgradeOs
 
   UpdateOs:
