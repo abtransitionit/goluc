@@ -8,11 +8,21 @@ phases:
     param: 
       - node.all
 
-  Ssh:
+  SshAccess:
     description: Check node is SSH reachable
     node: node.bastion
     fn: CheckSshAccess
     param:
       - node.all
+    dependency:
+      - Conf
+
+  SshOnline:
+    description: Check node is SSH online within a delay
+    node: node.bastion
+    fn: CheckIsSshOnline
+    param:
+      - node.all
+      - ssh.delay
     dependency:
       - Conf

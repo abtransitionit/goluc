@@ -23,5 +23,6 @@ func registerFunctions() {
 	// register function used
 	registry.Add(worflowName, "CheckSshConf", node.CheckSshConf)
 	registry.Add(worflowName, "CheckSshAccess", node.CheckSshAccess)
+	registry.Add(worflowName, "CheckIsSshOnline", node.WaitIsSshOnline)
 
 }

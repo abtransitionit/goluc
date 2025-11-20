@@ -1,11 +1,13 @@
 workflow:
   ssh:
 
+    ssh:
+      delay: 30
     node:
       bastion: local
       test: 
         - local
-        - o1u
+        # - o1u
       all: 
         - o1u
         - o2a
