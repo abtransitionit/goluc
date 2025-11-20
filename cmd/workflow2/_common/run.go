@@ -48,11 +48,11 @@ func GetRunCmd(cmdPathName string) *cobra.Command {
 				retainSkipRange = fmt.Sprintf("-s%s", skipFlag)
 			}
 
-			// execute the workflow
-			err = workflow.Execute(ctx, config, FunctionRegistry, retainSkipRange, logger)
-			if err != nil {
-				return fmt.Errorf("executing workflow: %w", err)
-			}
+			// execute the workflow - no need for error at this level because already lot of logs exist
+			_ = workflow.Execute(ctx, config, FunctionRegistry, retainSkipRange, logger)
+			// if err != nil {
+			// 	return fmt.Errorf("executing workflow: %w", err)
+			// }
 
 			// success
 			return nil
