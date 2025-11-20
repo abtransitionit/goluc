@@ -22,5 +22,6 @@ func registerFunctions() {
 	worflowName := filepath.Base(cmdPathName)
 	// register function used
 	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
+	registry.Add(worflowName, "NeedReboot", onpm.NeedReboot)
 
 }
