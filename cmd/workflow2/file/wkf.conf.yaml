@@ -1,0 +1,16 @@
+workflow:
+  file:
+
+    agent:
+      src: /tmp/luca
+      dst: /usr/local/bin/titi
+    node:
+      bastion: local
+      test: 
+        - local
+        # - o1u
+      all: 
+        - o1u
+        - o2a
+        - o3r
+

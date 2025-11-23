@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/abtransitionit/gocore/phase2"
+	"github.com/abtransitionit/gotask/mock/node"
 	"github.com/abtransitionit/gotask/mock/onpm"
 )
 
@@ -23,5 +24,7 @@ func registerFunctions() {
 	// register function used
 	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
 	registry.Add(worflowName, "NeedReboot", onpm.NeedReboot)
+	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
+	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
 
 }

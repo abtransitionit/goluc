@@ -1,0 +1,7 @@
+name: ovh
+description: test Ssh access
+phases:
+  ListInfo:
+    description: display informations on OVH API
+    node: node.test
+    fn: ListInfo

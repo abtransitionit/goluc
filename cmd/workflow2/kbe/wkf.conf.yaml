@@ -1,5 +1,10 @@
 workflow:
   kbe:
+    ssh:
+      delay: 120 // seconds
+    agent:
+      src: /tmp/luca
+      dst: /usr/local/bin/
     file:
       crc:  .profile.luc.  # custom RC file
       binf: /usr/local/bin # binary folder

@@ -2,13 +2,30 @@ name: os
 description: test upgrading and updating a linux OS
 phases:
   UpgradeOs:
-    description: Upgrade a linux OS native repositories and packages to the latest version
+    description: Upgrade node (linux OS) native repositories and packages to the latest version
     node: node.all
     fn: UpgradeOs
 
-  WaitIsOnline:
-    description: Wait a node to be online after a possible reboot
+  # NeedReboot:
+  #   description: Reboot a node if needed
+  #   node: node.all
+  #   fn: NeedReboot
+  #   dependency:
+  #     - UpgradeOs
+
+  RebootIfNeeded:
+    description: Reboot a node if needed
     node: node.all
-    fn: WaitIsOnline
+    fn: RebootIfNeeded
     dependency:
       - UpgradeOs
+
+  WaitIsOnline:
+    description: Check a node is ssh reachable from a host (after a possible reboot) within a delay
+    node: node.bastion
+    fn: WaitIsOnline
+    param: 
+      - node.all
+      - ssh.delay
+    dependency:
+      - RebootIfNeeded

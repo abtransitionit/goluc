@@ -1,37 +1,56 @@
 name: kbe
 description: create KBE (Kubernetes Easy) clusters
 phases:
-  Conf:
-    description: check node is SSH configured in target (~/.ssh/config)
+  CheckSshConf:
+    description: check node is SSH configured on the host (aka. ~/.ssh/config.d/)
     node: node.bastion
     fn: CheckSshConf
     param: 
       - node.all
 
-  Ssh:
-    description: Check node is SSH reachable
+  CheckSshAccess:
+    description: Check node is SSH reachable from the host
     node: node.bastion
     fn: CheckSshAccess
     param:
       - node.all
     dependency:
-      - Conf
+      - CheckSshConf
 
-  Agent:
-    description: Copy LUC CLI agent
+  DeployAgent:
+    description: copy luca agent from the host to the node 
     node: node.bastion
-    fn: DeployLuc
+    fn: DeployAgent
     param: 
       - node.all
+      - agent
     dependency:
-      - Ssh
+      - CheckSshAccess
 
-  AlignDistro:
-    description: Upgrade native OS packages and repositories to version latest
+  UpgradeOs:
+    description: Upgrade node (linux OS) native repositories and packages to the latest version
     node: node.all
-    fn: AlignDistro
+    fn: UpgradeOs
     dependency:
-      - Agent
+      - DeployAgent
+
+  RebootIfNeeded:
+    description: Reboot a node if needed
+    node: node.all
+    fn: RebootIfNeeded
+    dependency:
+      - UpgradeOs
+
+  WaitIsOnline:
+    description: Check a node is ssh reachable from a host (after a possible reboot) within a delay
+    node: node.bastion
+    fn: WaitIsOnline
+    param: 
+      - node.all
+      - ssh.delay
+    dependency:
+      - RebootIfNeeded
+
 
   AlignPkg:
     description: Provision required/missing native standard OS packages
@@ -40,7 +59,7 @@ phases:
     param:
       - onpm.pkg.node
     dependency:
-      - AlignDistro
+      - WaitIsOnline
 
   NativeRepo:
     description: Provision native OS package repository(ies)

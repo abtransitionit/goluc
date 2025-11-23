@@ -1,0 +1,11 @@
+name: file
+description: sudo manage file
+phases:
+  DeployAgent:
+    description: copy luca agent from the host to the node 
+    node: node.bastion
+    fn: DeployAgent
+    param: 
+      - node.all
+      - agent
+

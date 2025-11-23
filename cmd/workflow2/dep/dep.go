@@ -1,7 +1,10 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
 package dep
 
-// Package variables : confifg2
 var (
 	cmdPathName = "dep"
-	shortDesc   = "test a workflow with dependency."
+	shortDesc   = "Test a wkf with and without dependencies"
+	longDesc    = shortDesc
 )

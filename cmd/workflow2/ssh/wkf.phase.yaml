@@ -2,14 +2,14 @@ name: ssh
 description: test Ssh access
 phases:
   Conf:
-    description: check node is SSH configured (aka. ~/.ssh/config.d/)
+    description: check node is SSH configured on the host (aka. ~/.ssh/config.d/)
     node: node.test
     fn: CheckSshConf
     param: 
       - node.all
 
   SshAccess:
-    description: Check node is SSH reachable
+    description: Check node is SSH reachable from the host
     node: node.bastion
     fn: CheckSshAccess
     param:
@@ -18,7 +18,7 @@ phases:
       - Conf
 
   SshOnline:
-    description: Check node is SSH online within a delay
+    description: Check node is SSH reachable from a host within a delay
     node: node.bastion
     fn: CheckIsSshOnline
     param:
