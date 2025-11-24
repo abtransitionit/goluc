@@ -5,6 +5,7 @@ workflow:
     agent:
       src: /tmp/luca
       dst: /usr/local/bin/
+      chmod: 755
     file:
       crc:  .profile.luc.  # custom RC file
       binf: /usr/local/bin # binary folder
@@ -35,11 +36,11 @@ workflow:
     node:
       bastion: local 
       all: 
-        - o1u
         - o2a
-        - o3r
-        - o4f
-        - o5d
+        # - o1u
+        # - o3r
+        # - o4f
+        # - o5d
       cp:
        - o1u
       worker: 
