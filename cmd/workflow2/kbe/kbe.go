@@ -29,6 +29,7 @@ func registerFunctions() {
 	registry.Add(worflowName, "CheckSshConf", node.CheckSshConf)
 	registry.Add(worflowName, "CheckSshAccess", node.CheckSshAccess)
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)
-	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
+	registry.Add(worflowName, "RebootIfNeeded", node.WaitIsSshOnline)
+	registry.Add(worflowName, "UpgradeOs", onpm.NeedReboot)
 	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
 }

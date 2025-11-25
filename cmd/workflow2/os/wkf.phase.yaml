@@ -6,6 +6,11 @@ phases:
     node: node.all
     fn: UpgradeOs
 
+  UpdateOs:
+    description: Upgrade node (linux OS) native repositories and packages to the latest version
+    node: node.all
+    fn: UpdateOs
+
   # NeedReboot:
   #   description: Reboot a node if needed
   #   node: node.all

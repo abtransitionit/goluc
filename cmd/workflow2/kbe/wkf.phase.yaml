@@ -18,7 +18,7 @@ phases:
       - CheckSshConf
 
   DeployAgent:
-    description: copy luca agent from the host to the node 
+    description: copy luca agent from the host to the node (only if it is different from the host)
     node: node.bastion
     fn: DeployAgent
     param: 

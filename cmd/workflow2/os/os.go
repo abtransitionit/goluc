@@ -23,6 +23,7 @@ func registerFunctions() {
 	worflowName := filepath.Base(cmdPathName)
 	// register function used
 	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
+	registry.Add(worflowName, "UpdateOs", onpm.UpdateOs)
 	registry.Add(worflowName, "NeedReboot", onpm.NeedReboot)
 	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
 	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)

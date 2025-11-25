@@ -1,7 +1,7 @@
 workflow:
   kbe:
     ssh:
-      delay: 120 // seconds
+      delay: 120 # seconds
     agent:
       src: /tmp/luca
       dst: /usr/local/bin/
@@ -37,10 +37,10 @@ workflow:
       bastion: local 
       all: 
         - o2a
-        # - o1u
-        # - o3r
-        # - o4f
-        # - o5d
+        - o1u
+        - o3r
+        - o4f
+        - o5d
       cp:
        - o1u
       worker: 
