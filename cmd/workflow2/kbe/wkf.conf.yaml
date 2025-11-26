@@ -60,8 +60,12 @@ workflow:
     onpm:
       repo:
         node:
-          - { name: crio, fileName: kbe-crio, version: "1.32" }
-          - { name: k8s,  fileName: kbe-k8s,  version: "1.32" }
+          - name: crio
+            fileName: kbe-crio
+            version: "1.32"
+          - name: k8s
+            fileName: kbe-k8s
+            version: "1.32"
       pkg:
         node:
           all:

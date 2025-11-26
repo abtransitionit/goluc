@@ -52,32 +52,32 @@ phases:
       - RebootIfNeeded
 
 
-  AlignPkg:
-    description: Provision required/missing native standard OS packages
-    node: node.all
-    fn: UpdateNativePkg
-    param:
-      - onpm.pkg.node
-    dependency:
-      - WaitIsOnline
+  # AlignPkg:
+  #   description: Provision required/missing native standard OS packages
+  #   node: node.all
+  #   fn: UpdateNativePkg
+  #   param:
+  #     - onpm.pkg.node
+  #   dependency:
+  #     - WaitIsOnline
 
-  NativeRepo:
+  AddNativeRepo:
     description: Provision native OS package repository(ies)
     node: node.all
-    fn: InstallRepo
+    fn: AddNativeRepo
     param:
       - onpm.repo.node
     dependency:
-      - AlignPkg
+      - WaitIsOnline
 
-  NativePkg:
+  AddNativePkg:
     description: Provision native OS package(s)
     node: node.all
-    fn: InstallPkg
+    fn: AddNativePkg
     param:
-      - onpm.pkg.node
+      - onpm.pkg.node.all
     dependency:
-      - NativeRepo
+      - AddNativeRepo
 
   CpNativePkg:
     description: Provision native OS package(s)
@@ -86,7 +86,7 @@ phases:
     param:
       - onpm.pkg.cp
     dependency:
-      - NativePkg
+      - AddNativePkg
 
   KModule:
     description: Load OS kernel module(s)
@@ -96,7 +96,7 @@ phases:
       - kernel.module
       - file.kernel
     dependency:
-      - NativePkg
+      - AddNativePkg
       - CpNativePkg
 
   KParam:

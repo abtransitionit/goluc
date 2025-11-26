@@ -6,10 +6,10 @@ phases:
     node: node.all
     fn: UpgradeOs
 
-  UpdateOs:
+  AlignPkg:
     description: Upgrade node (linux OS) native repositories and packages to the latest version
     node: node.all
-    fn: UpdateOs
+    fn: AlignPkg
 
   # NeedReboot:
   #   description: Reboot a node if needed
