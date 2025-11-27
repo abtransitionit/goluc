@@ -35,6 +35,11 @@ workflow:
 
     node:
       bastion: local 
+      test: 
+        o1u: 
+          - o1u
+        o2a: 
+          - o2a
       all: 
         - o2a
         - o1u
