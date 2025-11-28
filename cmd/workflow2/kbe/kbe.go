@@ -34,5 +34,6 @@ func registerFunctions() {
 	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
 	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
 	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
+	registry.Add(worflowName, "UpdateOs", onpm.UpdateOs)
 	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
 }

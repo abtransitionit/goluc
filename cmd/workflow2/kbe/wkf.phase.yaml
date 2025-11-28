@@ -52,14 +52,12 @@ phases:
       - RebootIfNeeded
 
 
-  # AlignPkg:
-  #   description: Provision required/missing native standard OS packages
-  #   node: node.all
-  #   fn: UpdateNativePkg
-  #   param:
-  #     - onpm.pkg.node
-  #   dependency:
-  #     - WaitIsOnline
+  UpdateOs:
+    description: Provision required/missing native standard OS packages
+    node: node.test.da
+    fn: UpdateOs
+    dependency:
+      - WaitIsOnline
 
   AddNativeRepo:
     description: Provision native OS package repository(ies)
@@ -68,11 +66,11 @@ phases:
     param:
       - onpm.repo.node
     dependency:
-      - WaitIsOnline
+      - UpdateOs
 
   AddNativePkg:
     description: Provision native OS package(s)
-    node: node.o1u
+    node: node.test.o1u
     fn: AddNativePkg
     param:
       - onpm.pkg.node.all
