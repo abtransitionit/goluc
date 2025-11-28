@@ -1,7 +1,7 @@
 name: os
 description: test upgrading and updating a linux OS
 phases:
-  UpgradeOs:
+""  UpgradeOs:
     description: Upgrade node (linux OS) native repositories and packages to the latest version
     node: node.all
     fn: UpgradeOs
