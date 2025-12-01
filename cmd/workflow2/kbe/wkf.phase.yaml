@@ -54,7 +54,7 @@ phases:
 
   UpdateOs:
     description: Provision required/missing native standard OS packages
-    node: node.test.da
+    node: node.test.o5d
     fn: UpdateOs
     dependency:
       - WaitIsOnline

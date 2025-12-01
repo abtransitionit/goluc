@@ -43,6 +43,8 @@ workflow:
           - o1u
         o2a: 
           - o2a
+        o5d: 
+          - o5d
       all: 
         - o2a
         - o1u
