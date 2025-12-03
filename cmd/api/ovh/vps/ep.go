@@ -10,9 +10,16 @@ import (
 var forceFlag bool
 
 // Description
-var vpsSDesc = "execute action(s) on OVH VPS via OVH client's request(s)."
+var vpsSDesc = "Execute actions on an OVH VPS via the OVH API."
 var epLDesc = vpsSDesc + `
-- This command is used to execute action(s) on VPS using an OVH client's request(s).
+An action represents an operation that can be performed on a VPS through the OVH API.
+
+Examples of actions include:
+  • starting or stopping a VPS
+  • retrieving information such as status or configuration
+  • rebooting, reinstalling, or managing snapshots
+
+This command sends requests to the OVH API client to run these actions on the target VPS.
 `
 
 // root Command
@@ -26,5 +33,6 @@ func init() {
 	EpCmd.AddCommand(installCmd)
 	EpCmd.AddCommand(listCmd)
 	EpCmd.AddCommand(getCmd)
-	EpCmd.AddCommand(getlCmd)
+	EpCmd.AddCommand(getliCmd)
+	EpCmd.AddCommand(getlvCmd)
 }

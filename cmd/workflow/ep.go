@@ -12,7 +12,6 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow/om"
-	"github.com/abtransitionit/goluc/cmd/workflow/ovh"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -55,5 +54,4 @@ func init() {
 	EpCmd.AddCommand(kbe.EpCmd)
 	EpCmd.AddCommand(kind.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
-	EpCmd.AddCommand(ovh.EpCmd)
 }

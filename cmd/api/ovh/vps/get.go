@@ -18,11 +18,20 @@ var (
 	fieldFlag string
 )
 
-// Description
-var getSDesc = "Api get the list of OVH VPS."
+// Short description
+var getSDesc = "Get information on any or all OVH VPS."
+
+// Long description
 var getLDesc = getSDesc + `
-- This command is used to Api get the list of OVH VPS name id.
+This command sends a GET request to the OVH API to retrieve information about your VPS instances,
+including their name and ID.
 `
+
+// // Description
+// var getSDesc = "Get informations on any or all OVH VPS."
+// var getLDesc = getSDesc + `
+// - This command is used to Api get the list of OVH VPS name id.
+// `
 
 // root Command
 var getCmd = &cobra.Command{
@@ -84,6 +93,6 @@ var getCmd = &cobra.Command{
 
 // fetchFilterDisplayVps fetches VPS detail, applies field filtering, and prints the result
 func init() {
-	getCmd.Flags().BoolVar(&allFlag, "all", false, "Get all VPSs with details")
+	getCmd.Flags().BoolVar(&allFlag, "all", false, "Get detailed information for all VPSs")
 	getCmd.Flags().StringVar(&fieldFlag, "field", "", "Display only a specific field (e.g. displayName, memoryLimit)")
 }

@@ -12,13 +12,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Description
-var tokenSDesc = "manage the OAuth2 OVH token."
+// Short description
+var tokenSDesc = "Manage the OAuth2 OVH token via the OVH API."
+
+// Long description
 var tokenLDesc = tokenSDesc + `
-- This command is used to genereate the token used as the bearer in any OVH client's request.
-- The token is created using credentials related to a service account (aka. Client).
-- This credentials (client id/secret) are stored in a local json file in the current working directory.
-- The token is stored in a local json file in the current working directory.
+An OAuth2 token is required to authenticate and authorize any action executed through the OVH API.
+
+The token 
+  • is created using credentials related to a service account (also called a Client)
+  • is stored in a local json file in the current working directory.
+
+The credentials (Client ID and Secret)
+   • are stored in and loaded from a local JSON file in the current working directory,
+
+This command allows you to:
+  • generate and store the token used as the Bearer for any OVH API requests
 `
 
 // root Command

@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var listSDesc = "Api list all OVH VPS name id."
+var listSDesc = "List all OVH VPS name id."
 var listLDesc = listSDesc + ` xxx.`
 
 // root Command

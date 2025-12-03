@@ -13,26 +13,26 @@ import (
 )
 
 // Description
-var getlSDesc = "Get the list of OVH VPS define in the local configuration file (There is no API call)."
-var getlLDesc = getlSDesc + `
+var getlvSDesc = "Get the list of OVH VPS define in the local configuration file (There is no API call)."
+var getlvLDesc = getlvSDesc + `
 - This command is used to get the list of OVH VPS info statically defined in the local configuration file.
 - This command also add a dynamic (computated) field.
 `
 
 // root Command
-var getlCmd = &cobra.Command{
-	Use:   "getl",
-	Short: getlSDesc,
-	Long:  getlLDesc,
+var getlvCmd = &cobra.Command{
+	Use:   "getlv",
+	Short: getlvSDesc,
+	Long:  getlvLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define the logger
 		logger := logx.GetLogger()
 
 		// log
-		logger.Infof(getlSDesc)
+		logger.Infof(getlvSDesc)
 
-		// get the infos of all vps (ie. read the locl VPS config file)
-		vpsList, err := ovh.GetListVpsFromFile()
+		// get the infos of all vps (ie. read the local VPS config file)
+		vpsList, err := ovh.GetListVps()
 		if err != nil {
 			logger.Errorf("get vps:list from configuration file failed: %v", err)
 			os.Exit(1)
@@ -44,9 +44,9 @@ var getlCmd = &cobra.Command{
 }
 
 func init() {
-	getlCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
-	getlCmd.Flags().BoolP("list", "l", false, "List all available phases")
-	getlCmd.Flags().BoolP("runall", "r", false, "Run all phases in batch mode")
+	getlvCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
+	getlvCmd.Flags().BoolP("list", "l", false, "List all available phases")
+	getlvCmd.Flags().BoolP("runall", "r", false, "Run all phases in batch mode")
 	// Make them mutually exclusive
-	getlCmd.MarkFlagsMutuallyExclusive("list", "runall")
+	getlvCmd.MarkFlagsMutuallyExclusive("list", "runall")
 }

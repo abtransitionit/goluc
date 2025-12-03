@@ -1,15 +1,20 @@
 workflow:
   ovh:
-
     ssh:
-      delay: 30
+      delay: 180 # seconds
     node:
       bastion: local
-      test: 
+      local: 
         - local
-        # - o1u
-      all: 
+      o1u: 
         - o1u
+      da: 
         - o2a
+        - o1u
+      all: 
+        - o2a
+        - o1u
         - o3r
+        - o4f
+        - o5d
 

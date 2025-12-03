@@ -15,7 +15,7 @@ var forceFlag bool
 // Description
 var epSDesc = "request the OVH API."
 var epLDesc = epSDesc + `
-- This command is used to run action(s) on OVH resource(s) using an OVH client'srequest.
+- This command is used to run actions on OVH resources using an OVH API client request.
 `
 
 // root Command

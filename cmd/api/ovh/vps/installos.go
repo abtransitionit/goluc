@@ -14,7 +14,7 @@ import (
 )
 
 // Description
-var installSDesc = "Api re-install the OVH VPS Os image."
+var installSDesc = "Re-install the OVH VPS Os image."
 var installLDesc = installSDesc + `
 - This command is used to Api re-install the OVH VPS Os image.
 `
