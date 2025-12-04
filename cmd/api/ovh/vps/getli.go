@@ -32,8 +32,8 @@ var getliCmd = &cobra.Command{
 		// log
 		logger.Infof(getliSDesc)
 
-		// get the list of allOVH VPS OS images
-		vpsList, err := ovh.ImageGetList(ctx, logger)
+		// get the list of all OVH VPS OS images for a VPS
+		vpsList, err := ovh.VpsImageGetList(ctx, "o5d", logger)
 		if err != nil {
 			logger.Errorf("getting available image:list : %v", err)
 			os.Exit(1)

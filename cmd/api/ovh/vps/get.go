@@ -69,7 +69,7 @@ var getCmd = &cobra.Command{
 		// process each vps
 		for _, id := range vpsNameIdSlice {
 			// api get the VPS:detail
-			vpsDetail, err := ovh.VpsGetDetail(ctx, logger, id)
+			vpsDetail, err := ovh.VpsGetDetail(ctx, id, logger)
 			if err != nil {
 				logger.Errorf("failed to get detail for VPS: %s: %v", id, err)
 				os.Exit(1)

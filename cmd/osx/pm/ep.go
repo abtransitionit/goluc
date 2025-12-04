@@ -9,10 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var localFlag bool
-
 // Description
-var epSDesc = "managing linux os packages repositories and packages using native package managers."
+var epSDesc = "manage linux os packages repositories and packages using native package managers."
 var epLDesc = epSDesc + `
 This command supports the following Linux families
   - Debian-based (Ubuntu, Debian)

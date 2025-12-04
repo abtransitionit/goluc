@@ -14,7 +14,7 @@ import (
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/da"
-	"github.com/abtransitionit/golinux/property"
+	lproperty "github.com/abtransitionit/golinux/mock/property"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -93,18 +93,19 @@ var listCmd = &cobra.Command{
 		// define resource property from ID and output
 		vmName, err := list.GetFieldByID(formatedString, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get host name from ID: %s: %v", id, err)
 			return
 		}
 
 		// get property
-		osFamily, err := property.GetProperty(vmName, "osfamily")
+		// osFamily, err := property.GetProperty(vmName, "osfamily")
+		osFamily, err := lproperty.GetProperty(logger, vmName, "osFamily")
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 		// get property
-		osDistro, err := property.GetProperty(vmName, "osdistro")
+		osDistro, err := lproperty.GetProperty(logger, vmName, "osDistro")
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

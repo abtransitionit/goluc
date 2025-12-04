@@ -60,10 +60,10 @@ var EpCmd = &cobra.Command{
 
 		// 4 - get property
 		value, err := lproperty.GetProperty(logger, targetName, propertyName, propertyParams...)
-		// 4 - handle system error
 		if err != nil {
 			return fmt.Errorf("%v", err)
 		}
+
 		// 5 - handle success
 		fmt.Println(value)
 		return nil

@@ -55,7 +55,7 @@ var installCmd = &cobra.Command{
 		// 4 - process each VPS
 		for _, id := range vpsNameIdSlice {
 			logger.Infof("Processing VPS: %s", id)
-			jsonResponse, err := ovh.VpsReinstallHelper(ctx, logger, id)
+			jsonResponse, err := ovh.VpsReinstall(ctx, logger, id)
 			if err != nil {
 				logger.Errorf("failed to re-install VPS: %v", err)
 				os.Exit(1)

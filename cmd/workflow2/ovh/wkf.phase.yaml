@@ -3,6 +3,11 @@ description: manage OVH objects
 phases:
 
 
+  GetImageInfo:
+    description: get image Info (api call)
+    node: node.local
+    fn: GetImageInfo
+
   ListVpsOsImage:
     description: list availbale OVH VPS OS images (api call)
     node: node.local
@@ -20,7 +25,7 @@ phases:
 
   InstallVpsImage:
     description: Re-install the same OS image on a OVH Vps
-    node: node.o3r
+    node: node.o5d
     fn: InstallVpsImage
     dependency: 
       - ListInfo

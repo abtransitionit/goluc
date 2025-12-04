@@ -4,10 +4,16 @@ workflow:
       delay: 180 # seconds
     node:
       bastion: local
+      test: 
+        - o3r
+        - o4f
+        - o5d
       local: 
         - local
       o1u: 
         - o1u
+      o5d: 
+        - o5d
       o3r: 
         - o1u
       da: 
