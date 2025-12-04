@@ -8,12 +8,14 @@ workflow:
         - local
       o1u: 
         - o1u
+      o3r: 
+        - o1u
       da: 
         - o2a
         - o1u
       all: 
-        - o2a
         - o1u
+        - o2a
         - o3r
         - o4f
         - o5d

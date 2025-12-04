@@ -51,7 +51,6 @@ phases:
     dependency:
       - RebootIfNeeded
 
-
   UpdateOs:
     description: Provision required/missing native standard OS packages
     node: node.test.o5d

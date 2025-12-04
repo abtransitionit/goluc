@@ -9,17 +9,17 @@ phases:
 
   InstallVpsImage:
     description: Re-install the same OS image on a OVH Vps
-    node: node.o1u
+    node: node.o3r
     fn: InstallVpsImage
     dependency: 
       - ListInfo
 
   WaitIsOnline:
-    description: Check a node is ssh reachable from a host (after a possible reboot) within a delay
+    description: Check a node is ssh reachable from a host within a delay
     node: node.bastion
     fn: WaitIsOnline
     param: 
-      - node.o1u
+      - node.all
       - ssh.delay
     dependency:
       - InstallVpsImage
