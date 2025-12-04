@@ -2,6 +2,17 @@ name: ovh
 description: manage OVH objects
 phases:
 
+
+  ListVpsOsImage:
+    description: list availbale OVH VPS OS images (api call)
+    node: node.local
+    fn: ListVpsOsImage
+
+  RenewOvhToken:
+    description: generate and store locally an OVH token
+    node: node.local
+    fn: RenewOvhToken
+
   ListInfo:
     description: display informations on OVH API
     node: node.local
@@ -13,6 +24,7 @@ phases:
     fn: InstallVpsImage
     dependency: 
       - ListInfo
+
 
   WaitIsOnline:
     description: Check a node is ssh reachable from a host within a delay

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package pack
+package pkg
 
 import (
 	"github.com/spf13/cobra"
@@ -15,7 +15,7 @@ var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "pack",
+	Use:   "pkg",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {

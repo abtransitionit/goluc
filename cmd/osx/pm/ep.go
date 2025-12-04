@@ -4,7 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package pm
 
 import (
-	"github.com/abtransitionit/goluc/cmd/osx/pm/pack"
+	"github.com/abtransitionit/goluc/cmd/osx/pm/pkg"
 	"github.com/abtransitionit/goluc/cmd/osx/pm/repo"
 	"github.com/spf13/cobra"
 )
@@ -33,5 +33,5 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(repo.EpCmd)
-	EpCmd.AddCommand(pack.EpCmd)
+	EpCmd.AddCommand(pkg.EpCmd)
 }
