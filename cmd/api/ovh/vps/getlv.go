@@ -13,7 +13,7 @@ import (
 )
 
 // Description
-var getlvSDesc = "Get the list of OVH VPS define in the local configuration file (There is no API call)."
+var getlvSDesc = "Get the list of OVH VPS define in the local configuration file (no API call)."
 var getlvLDesc = getlvSDesc + `
 - This command is used to get the list of OVH VPS info statically defined in the local configuration file.
 - This command also add a dynamic (computated) field.
@@ -32,13 +32,20 @@ var getlvCmd = &cobra.Command{
 		logger.Infof(getlvSDesc)
 
 		// get the infos of all vps (ie. read the local VPS config file)
-		vpsList, err := ovh.GetListVps()
+		vpsList, err := ovh.GetVpsList()
 		if err != nil {
 			logger.Errorf("get vps:list from configuration file failed: %v", err)
 			os.Exit(1)
 		}
 
 		jsonx.PrettyPrintColor(vpsList)
+
+		out, err := ovh.GetVpsDistro("o1u")
+		if err != nil {
+			logger.Errorf("get vps:distro failed: %v", err)
+			os.Exit(1)
+		}
+		jsonx.PrettyPrintColor(out)
 
 	},
 }

@@ -26,8 +26,8 @@ func registerFunctions() {
 	// get the workflow name
 	worflowName := filepath.Base(cmdPathName)
 	// register function used
-	registry.Add(worflowName, "AddNativeRepo", onpm.AddRepo)
-	registry.Add(worflowName, "AddNativePkg", onpm.AddPkg)
+	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
+	registry.Add(worflowName, "AddPkgNative", onpm.AddPkg)
 	registry.Add(worflowName, "CheckSshConf", node.CheckSshConf)
 	registry.Add(worflowName, "CheckSshAccess", node.CheckSshAccess)
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)

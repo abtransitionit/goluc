@@ -63,9 +63,10 @@ workflow:
       kubectl:
         - o1u
 
-    go:
+    gopm:
       cp:
-      - { name: helm, version: "3.17.3" }
+      - name: helm
+        ersion: "3.17.3"
         
     onpm:
       repo:

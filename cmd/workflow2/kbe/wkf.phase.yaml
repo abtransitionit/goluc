@@ -53,28 +53,28 @@ phases:
 
   UpdateOs:
     description: Provision required/missing native standard OS packages
-    node: node.test.o5d
+    node: node.all
     fn: UpdateOs
     dependency:
       - WaitIsOnline
 
-  AddNativeRepo:
+  AddRepoNative:
     description: Provision native OS package repository(ies)
     node: node.test.o1u
-    fn: AddNativeRepo
+    fn: AddRepoNative
     param:
       - onpm.repo.node
     dependency:
       - UpdateOs
 
-  AddNativePkg:
+  AddPkgNative:
     description: Provision native OS package(s)
     node: node.test.o1u
-    fn: AddNativePkg
+    fn: AddPkgNative
     param:
       - onpm.pkg.node.all
     dependency:
-      - AddNativeRepo
+      - AddRepoNative
 
   CpNativePkg:
     description: Provision native OS package(s)
@@ -83,7 +83,7 @@ phases:
     param:
       - onpm.pkg.cp
     dependency:
-      - AddNativePkg
+      - AddPkgNative
 
   KModule:
     description: Load OS kernel module(s)
@@ -93,7 +93,6 @@ phases:
       - kernel.module
       - file.kernel
     dependency:
-      - AddNativePkg
       - CpNativePkg
 
   KParam:

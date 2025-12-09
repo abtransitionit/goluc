@@ -10,7 +10,7 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "managing os packages."
+var epSDesc = "manages native linux os packages."
 var epLDesc = epSDesc
 
 // root Command

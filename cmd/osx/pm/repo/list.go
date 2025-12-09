@@ -4,15 +4,15 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package repo
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/ovh"
+	"github.com/abtransitionit/gocore/ui"
 	"github.com/abtransitionit/golinux/da"
 	lproperty "github.com/abtransitionit/golinux/mock/property"
 	"github.com/abtransitionit/goluc/internal"
@@ -25,7 +25,7 @@ var (
 )
 
 // Description
-var listSDesc = "list native os package repositories installed or in the whitelist (ie. authorized)."
+var listSDesc = "list native os package repositories installed (default) or in the whitelist (ie. authorized to install)."
 var listLDesc = listSDesc
 
 // root Command
@@ -62,49 +62,36 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// 1 - list installed repos
-		// 11 - define list Vms
-		vmNames := []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
-
-		// no action is needed based on the number of row
-		formatedString := strings.Join(vmNames, "\n")
-		rowCount := list.CountNbLine(formatedString)
-		if rowCount == 1 {
-			return
+		// 1 - get list of OVH VPS names
+		// vpsSliceName, := []string{"o1u", "o2a", "o3r", "o4f", "o5d"}
+		vpsSliceName, err := ovh.GetVpsListName()
+		if err != nil {
+			logger.Errorf("getting vps:list from configuration file: %v", err)
+			os.Exit(1)
 		}
 
-		// 12 - print the list
-		formatedString = "NAME\n" + strings.Join(vmNames, "\n")
-		list.PrettyPrintTable(formatedString)
+		// print list
+		pList := "Name\n" + strings.Join(vpsSliceName, "\n")
+		list.PrettyPrintTable(pList)
 
 		// Ask user which ID (to choose) from the printed list
-		fmt.Print("\nWhich item (enter ID): ")
-
-		// convert user input to int
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		id, err := strconv.Atoi(input)
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
-		// define resource property from ID and output
-		vmName, err := list.GetFieldByID(formatedString, id, 0)
+		// 2 - define resource property from user choice (ID and output)
+		vmName, err := list.GetFieldByID(pList, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get host name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item from ID: %d > %v", id, err)
 			return
 		}
-
-		// get property
-		// osFamily, err := property.GetProperty(vmName, "osfamily")
 		osFamily, err := lproperty.GetProperty(logger, vmName, "osFamily")
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
-		// get property
 		osDistro, err := lproperty.GetProperty(logger, vmName, "osDistro")
 		if err != nil {
 			logger.Errorf("%v", err)
