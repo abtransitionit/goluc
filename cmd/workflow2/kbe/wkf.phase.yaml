@@ -60,7 +60,7 @@ phases:
 
   AddRepoNative:
     description: Provision native OS package repository(ies)
-    node: node.test.o1u
+    node: node.test.da
     fn: AddRepoNative
     param:
       - onpm.repo.node
