@@ -103,7 +103,7 @@ phases:
     param:
       - onpm.pkg.cp
     dependency:
-      - AddKParam
+      - AddKParam 
 
   Selinux:
     description: Configure SELinux
