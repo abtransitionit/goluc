@@ -76,6 +76,7 @@ phases:
     dependency:
       - AddRepoNative
 
+
   AddKModule:
     description: Load linux OS kernel module(s)
     node: node.all
@@ -96,21 +97,15 @@ phases:
     dependency:
       - AddKModule
 
-  CpNativePkg:
-    description: Provision native OS package(s)
-    node: node.cp
-    fn: Installpkg
-    param:
-      - onpm.pkg.cp
-    dependency:
-      - AddKParam 
 
-  Selinux:
+  SelinuxConfigure:
     description: Configure SELinux
     node: node.all
-    fn: ConfigureSelinux
+    fn: SelinuxConfigure
     dependency:
       - AddKParam
+
+
 
   ServiceEnable:
     description: Enable OS services to start after a reboot
@@ -119,17 +114,27 @@ phases:
     param:
       - service.enable
     dependency:
-      - Selinux
+      - SelinuxConfigure
 
   ServiceStart:
-    description: Start OS services for current session
+    description: Start an OS service for the current session
     node: node.all
     fn: StartService
     param:
       - service.start
     dependency:
-      - Selinux
       - ServiceEnable
+
+
+  AddPkgNativeCp:
+    description: Provision native OS package(s)
+    node: node.cp
+    fn: AddPkgNativeCp
+    param:
+      - onpm.pkg.cp
+    dependency:
+      - ServiceStart 
+
 
   CpReset:
     description: Reset the control plane node(s)
@@ -172,7 +177,7 @@ phases:
     dependency:
       - WorkerAdd
 
-  Go:
+  AddPkgGo:
     description: Provision Go CLI(s)
     node: node.cp
     fn: InstallGoCli
@@ -181,14 +186,14 @@ phases:
     dependency:
       - Kubectl
 
-  Rc:
+  AddRc:
     description: Create a custom RC file in user's home
     node: node.cp
     fn: CreateRc
     param:
       - file.crc
     dependency:
-      - Go
+      - AddPkgGo
 
   Path:
     description: Configure PATH envvar into current user's custom RC file
@@ -198,7 +203,7 @@ phases:
       - file.crc
       - file.binf
     dependency:
-      - Rc
+      - AddRc
 
   Helm:
     description: Install Helm chart repositories

@@ -13,23 +13,23 @@ workflow:
 
     service:
       start:
-        - crio
+        - name: crio
       enable:
-        - crio
-        - kubelet
+        - name: crio
+        - name: kubelet
 
     kernel:
       module:
-        - overlay
-        - br_netfilter
+        - name: overlay
+        - name: br_netfilter
       param:
-        - key: net.ipv4.ip_forward
+        - name: net.ipv4.ip_forward
           value: 1
           Description: Enable IPv4 packet forwarding - core kernel parameter
-        - key: net.bridge.bridge-nf-call-iptables
+        - name: net.bridge.bridge-nf-call-iptables
           value: 1
           Description: Pass bridged IPv4 traffic to iptables - br_netfilter module parameter
-        - key: net.bridge.bridge-nf-call-ip6tables
+        - name: net.bridge.bridge-nf-call-ip6tables
           value: 1
           Description: Pass bridged IPv6 traffic to iptables - br_netfilter module parameter
 

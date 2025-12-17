@@ -10,6 +10,9 @@ import (
 	"github.com/abtransitionit/gotask/mock/file"
 	"github.com/abtransitionit/gotask/mock/node"
 	"github.com/abtransitionit/gotask/mock/onpm"
+	"github.com/abtransitionit/gotask/mock/oskernel"
+	"github.com/abtransitionit/gotask/mock/osservice/sys"
+	"github.com/abtransitionit/gotask/mock/selinux"
 )
 
 // Package variables
@@ -28,11 +31,16 @@ func registerFunctions() {
 	// register function used
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
 	registry.Add(worflowName, "AddPkgNative", onpm.AddPkg)
+	registry.Add(worflowName, "AddKModule", oskernel.AddKModule)
+	registry.Add(worflowName, "AddKParam", oskernel.AddKParam)
+	registry.Add(worflowName, "EnableService", sys.Enable)
+	registry.Add(worflowName, "StartService", sys.Start)
 	registry.Add(worflowName, "CheckSshConf", node.CheckSshConf)
 	registry.Add(worflowName, "CheckSshAccess", node.CheckSshAccess)
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)
 	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
 	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
+	registry.Add(worflowName, "SelinuxConfigure", selinux.ConfigureSelinux)
 	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
 	registry.Add(worflowName, "UpdateOs", onpm.UpdateOs)
 	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
