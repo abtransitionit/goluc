@@ -129,53 +129,53 @@ phases:
   AddPkgNativeCp:
     description: Provision native OS package(s)
     node: node.cp
-    fn: AddPkgNativeCp
+    fn: AddPkgNative
     param:
-      - onpm.pkg.cp
+      - onpm.pkg.node.cp
     dependency:
       - ServiceStart 
 
 
-  CpReset:
+  ResetCp:
     description: Reset the control plane node(s)
     node: node.cp
     fn: ResetNode
     dependency:
       - ServiceStart
 
-  CpInit:
+  InitCp:
     description: Initialize/bootstrap the cluster
     node: node.cp
     fn: InitCPlane
     param:
       - cluster
     dependency:
-      - CpReset
+      - ResetCp
 
-  WorkerReset:
+  ResetWorker:
     description: Reset the worker node(s)
     node: node.worker
     fn: ResetNode
     dependency:
-      - CpInit
+      - InitCp
 
-  WorkerAdd:
+  AddWorker:
     description: Add worker node(s) to the cluster
     node: node.worker
     fn: AddWorker
     param:
       - node.cp
     dependency:
-      - WorkerReset
+      - ResetWorker
 
-  Kubectl:
+  ConfigureKubectl:
     description: Configure kubectl
     node: node.kubectl
     fn: Configure
     param:
       - node.cp
     dependency:
-      - WorkerAdd
+      - AddWorker
 
   AddPkgGo:
     description: Provision Go CLI(s)
@@ -184,7 +184,7 @@ phases:
     param:
       - go.cp
     dependency:
-      - Kubectl
+      - ConfigureKubectl
 
   AddRc:
     description: Create a custom RC file in user's home
