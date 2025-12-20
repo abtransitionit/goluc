@@ -1,24 +1,24 @@
 workflow:
   kbe:
     ssh:
-      delay: 120 # seconds
+      delay: 120 # seconds - delay to wait for ssh to be reachable after reboot
     agent:
       src: /tmp/luca
       dst: /usr/local/bin/
       chmod: 755
     file:
       crc:  .profile.luc.  # custom RC file
-      binf: /usr/local/bin # binary folder
-      kernel: 99-kbe.conf
+      binf: /usr/local/bin # binary folder - where to place agent and other binaries
+      kernel: 99-kbe.conf  # kernel config module and parameters file
 
-    service:
-      start:
+    service: # os services to manage
+      start:               # for curreent session
         - name: crio
-      enable:
+      enable:              # after a reboot
         - name: crio
         - name: kubelet
 
-    kernel:
+    kernel: # kernel modules and parameters to set
       module:
         - name: overlay
         - name: br_netfilter
@@ -63,12 +63,12 @@ workflow:
       kubectl:
         - o1u
 
-    gopm:
+    gopm: # go packages to install
       cp:
       - name: helm
-        ersion: "3.17.3"
+        version: "3.17.3"
         
-    onpm:
+    onpm: # os native repos and packages to install
       repo:
         node:
           - name: crio
@@ -88,7 +88,7 @@ workflow:
         required:
           - name: gnupg
 
-    helm:
+    helm: # helm repos and releases to install
       repo:
         - name: cilium
         - name: kdabsh
@@ -103,7 +103,9 @@ workflow:
           version: "0.18.7"
 
     cluster:
-      - podCidr: "192.168.0.0/16"
-        serviceCidr: "172.16.0.0/16"
-        crSocketName: unix:///var/run/crio/crio.sock
-        k8sVersion:   "1.32.0"
+      podCidr: "192.168.0.0/16"
+      serviceCidr: "172.16.0.0/16"
+      k8sVersion:   "1.32.0"
+
+    containerRuntime:
+      socketName: unix:///var/run/crio/crio.sock

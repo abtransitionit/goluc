@@ -126,7 +126,7 @@ phases:
       - ServiceEnable
 
 
-  AddPkgNativeCp:
+  AddPkgNative2:
     description: Provision native OS package(s)
     node: node.cp
     fn: AddPkgNative
@@ -136,28 +136,29 @@ phases:
       - ServiceStart 
 
 
-  ResetCp:
+  ResetCplane:
     description: Reset the control plane node(s)
     node: node.cp
     fn: ResetNode
     dependency:
       - ServiceStart
 
-  InitCp:
+  InitCplane:
     description: Initialize/bootstrap the cluster
     node: node.cp
-    fn: InitCPlane
+    fn: InitCplane
     param:
       - cluster
+      - ContainerRuntime.socketName
     dependency:
-      - ResetCp
+      - ResetCplane
 
   ResetWorker:
     description: Reset the worker node(s)
     node: node.worker
     fn: ResetNode
     dependency:
-      - InitCp
+      - InitCplane
 
   AddWorker:
     description: Add worker node(s) to the cluster
@@ -171,7 +172,7 @@ phases:
   ConfigureKubectl:
     description: Configure kubectl
     node: node.kubectl
-    fn: Configure
+    fn: ConfigureKubectl
     param:
       - node.cp
     dependency:
@@ -182,41 +183,48 @@ phases:
     node: node.cp
     fn: InstallGoCli
     param:
-      - go.cp
+      - gopm.cp
     dependency:
       - ConfigureKubectl
 
-  AddRc:
-    description: Create a custom RC file in user's home
+  CreateRc:
+    description: Create a user's custom RC file
     node: node.cp
-    fn: CreateRc
+    fn: CreateRcFile
     param:
       - file.crc
     dependency:
       - AddPkgGo
 
-  Path:
-    description: Configure PATH envvar into current user's custom RC file
+  AddPath:
+    description: Add the envvar:PATH into the user's custom RC file
     node: node.cp
-    fn: SetPath
+    fn: UpdateRcFile
     param:
       - file.crc
       - file.binf
     dependency:
-      - AddRc
+      - CreateRc
 
-  Helm:
-    description: Install Helm chart repositories
+  AddRepoHelm:
+    description: Install Helm charts repositories
     node: node.helm
-    fn: InstallHelmRepo
+    fn: AddRepoHelm
     param:
       - helm.repo
     dependency:
-      - Path
+      - AddPath
 
-  Cni:
-    description: Install and configure the CNI Cilium
-    node: Helm
-    fn: InstallCilium
+  AddPkgHelmCniCilium:
+    description: Install the CNI:Cilium as a Helm:Chart
+    node: node.helm
+    fn: AddPkgHelm # aka. Helm chart (Pkg is not a concept in Helm language)
     dependency:
-      - Helm
+      - AddRepoHelm
+
+  ConfigureCni:
+    description: Configure Cilium
+    node: node.helm
+    fn: ConfigureCilium
+    dependency:
+      - AddPkgHelmCniCilium
