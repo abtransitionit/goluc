@@ -9,7 +9,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage linux CLI using go."
+var epSDesc = "build linux CLI from Go source code."
 var epLDesc = epSDesc + `
 This command allows to Build a CLI binary for any OS from GO source code.
 `

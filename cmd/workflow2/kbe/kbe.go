@@ -34,6 +34,12 @@ func registerFunctions() {
 	registry.Add(worflowName, "CheckSshConf", node.CheckSshConf)
 	registry.Add(worflowName, "CheckSshAccess", node.CheckSshAccess)
 
+	// code to ensure OS is up to date
+	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
+	registry.Add(worflowName, "UpdateOs", onpm.UpdateOs)
+	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
+	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
+
 	// deploy an agent
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)
 
@@ -42,12 +48,6 @@ func registerFunctions() {
 
 	// update RC file
 	registry.Add(worflowName, "UpdateRcFile", file.AddString)
-
-	// code to ensure OS is up to date
-	registry.Add(worflowName, "UpgradeOs", onpm.UpgradeOs)
-	registry.Add(worflowName, "UpdateOs", onpm.UpdateOs)
-	registry.Add(worflowName, "RebootIfNeeded", node.RebootIfNeeded)
-	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
 
 	// code OS Native Package Manager specific
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
