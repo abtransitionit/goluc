@@ -1,101 +1,138 @@
 name: kind
 description: create a KIND (Kubernetes in Docker) cluster
 phases:
-  Conf:
-    description: check node is SSH configured in target (~/.ssh/config)
+  CheckSshConf:
+    description: check node is SSH configured on the host (aka. ~/.ssh/config.d/)
     node: node.bastion
     fn: CheckSshConf
     param: 
       - node.all
 
-  Ssh:
-    description: Check node is SSH reachable
+  CheckSshAccess:
+    description: Check node is SSH reachable from the host
     node: node.bastion
     fn: CheckSshAccess
     param:
       - node.all
     dependency:
-      - Conf
+      - CheckSshConf
 
-  Agent:
-    description: Copy LUC CLI
+  DeployAgent:
+    description: copy luca agent from the host to the node (only if it is different from the host)
     node: node.bastion
-    fn: Deploy
-    dependency:
-      - Ssh
-    param:
+    fn: DeployAgent
+    param: 
       - node.all
+      - agent
+    dependency:
+      - CheckSshAccess
 
-  Os:
-    description: Provision OS nodes with latest dnfapt packages and repositories
+  UpgradeOs:
+    description: Upgrade node (linux OS) native repositories and packages to the latest version
     node: node.all
     fn: UpgradeOs
     dependency:
-      - Agent
+      - DeployAgent
 
-  Pkg:
-    description: Provision required/missing standard dnfapt packages
+  RebootIfNeeded:
+    description: Reboot a node if needed
     node: node.all
-    fn: UpdateNativePkg
-    param:
-      - da.pkg.required
+    fn: RebootIfNeeded
     dependency:
-      - Os
+      - UpgradeOs
 
-  Go:
-    description: Provision Go CLI(s)
+  WaitIsOnline:
+    description: Check a node is ssh reachable from a host (after a possible reboot) within a delay
+    node: node.bastion
+    fn: WaitIsOnline
+    param: 
+      - node.all
+      - ssh.delay
+    dependency:
+      - RebootIfNeeded
+
+  UpdateOs:
+    description: Provision required/missing native standard OS packages
     node: node.all
+    fn: UpdateOs
+    dependency:
+      - WaitIsOnline
+
+  AddRepoNative:
+    description: Provision native OS package repository(ies)
+    node: node.all
+    fn: AddRepoNative
+    param:
+      - onpm.repo.node
+    dependency:
+      - UpdateOs
+
+  AddPkgNative:
+    description: Provision native OS package(s)
+    node: node.all
+    fn: AddPkgNative
+    param:
+      - onpm.pkg.node.all
+    dependency:
+      - AddRepoNative
+
+  AddPkgGo:
+    description: Provision Go CLI(s)
+    node: node.cp
     fn: InstallGoCli
     param:
-      - goCli
+      - gopm
     dependency:
-      - Pkg
+      - AddPkgNative
+
+  CreateRc:
+    description: Create a user's custom RC file
+    node: node.cp
+    fn: CreateRcFile
+    param:
+      - file.crc
+    dependency:
+      - AddPkgGo
+
 
   InstallService:
     description: Provision OS service(s)
     node: node.all
     fn: InstallService
     param:
-      - service
+      - service.install
     dependency:
-      - Go
-      - Envar
+      - AddPkgGo
+      - AddEnvar
 
-  UserService:
+  ConfigureUserServices:
     description: Allows user services to be session-independent
     node: node.all
     fn: EnableLinger
     dependency:
-      - Go
+      - AddPkgGo
 
-  Rc:
-    description: Create a custom RC file in user's home
-    node: node.all
-    fn: CreateRc
+
+  AddPath:
+    description: Update and Add the envvar:PATH into the user's custom RC file
+    node: node.cp
+    fn: UpdateRcFile
     param:
-      - customRcFileName
+      - file.crc
+      - file.binf
     dependency:
-      - UserService
+      - CreateRc
 
-  Path:
-    description: Configure PATH envvar into current user's custom RC file
-    node: node.all
-    fn: SetPath
-    param:
-      - binFolderPath
-      - customRcFileName
-    dependency:
-      - Rc
 
-  Envar:
-    description: Define envvars into current user's custom RC file
+  AddEnvar:
+    description: Add the other envvars into the user's custom RC file
     node: node.all
-    fn: DefineEnvar
+    fn: UpdateRcFile
     param:
-      - customRcFileName
+      - file.crc
       - envar
     dependency:
-      - Path
+      - AddPath
 
   ServiceStart:
     description: Start OS services needed by the app
@@ -105,7 +142,7 @@ phases:
       - service
     dependency:
       - InstallService
-      - Envar
+      - AddEnvar
 
   Containerd:
     description: Sets up a rootless containerd env Linux session independent for the current user

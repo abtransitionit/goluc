@@ -76,7 +76,6 @@ phases:
     dependency:
       - AddRepoNative
 
-
   AddKModule:
     description: Load linux OS kernel module(s)
     node: node.all
@@ -97,15 +96,12 @@ phases:
     dependency:
       - AddKModule
 
-
   SelinuxConfigure:
     description: Configure SELinux
     node: node.all
     fn: SelinuxConfigure
     dependency:
       - AddKParam
-
-
 
   ServiceEnable:
     description: Enable OS services to start after a reboot
@@ -134,7 +130,6 @@ phases:
       - onpm.pkg.node.cp
     dependency:
       - ServiceStart 
-
 
   ResetCplane:
     description: Reset the control plane node(s)
@@ -197,7 +192,7 @@ phases:
       - AddPkgGo
 
   AddPath:
-    description: Add the envvar:PATH into the user's custom RC file
+    description: Update and Add the envvar:PATH into the user's custom RC file
     node: node.cp
     fn: UpdateRcFile
     param:

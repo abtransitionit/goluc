@@ -1,19 +1,17 @@
 workflow:
   kind:
-
+    ssh:
+      delay: 120 # seconds - delay to wait for ssh to be reachable after reboot
     node:
       bastion: local
-      all:
+      all: 
         - o1u
         - o2a
+        - o3r
+        - o4f
+        - o5d
 
-    da:
-      pkg:
-        required:
-          - uidmap
-          - dbus-user-session
-
-    goCli:
+    gopm:
       - name: cni
         version: "1.7.1"
       - name: containerd
@@ -29,10 +27,11 @@ workflow:
       - name: slirp4netns
         version: "1.3.3"
 
-    service:
-      - name: apparmor
-        path: /etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit
-        content: ./apparmor
+    service: # os services to manage
+      install:
+        - name: apparmor
+          path: /etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit
+          content: ./apparmor
 
     envar:
       - name: CNI_PATH
