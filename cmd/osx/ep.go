@@ -5,6 +5,7 @@ package osx
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s"
+	"github.com/abtransitionit/goluc/cmd/osx/gox"
 	"github.com/abtransitionit/goluc/cmd/osx/kernel"
 	"github.com/abtransitionit/goluc/cmd/osx/pm"
 	"github.com/spf13/cobra"
@@ -26,5 +27,6 @@ var EpCmd = &cobra.Command{
 func init() {
 	EpCmd.AddCommand(kernel.EpCmd)
 	EpCmd.AddCommand(pm.EpCmd)
+	EpCmd.AddCommand(gox.EpCmd)
 	EpCmd.AddCommand(k8s.EpCmd)
 }
