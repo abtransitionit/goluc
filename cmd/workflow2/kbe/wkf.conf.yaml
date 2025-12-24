@@ -103,9 +103,10 @@ workflow:
           version: "0.18.7"
 
     cluster:
-      podCidr: "192.168.0.0/16"
-      serviceCidr: "172.16.0.0/16"
-      k8sVersion:   "1.32.0"
+      parameter:
+        podCidr: "192.168.0.0/16"
+        serviceCidr: "172.16.0.0/16"
+        k8sVersion:  "1.32.0"
 
     containerRuntime:
       socketName: unix:///var/run/crio/crio.sock

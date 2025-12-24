@@ -58,7 +58,7 @@ func registerFunctions() {
 	registry.Add(worflowName, "AddKParam", oskernel.AddKParam)
 	registry.Add(worflowName, "EnableService", sys.Enable)
 	registry.Add(worflowName, "StartService", sys.Start)
-	registry.Add(worflowName, "SelinuxConfigure", selinux.ConfigureSelinux)
+	registry.Add(worflowName, "SelinuxConfigure", selinux.Configure)
 
 	// code K8s specific
 	registry.Add(worflowName, "ResetNode", k8s.ResetNode)
