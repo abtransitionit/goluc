@@ -139,7 +139,7 @@ phases:
     node: node.all
     fn: StartService
     param:
-      - service
+      - service.start
     dependency:
       - InstallService
       - AddEnvar

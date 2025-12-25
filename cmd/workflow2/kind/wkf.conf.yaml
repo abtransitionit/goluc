@@ -36,7 +36,9 @@ workflow:
         - name: apparmor
           path: /etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit
           content: ./apparmor
+      start:
+        - name: apparmor.service
 
-    envar:
+    envar: # os envar to set for the user
       - name: CNI_PATH
         value: /usr/local/bin/cni
