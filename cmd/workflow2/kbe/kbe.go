@@ -52,8 +52,8 @@ func registerFunctions() {
 	registry.Add(worflowName, "AddPkgNative", onpm.AddPkg)
 
 	// code OS specific
-	registry.Add(worflowName, "AddKModule", oskernel.AddKModule)
-	registry.Add(worflowName, "AddKParam", oskernel.AddKParam)
+	registry.Add(worflowName, "AddKModule", oskernel.LoadModule)
+	registry.Add(worflowName, "AddKParam", oskernel.LoadParam)
 	registry.Add(worflowName, "EnableService", sys.Enable)
 	registry.Add(worflowName, "StartService", sys.Start)
 	registry.Add(worflowName, "SelinuxConfigure", selinux.Configure)
