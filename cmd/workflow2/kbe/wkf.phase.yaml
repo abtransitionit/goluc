@@ -166,17 +166,18 @@ phases:
 
   ConfigureKubectl:
     description: Configure kubectl
-    node: node.kubectl
+    node: node.bastion
     fn: ConfigureKubectl
     param:
       - node.cp
+      - node.kubectl
     dependency:
       - AddWorker
 
   AddPkgGo:
-    description: Provision Go CLI(s)
+    description: install Go CLI(s)
     node: node.cp
-    fn: InstallGoCli
+    fn: AddPkgGo
     param:
       - gopm.cp
     dependency:

@@ -63,7 +63,7 @@ func registerFunctions() {
 	registry.Add(worflowName, "InitCplane", k8s.InitCplane)
 	registry.Add(worflowName, "AddWorker", k8s.AddWorker)
 	registry.Add(worflowName, "ConfigureKubectl", k8s.ConfigureKubectl)
-	registry.Add(worflowName, "InstallGoCli", gopm.InstallGoCli)
+	registry.Add(worflowName, "AddPkgGo", gopm.AddPkgGo)
 	registry.Add(worflowName, "AddRepoHelm", k8s.AddRepoHelm)
 	registry.Add(worflowName, "AddPkgHelm", k8s.AddChartHelm)
 

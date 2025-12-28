@@ -88,6 +88,9 @@ workflow:
         required:
           - name: gnupg
 
+    kubectl: # manage kubectl
+      node:  # where to install
+        name: o1u
     helm: # helm repos and releases to install
       repo:
         - name: cilium
