@@ -180,6 +180,8 @@ phases:
     fn: AddPkgGo
     param:
       - gopm.cp
+      - file.binf
+
     dependency:
       - ConfigureKubectl
 
