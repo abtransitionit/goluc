@@ -67,10 +67,10 @@ workflow:
       cp:
       - name: helm
         version: 3.17.3
+      # - name: runc
+      #   version: 1.3.0
       # - name: kind
       #   version: latest
-      - name: runc
-        version: 1.3.0
       # - name: slirp4netns
       #   version: 1.3.3
         
