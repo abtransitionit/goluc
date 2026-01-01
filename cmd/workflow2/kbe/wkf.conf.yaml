@@ -7,7 +7,7 @@ workflow:
       dst: /usr/local/bin/
       chmod: 755
     file:
-      crc:  .profile.luc.  # custom RC file
+      crc:  .profile.kbe   # custom RC file
       binf: /usr/local/bin # binary folder - where to place agent and other binaries
       kernel: 99-kbe.conf  # kernel config module and parameters file
 

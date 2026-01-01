@@ -185,24 +185,25 @@ phases:
     dependency:
       - ConfigureKubectl
 
-  CreateRc:
+  CreateRcFile:
     description: Create a user's custom RC file
-    node: node.cp
+    node: node.bastion
     fn: CreateRcFile
     param:
+      - node.cp
       - file.crc
     dependency:
       - AddPkgGo
 
-  AddPath:
-    description: Update and Add the envvar:PATH into the user's custom RC file
+  RcAddPath:
+    description: Update the user's custom RC file by adding the envvar:PATH
     node: node.cp
-    fn: UpdateRcFile
+    fn: RcAddPath
     param:
       - file.crc
       - file.binf
     dependency:
-      - CreateRc
+      - CreateRcFile
 
   AddRepoHelm:
     description: Install Helm charts repositories
@@ -211,7 +212,7 @@ phases:
     param:
       - helm.repo
     dependency:
-      - AddPath
+      - RcAddPath
 
   AddPkgHelmCniCilium:
     description: Install the CNI:Cilium as a Helm:Chart

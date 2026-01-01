@@ -40,8 +40,8 @@ func registerFunctions() {
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)
 
 	// mange an RC file
-	registry.Add(worflowName, "CreateRcFile", file.Create)
-	registry.Add(worflowName, "UpdateRcFile", file.AddString)
+	registry.Add(worflowName, "CreateRcFile", file.CreateRcFile)
+	// registry.Add(worflowName, "UpdateRcFile", file.AddString)
 
 	// code OS Native Package Manager specific
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
