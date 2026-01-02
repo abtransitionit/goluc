@@ -190,7 +190,7 @@ phases:
     node: node.bastion
     fn: CreateRcFile
     param:
-      - node.cp
+      - node.test.o2a
       - file.crc
     dependency:
       - AddPkgGo

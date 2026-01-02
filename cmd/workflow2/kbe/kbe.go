@@ -45,7 +45,7 @@ func registerFunctions() {
 
 	// mange an RC file
 	registry.Add(worflowName, "CreateRcFile", file.CreateRcFile)
-	// registry.Add(worflowName, "RcAdPath", file.RcAddPath)
+	registry.Add(worflowName, "RcAddPath", file.RcAddPath)
 	// registry.Add(worflowName, "UpdateRcFile", file.AddString)
 
 	// code OS Native Package Manager specific
