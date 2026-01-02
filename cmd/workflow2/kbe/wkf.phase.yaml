@@ -197,11 +197,12 @@ phases:
 
   RcAddPath:
     description: Update the user's custom RC file by adding the envvar:PATH
-    node: node.cp
+    node: node.bastion
     fn: RcAddPath
     param:
-      - file.crc
+      - node.test.o1u
       - file.binf
+      - file.crc
     dependency:
       - CreateRcFile
 
