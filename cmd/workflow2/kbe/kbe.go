@@ -43,16 +43,16 @@ func registerFunctions() {
 	// deploy an agent
 	registry.Add(worflowName, "DeployAgent", file.CopyFileWithSudo)
 
-	// mange an RC file
+	// mange RC file
 	registry.Add(worflowName, "CreateRcFile", file.CreateRcFile)
 	registry.Add(worflowName, "RcAddPath", file.RcAddPath)
 	// registry.Add(worflowName, "UpdateRcFile", file.AddString)
 
-	// code OS Native Package Manager specific
+	// code to manage Linux OS Native Package
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
 	registry.Add(worflowName, "AddPkgNative", onpm.AddPkg)
 
-	// code OS specific
+	// code Linux OS specific
 	registry.Add(worflowName, "AddKModule", oskernel.LoadModule)
 	registry.Add(worflowName, "AddKParam", oskernel.LoadParam)
 	registry.Add(worflowName, "EnableService", sys.Enable)

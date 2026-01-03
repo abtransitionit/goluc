@@ -1,0 +1,8 @@
+workflow:
+  kse:
+    ssh:
+      delay: 120 # seconds - delay to wait for ssh to be reachable after reboot
+    agent:
+      src: /tmp/luca
+      dst: /usr/local/bin/
+      chmod: 755

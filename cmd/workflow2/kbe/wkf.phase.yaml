@@ -190,7 +190,7 @@ phases:
     node: node.bastion
     fn: CreateRcFile
     param:
-      - node.test.o2a
+      - node.cp
       - file.crc
     dependency:
       - AddPkgGo
@@ -200,7 +200,7 @@ phases:
     node: node.bastion
     fn: RcAddPath
     param:
-      - node.test.o1u
+      - node.cp
       - file.binf
       - file.crc
     dependency:
@@ -211,20 +211,28 @@ phases:
     node: node.helm
     fn: AddRepoHelm
     param:
+      - 
       - helm.repo
     dependency:
       - RcAddPath
 
-  AddPkgHelmCniCilium:
+  AddChartHelm:
     description: Install the CNI:Cilium as a Helm:Chart
     node: node.helm
-    fn: AddPkgHelm # aka. Helm chart (Pkg is not a concept in Helm language)
+    fn: AddChartHelm # aka. Helm chart (Pkg is not a concept in Helm language)
     dependency:
       - AddRepoHelm
+
+  # AddPkgHelmCniCilium:
+  #   description: Install the CNI:Cilium as a Helm:Chart
+  #   node: node.helm
+  #   fn: AddPkgHelm # aka. Helm chart (Pkg is not a concept in Helm language)
+  #   dependency:
+  #     - AddRepoHelm
 
   ConfigureCni:
     description: Configure Cilium
     node: node.helm
     fn: ConfigureCilium
     dependency:
-      - AddPkgHelmCniCilium
+      - AddChartHelm

@@ -1,0 +1,29 @@
+name: kse
+description: secure a Kubernetes cluster
+phases:
+  CheckSshConf:
+    description: check node is SSH configured on the host (aka. ~/.ssh/config.d/)
+    node: node.bastion
+    fn: CheckSshConf
+    param: 
+      - node.all
+
+  CheckSshAccess:
+    description: Check node is SSH reachable from the host
+    node: node.bastion
+    fn: CheckSshAccess
+    param:
+      - node.all
+    dependency:
+      - CheckSshConf
+
+  DeployAgent:
+    description: copy luca agent from the host to the node (only if it is different from the host)
+    node: node.bastion
+    fn: DeployAgent
+    param: 
+      - node.all
+      - agent
+    dependency:
+      - CheckSshAccess
+
