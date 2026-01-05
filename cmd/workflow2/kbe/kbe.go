@@ -46,7 +46,6 @@ func registerFunctions() {
 	// mange Linux RC file
 	registry.Add(worflowName, "CreateRcFile", file.CreateRcFile)
 	registry.Add(worflowName, "RcAddPath", file.RcAddPath)
-	// registry.Add(worflowName, "UpdateRcFile", file.AddString)
 
 	// manage Linux OS Native Package
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
