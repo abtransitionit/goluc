@@ -27,3 +27,23 @@ phases:
     dependency:
       - CheckSshAccess
 
+  BlockAllPort:
+    description: block the node's all ports
+    node: node.bastion
+    fn: BlockAllPort
+    param: 
+      - node.all
+      - agent
+    dependency:
+      - CheckSshAccess
+
+  AuthorizePort:
+    description: Authorize the node's port
+    node: node.bastion
+    fn: BlockAllPort
+    param: 
+      - node.all
+      - agent
+    dependency:
+      - CheckSshAccess
+

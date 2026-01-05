@@ -1,29 +1,35 @@
 name: koe
 description: add observability to a Kubernetes cluster
 phases:
-  CheckSshConf:
-    description: check node is SSH configured on the host (aka. ~/.ssh/config.d/)
-    node: node.bastion
-    fn: CheckSshConf
-    param: 
-      - node.all
+  CheckNodeConf:
+    description: check cluster's bastion is SSH configured on the host (aka. ~/.ssh/config.d/)
+    node: cluster.bastion
+    fn: CheckNodeConf
 
-  CheckSshAccess:
-    description: Check node is SSH reachable from the host
-    node: node.bastion
-    fn: CheckSshAccess
-    param:
-      - node.all
+  CheckNodeSshAccess:
+    description: Check cluster's node is SSH reachable from the bastion
+    node: cluster.bastion
+    fn: CheckNodeSshAccess
     dependency:
-      - CheckSshConf
+      - CheckNodeConf
+    param: 
+      - cluster.node
 
   DeployAgent:
-    description: copy luca agent from the host to the node (only if it is different from the host)
+    description: copy luca agent from the bastion to the cluster's node (only if it is different from the bastion)
     node: node.bastion
     fn: DeployAgent
     param: 
-      - node.all
+      - cluster.node
       - agent
     dependency:
-      - CheckSshAccess
+      - CheckNodeSshAccess
 
+  AddRepoHelm:
+    description: Install Helm charts repositories
+    node: node.helm
+    fn: AddRepoHelm
+    param:
+      - helm.repo
+    dependency:
+      - DeployAgent

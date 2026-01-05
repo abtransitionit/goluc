@@ -102,16 +102,15 @@ workflow:
     helm: # helm repos and releases to install
       repo:
         - name: cilium
-        - name: kdabsh
       release:
         - name: kbe-mxtest
           chart: ~/wkspc/chart/mxtest
           namespace: default
         - name: kbe-cilium
           chart: cilium
-          namespace: "kube-system" 
           repo:  cilium
           version: "0.18.7"
+          namespace: kube-system
 
     cluster:
       parameter:

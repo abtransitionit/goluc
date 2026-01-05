@@ -211,17 +211,18 @@ phases:
     node: node.helm
     fn: AddRepoHelm
     param:
-      - 
       - helm.repo
     dependency:
       - RcAddPath
 
-  AddChartHelm:
+  AddReleasesHelm:
     description: Install the CNI:Cilium as a Helm:Chart
     node: node.helm
-    fn: AddChartHelm # aka. Helm chart (Pkg is not a concept in Helm language)
+    fn: AddReleasesHelm # aka. Helm chart (Pkg is not a concept in Helm language)
     dependency:
       - AddRepoHelm
+    param:
+      - helm.repo
 
   # AddPkgHelmCniCilium:
   #   description: Install the CNI:Cilium as a Helm:Chart
@@ -235,4 +236,4 @@ phases:
     node: node.helm
     fn: ConfigureCilium
     dependency:
-      - AddChartHelm
+      - AddReleasesHelm
