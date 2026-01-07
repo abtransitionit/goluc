@@ -128,7 +128,7 @@ phases:
     param:
       - service.stop
     dependency:
-      - ServiceEnable
+      - ServiceStart
 
 
   AddPkgNative2:
@@ -138,14 +138,14 @@ phases:
     param:
       - onpm.pkg.node.cp
     dependency:
-      - ServiceStart 
+      - ServiceStop 
 
   ResetCplane:
     description: Reset the control plane node(s)
     node: node.cp
     fn: ResetNode
     dependency:
-      - ServiceStop
+      - AddPkgNative2
 
   InitCplane:
     description: Initialize/bootstrap the cluster
@@ -245,4 +245,4 @@ phases:
     node: node.helm
     fn: ConfigureCilium
     dependency:
-      - AddReleasesHelm
+      - AddCni

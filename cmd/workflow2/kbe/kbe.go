@@ -75,5 +75,6 @@ func registerFunctions() {
 	// - Helm
 	registry.Add(worflowName, "AddRepoHelm", k8s.AddRepoHelm)
 	registry.Add(worflowName, "AddPkgHelm", k8s.AddChartHelm)
+	registry.Add(worflowName, "AddPkgHelm", k8s.AddReleaseHelm)
 
 }
