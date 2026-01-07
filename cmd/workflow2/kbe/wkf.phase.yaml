@@ -224,7 +224,7 @@ phases:
     dependency:
       - RcAddPath
 
-  AddReleasesHelm:
+  AddCni:
     description: Install the CNI:Cilium as a Helm:Chart
     node: node.helm
     fn: AddReleasesHelm # aka. Helm chart (Pkg is not a concept in Helm language)
@@ -241,7 +241,7 @@ phases:
   #     - AddRepoHelm
 
   ConfigureCni:
-    description: Configure Cilium
+    description: Configure CNI:Cilium for this cluster
     node: node.helm
     fn: ConfigureCilium
     dependency:
