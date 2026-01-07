@@ -215,11 +215,12 @@ phases:
       - CreateRcFile
 
   AddRepoHelm:
-    description: Install Helm charts repositories
-    node: node.helm
+    description: Install Helm charts repositories on the helm client (node.helm)
+    node: node.bastion
     fn: AddRepoHelm
     param:
       - helm.repo
+      - node.helm
     dependency:
       - RcAddPath
 

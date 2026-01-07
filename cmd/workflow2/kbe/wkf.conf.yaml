@@ -101,7 +101,7 @@ workflow:
     kubectl: # manage kubectl
       node:  # where to install
         name: o1u
-    helm: # helm repos and releases to install
+    helm: # helm repos and releases to manage
       repo:
         - name: cilium
       release:
