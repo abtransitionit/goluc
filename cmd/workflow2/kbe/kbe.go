@@ -61,6 +61,7 @@ func registerFunctions() {
 	// manage Linux service
 	registry.Add(worflowName, "EnableService", sys.Enable)
 	registry.Add(worflowName, "StartService", sys.Start)
+	registry.Add(worflowName, "StopService", sys.Stop)
 
 	// manage Linux Selinux
 	registry.Add(worflowName, "SelinuxConfigure", selinux.Configure)

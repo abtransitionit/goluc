@@ -121,6 +121,15 @@ phases:
     dependency:
       - ServiceEnable
 
+  ServiceStop:
+    description: Stop existing OS services for the current session
+    node: node.all
+    fn: StopService
+    param:
+      - service.stop
+    dependency:
+      - ServiceEnable
+
 
   AddPkgNative2:
     description: Provision native OS package(s)
@@ -136,7 +145,7 @@ phases:
     node: node.cp
     fn: ResetNode
     dependency:
-      - ServiceStart
+      - ServiceStop
 
   InitCplane:
     description: Initialize/bootstrap the cluster
@@ -181,7 +190,6 @@ phases:
     param:
       - gopm.cp
       - file.binf
-
     dependency:
       - ConfigureKubectl
 
