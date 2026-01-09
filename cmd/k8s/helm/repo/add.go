@@ -5,11 +5,12 @@ package repo
 
 import (
 	"fmt"
+	"log"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -38,14 +39,17 @@ var addCmd = &cobra.Command{
 		logger.Info(addSDesc)
 		// ctx := context.Background()
 
-		// list repos in whitelist
-		output, _ := helm.ListRepoReferenced(false, "", logger)
-
-		// print it
+		// get the yaml as a printable string
+		output, err := helm2.GetRepo("", "").GetWhitelist("")
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		// display it
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose repo (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -54,25 +58,39 @@ var addCmd = &cobra.Command{
 		// define resource property from ID and output
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
 			return
 		}
 		repoUrl, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get property repo:url from ID: %s > %w", id, err)
 			return
 		}
 
-		// define object from the resource property
-		helmRepo := helm.HelmRepo{Name: repoName, Url: repoUrl}
-
-		// Add repo
-		output, err = helm.AddRepo(localFlag, "o1u", helmRepo, logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
+			return
+		}
+		// get instance and operate
+		i := helm2.GetRepo(repoName, repoUrl)
+		if err := i.Add("local", helmHost, logger); err != nil {
+			logger.Errorf("%w", err)
 			return
 		}
 
+		// get instance and operate
+		output, err = helm2.GetRepo("", "").List("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
+			return
+		}
+		// no action is needed based on the number of row
+		rowCount := list.CountNbLine(output)
+		if rowCount == 1 {
+			return
+		}
 		list.PrettyPrintTable(output)
 
 	},

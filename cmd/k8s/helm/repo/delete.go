@@ -4,15 +4,12 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package repo
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/gocore/ui"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -39,10 +36,17 @@ var deleteCmd = &cobra.Command{
 		logger.Info(deleteSDesc)
 		// ctx := context.Background()
 
-		// get list of installed repos
-		output, err := helm.ListRepo(localFlag, "o1u", logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
+			return
+		}
+
+		// get instance and operate
+		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
 			return
 		}
 
@@ -57,13 +61,7 @@ var deleteCmd = &cobra.Command{
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		fmt.Print("\nWhich item do you want to describe (enter ID): ")
-
-		// convert user input to int
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		id, err := strconv.Atoi(input)
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -72,17 +70,22 @@ var deleteCmd = &cobra.Command{
 		// define resource property from ID and output
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get property repo:name from ID: %s >  %w", id, err)
 			return
 		}
 
-		// define object from the resource property
-		helmRepo := helm.HelmRepo{Name: repoName}
-
-		// delete the repo
-		output, err = helm.DeleteRepo(localFlag, "o1u", helmRepo, logger)
+		// get helm host
+		helmHost, err = helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to list helm charts: %v", err)
+			logger.Errorf("%w", err)
+			return
+		}
+
+		// get instance and operate
+		i := helm2.GetRepo(repoName, "")
+		output, err = i.Delete("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
 			return
 		}
 

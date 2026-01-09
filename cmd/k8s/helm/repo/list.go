@@ -6,15 +6,15 @@ package repo
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var listSDesc = "list installed helm repositories (ie. that exist in the Helm client configuration file) or in the whitelist (ie. authorized Helm repo)."
+var listSDesc = "list [helm] repositories (ie. whitelist or installed[default])."
 var listLDesc = listSDesc
 
 // root Command
@@ -45,31 +45,39 @@ var listCmd = &cobra.Command{
 			showInstalled = true
 		}
 
-		// list whitelist repos
+		// list whitelisted repos
 		if showWhitelist {
-			logger.Info("Installable repositories (organization whitelist):")
+			logger.Info("list Installable repositories (organization whitelist):")
 
-			// convert to listAsString
-			rawString := helm.MapHelmRepoReference.ConvertToString()
-
-			// print the list
-			list.PrettyPrintTable(rawString)
+			// get instance and operate
+			output, err := helm2.GetRepo("", "").GetWhitelist("")
+			if err != nil {
+				logger.Errorf("%w", err)
+				return
+			}
+			// display it
+			list.PrettyPrintTable(output)
 			return
 		}
 
-		// list installed repos
-		output, err := helm.ListRepo(localFlag, "o1u", logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
 			return
 		}
 
+		// get instance and operate
+		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
+			return
+		}
 		// no action is needed based on the number of row
 		rowCount := list.CountNbLine(output)
 		if rowCount == 1 {
 			return
 		}
-
 		list.PrettyPrintTable(output)
 	},
 }

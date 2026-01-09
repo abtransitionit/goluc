@@ -1,0 +1,35 @@
+name: koe
+description: extend a Kubernetes cluster with basic EXtensions
+phases:
+  CheckNodeConf:
+    description: check cluster's bastion is SSH configured on the host (aka. ~/.ssh/config.d/)
+    node: cluster.bastion
+    fn: CheckNodeConf
+
+  CheckNodeSshAccess:
+    description: Check cluster's node is SSH reachable from the bastion
+    node: cluster.bastion
+    fn: CheckNodeSshAccess
+    dependency:
+      - CheckNodeConf
+    param: 
+      - cluster.node
+
+  DeployAgent:
+    description: copy luca agent from the bastion to the cluster's node (only if it is different from the bastion)
+    node: node.bastion
+    fn: DeployAgent
+    param: 
+      - cluster.node
+      - agent
+    dependency:
+      - CheckNodeSshAccess
+
+  AddRepoHelm:
+    description: Install Helm charts repositories
+    node: node.helm
+    fn: AddRepoHelm
+    param:
+      - helm.repo
+    dependency:
+      - DeployAgent

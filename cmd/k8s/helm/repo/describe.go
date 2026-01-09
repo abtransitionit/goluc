@@ -6,10 +6,10 @@ package repo
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -35,18 +35,28 @@ var DescribeCmd = &cobra.Command{
 		logger.Info(describeSDesc)
 		// ctx := context.Background()
 
-		// get list of installed repos
-		output, err := helm.ListRepo(localFlag, "o1u", logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
 			return
 		}
 
-		// print
+		// get instance and operate to get list repo
+		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
+			return
+		}
+		// no action is needed based on the number of row
+		rowCount := list.CountNbLine(output)
+		if rowCount == 1 {
+			return
+		}
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose repo (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -59,13 +69,11 @@ var DescribeCmd = &cobra.Command{
 			return
 		}
 
-		// create a Helm repo object
-		helmRepo := helm.HelmRepo{Name: repoName}
-
-		// List helm charts
-		output, err = helm.ListChart(localFlag, "o1u", helmRepo, logger)
+		// get instance and operate
+		i := helm2.GetRepo(repoName, "")
+		output, err = i.ListChart("local", helmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to list helm charts: %v", err)
+			logger.Errorf("%w", err)
 			return
 		}
 
