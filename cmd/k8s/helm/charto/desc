@@ -12,7 +12,7 @@ var describeSDesc = "Describe a [Helm] chart of a [Helm chart] repository"
 
 // Parent command
 var describeCmd = &cobra.Command{
-	Use:   "describe",
+	Use:   "desc",
 	Short: describeSDesc,
 	Example: `
 	desc --ingnginx ingress-nginx

@@ -15,27 +15,27 @@ import (
 )
 
 // Description
-var kindSDesc = "list the kind of K8s resources a chart will create into the K8s cluster"
-var kindLDesc = kindSDesc + `
+var readmeSDesc = "view the Readme file of a chart"
+var readmeLDesc = readmeSDesc + `
 manage following use case:
 	- chart is on the local FS where the helm client lives
 	- chart is part of a chart repository configured in the helm client configuration files
 `
 
 // root Command
-var kindCmd = &cobra.Command{
-	Use:   "kind",
-	Short: kindSDesc,
-	Long:  kindLDesc,
+var readmeCmd = &cobra.Command{
+	Use:   "readme",
+	Short: readmeSDesc,
+	Long:  readmeLDesc,
 	Example: fmt.Sprintf(`
-  # add helm repo from whitelist
-  %[1]s repo add bitnami
+	# view the Readme file of a chart
+  %[1]s helm chart readme
   `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(kindSDesc)
+		logger.Info(readmeSDesc)
 		// ctx := context.Background()
 
 		// get helm host
@@ -104,32 +104,11 @@ var kindCmd = &cobra.Command{
 		helmChart := helm2.GetChart("", chartQName, "")
 
 		// get the list and nb of resources kind
-		output, err = helmChart.ListResKind("local", helmHost, logger)
+		output, err = helmChart.ViewReadme("local", helmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to list chart kind: %w", err)
+			logger.Errorf("failed to view chart kind > %v", err)
 			return
 		}
-
-		// print
-		rowCount = list.CountNbLine(output)
-		if rowCount == 1 {
-			return
-		}
-		list.PrettyPrintTable(output)
-
-		// 4 - get the list of resources kind and name
-		output, err = helmChart.ListRes("local", helmHost, logger)
-		if err != nil {
-			logger.Errorf("failed to list chart kind: %v", err)
-			return
-		}
-
-		// print
-		rowCount = list.CountNbLine(output)
-		if rowCount == 1 {
-			return
-		}
-		list.PrettyPrintTable(output)
 
 	},
 }

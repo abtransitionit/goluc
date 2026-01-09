@@ -95,6 +95,7 @@ workflow:
             - name: kubelet
           cp:
             - name: kubectl
+            - name: yq
         required:
           - name: gnupg
 
