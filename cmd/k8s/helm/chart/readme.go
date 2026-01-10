@@ -46,7 +46,7 @@ var readmeCmd = &cobra.Command{
 		}
 
 		// display the list of installed repos
-		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", helmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -60,7 +60,7 @@ var readmeCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
@@ -72,7 +72,7 @@ var readmeCmd = &cobra.Command{
 			return
 		}
 
-		// get instance and operate
+		// get instance from resource property and operate
 		repo := helm2.GetRepo(repoName, repoUrl)
 		output, err = repo.ListChart("local", helmHost, logger)
 		if err != nil {
@@ -93,7 +93,7 @@ var readmeCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-		// define resource property from ID and output
+		// define resource property from user choice
 		chartQName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)

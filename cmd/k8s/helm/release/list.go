@@ -4,9 +4,9 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package release
 
 import (
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/spf13/cobra"
 )
 
@@ -26,10 +26,17 @@ var listCmd = &cobra.Command{
 		logger.Info(listSDesc)
 		// ctx := context.Background()
 
-		// get list
-		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
+			return
+		}
+
+		// get stateless instance and operate
+		output, err := helm2.ReleaseSvc.List("local", helmHost, logger)
+		if err != nil {
+			logger.Errorf("%w", err)
 			return
 		}
 

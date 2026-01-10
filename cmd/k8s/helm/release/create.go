@@ -111,7 +111,7 @@ var createCmd = &cobra.Command{
 				return
 			}
 
-			// define resource property from ID and output
+			// define resource property from user choice
 			repoName, err := list.GetFieldByID(output, id, 0)
 			if err != nil {
 				logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
@@ -138,7 +138,7 @@ var createCmd = &cobra.Command{
 				return
 			}
 
-			// define resource property from ID and output
+			// define resource property from user choice
 			chartName, err := list.GetFieldByID(output, id, 0)
 			if err != nil {
 				logger.Errorf("failed to get resource property from ID: %s: %v", id, err)

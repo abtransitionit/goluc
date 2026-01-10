@@ -51,7 +51,7 @@ var getliCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-		// define resource property from ID and output
+		// define resource property from user choice
 		vpsName, err := list.GetFieldByID(pList, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get item from ID: %s: %v", id, err)

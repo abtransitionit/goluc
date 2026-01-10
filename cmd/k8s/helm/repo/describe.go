@@ -43,7 +43,7 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// get instance and operate to get list repo
-		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", helmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -62,14 +62,14 @@ var DescribeCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
-		// get instance and operate
+		// get instance from resource property and operate
 		i := helm2.GetRepo(repoName, "")
 		output, err = i.ListChart("local", helmHost, logger)
 		if err != nil {

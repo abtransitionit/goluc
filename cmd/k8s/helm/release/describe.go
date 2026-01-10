@@ -59,7 +59,7 @@ var describeCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		releaseName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)

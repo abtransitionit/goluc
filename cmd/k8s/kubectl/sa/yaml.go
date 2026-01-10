@@ -43,7 +43,7 @@ var YamlCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		saName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)

@@ -49,8 +49,8 @@ var listCmd = &cobra.Command{
 		if showWhitelist {
 			logger.Info("list Installable repositories (organization whitelist):")
 
-			// get instance and operate
-			output, err := helm2.GetRepo("", "").GetWhitelist("")
+			// get stateless instance and operate
+			output, err := helm2.RepoSvc.GetWhitelist("")
 			if err != nil {
 				logger.Errorf("%w", err)
 				return
@@ -68,7 +68,7 @@ var listCmd = &cobra.Command{
 		}
 
 		// get instance and operate
-		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", helmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

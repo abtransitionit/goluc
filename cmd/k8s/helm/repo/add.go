@@ -40,7 +40,7 @@ var addCmd = &cobra.Command{
 		// ctx := context.Background()
 
 		// get the yaml as a printable string
-		output, err := helm2.GetRepo("", "").GetWhitelist("")
+		output, err := helm2.RepoSvc.GetWhitelist("")
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -55,7 +55,7 @@ var addCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
@@ -73,7 +73,7 @@ var addCmd = &cobra.Command{
 			logger.Errorf("%w", err)
 			return
 		}
-		// get instance and operate
+		// get instance from resource property and operate
 		i := helm2.GetRepo(repoName, repoUrl)
 		if err := i.Add("local", helmHost, logger); err != nil {
 			logger.Errorf("%w", err)
@@ -81,7 +81,7 @@ var addCmd = &cobra.Command{
 		}
 
 		// get instance and operate
-		output, err = helm2.GetRepo("", "").List("local", helmHost, logger)
+		output, err = helm2.RepoSvc.List("local", helmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

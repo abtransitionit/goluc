@@ -44,7 +44,7 @@ var deleteCmd = &cobra.Command{
 		}
 
 		// get instance and operate
-		output, err := helm2.GetRepo("", "").List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", helmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -67,7 +67,7 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		// define resource property from ID and output
+		// define resource property from user choice
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get property repo:name from ID: %s >  %w", id, err)
@@ -81,7 +81,7 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		// get instance and operate
+		// get instance from resource property and operate
 		i := helm2.GetRepo(repoName, "")
 		output, err = i.Delete("local", helmHost, logger)
 		if err != nil {
