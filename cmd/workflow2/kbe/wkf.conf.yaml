@@ -106,14 +106,14 @@ workflow:
       repo:
         - name: cilium
       release:
-        - name: kbe-mxtest
-          chart: ~/wkspc/chart/mxtest
-          namespace: default
         - name: kbe-cilium
-          chart: cilium
-          repo:  cilium
-          version: "0.18.7"
+          cqname: cilium/cilium
+          version: 1.18.5
+          # version: 0.18.7
           namespace: kube-system
+        # - name: kbe-mxtest
+        #   chart: ~/wkspc/chart/mxtest
+        #   namespace: default
 
     cluster:
       parameter:

@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package chart
 
 import (
+	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
 	"github.com/spf13/cobra"
 )
 
@@ -24,8 +25,12 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	repoListCmd := *repo.DescribeCmd
+	repoListCmd.Use = "list"
+
 	// EpCmd.PersistentFlags().BoolVarP(&remoteFlag, "remote", "r", false, "uses by default the local Helm client unless the flag is provided (it will use the remote Helm client)")
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(kindCmd)
 	EpCmd.AddCommand(readmeCmd)
+	EpCmd.AddCommand(&repoListCmd)
 }
