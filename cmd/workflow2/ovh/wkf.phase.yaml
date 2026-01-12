@@ -25,7 +25,7 @@ phases:
 
   InstallVpsImage:
     description: Re-install the same OS image on a OVH Vps
-    node: node.o5d
+    node: node.all
     fn: InstallVpsImage
     dependency: 
       - ListInfo

@@ -250,9 +250,9 @@ phases:
   #   dependency:
   #     - AddRepoHelm
 
-  ConfigureCni:
-    description: Configure CNI:Cilium for this cluster
-    node: node.helm
-    fn: ConfigureCilium
-    dependency:
-      - FixCiliumDns
+  # ConfigureCni:
+  #   description: Configure CNI:Cilium for this cluster
+  #   node: node.helm
+  #   fn: ConfigureCilium
+  #   dependency:
+  #     - FixCiliumDns

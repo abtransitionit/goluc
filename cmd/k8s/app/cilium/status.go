@@ -4,9 +4,12 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cilium
 
 import (
-	cilium "github.com/abtransitionit/gocore/k8s-cilium"
-	"github.com/abtransitionit/gocore/list"
+	"fmt"
+
+	// cilium "github.com/abtransitionit/gocore/k8s-cilium"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/golinux/mock/k8sapp/cilium"
+	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/spf13/cobra"
 )
 
@@ -25,15 +28,21 @@ var statusCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// display status
-		output, err := cilium.Cilium{}.DisplayStatus(localFlag, "o1u", logger)
+		// get helm host
+		helmHost, err := helm2.GetHelmHost("local")
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%w", err)
 			return
 		}
 
-		list.PrettyPrintTableWithSkipLine(output, 1)
-
+		// display status
+		output, err := cilium.CilumSvc.DisplayStatus(localFlag, helmHost, logger)
+		if err != nil {
+			logger.Errorf("failed to get cilium status via the cilium cli: %v", err)
+			return
+		}
+		// handle success
+		fmt.Println(output)
 	},
 }
 

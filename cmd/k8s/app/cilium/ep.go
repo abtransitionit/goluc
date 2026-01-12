@@ -13,7 +13,7 @@ var (
 )
 
 // Description
-var epSDesc = "manage k8s resources using kubectl."
+var epSDesc = "manage cilium resources."
 var epLDesc = epSDesc
 
 // root Command

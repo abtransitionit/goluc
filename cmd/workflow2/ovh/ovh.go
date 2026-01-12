@@ -25,7 +25,7 @@ func registerFunctions() {
 	registry.Add(worflowName, "ListInfo", ovh.ListInfo)
 	registry.Add(worflowName, "InstallVpsImage", ovh.InstallVpsImage)
 	registry.Add(worflowName, "WaitIsOnline", node.WaitIsSshOnline)
-	registry.Add(worflowName, "RenewOvhToken", ovh.RenewOvhToken)
+	registry.Add(worflowName, "RenewOvhToken", ovh.RenewToken)
 	registry.Add(worflowName, "ListVpsOsImage", ovh.ListImageAvailable)
 	registry.Add(worflowName, "GetImageInfo", ovh.GetImageInfo)
 

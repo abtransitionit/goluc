@@ -4,7 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package k8s
 
 import (
-	"github.com/abtransitionit/goluc/cmd/k8s/cilium"
+	"github.com/abtransitionit/goluc/cmd/k8s/app"
 	"github.com/abtransitionit/goluc/cmd/k8s/helm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl"
 	"github.com/spf13/cobra"
@@ -26,5 +26,5 @@ var EpCmd = &cobra.Command{
 func init() {
 	EpCmd.AddCommand(helm.EpCmd)
 	EpCmd.AddCommand(kubectl.EpCmd)
-	EpCmd.AddCommand(cilium.EpCmd)
+	EpCmd.AddCommand(app.EpCmd)
 }
