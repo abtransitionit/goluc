@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/abtransitionit/gocore/phase2"
+	"github.com/abtransitionit/gotask/mock/dns"
 	"github.com/abtransitionit/gotask/mock/file"
 	"github.com/abtransitionit/gotask/mock/gopm"
 	"github.com/abtransitionit/gotask/mock/k8s"
@@ -50,6 +51,9 @@ func registerFunctions() {
 	// manage Linux OS Native Package
 	registry.Add(worflowName, "AddRepoNative", onpm.AddRepo)
 	registry.Add(worflowName, "AddPkgNative", onpm.AddPkg)
+
+	// manage file resolv.conf
+	registry.Add(worflowName, "FixDns", dns.FixDns)
 
 	// manage Go Package
 	registry.Add(worflowName, "AddPkgGo", gopm.AddPkgGo)
