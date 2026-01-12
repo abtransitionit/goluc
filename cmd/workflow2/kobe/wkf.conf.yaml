@@ -1,5 +1,5 @@
 workflow:
-  koe:
+  kobe:
     agent:
       src: /tmp/luca
       dst: /usr/local/bin/

@@ -1,4 +1,4 @@
-name: koe
+name: kobe
 description: add observability to a Kubernetes cluster
 phases:
   CheckNodeConf:

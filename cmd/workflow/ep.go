@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 
 	// "github.com/abtransitionit/goluc/cmd/workflow/gotc"
-	"github.com/abtransitionit/goluc/cmd/workflow/kbe"
+
 	"github.com/abtransitionit/goluc/cmd/workflow/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow/om"
 	"github.com/abtransitionit/goluc/internal"
@@ -51,7 +51,6 @@ var EpCmd = &cobra.Command{
 func init() {
 	// define the entry point for each workflow
 	// EpCmd.AddCommand(gotc.EpCmd)
-	EpCmd.AddCommand(kbe.EpCmd)
 	EpCmd.AddCommand(kind.EpCmd)
 	EpCmd.AddCommand(om.EpCmd)
 }
