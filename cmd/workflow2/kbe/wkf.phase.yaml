@@ -240,19 +240,3 @@ phases:
       - node.helm
     dependency:
       - FixCiliumDns
-
-
-
-  # AddPkgHelmCniCilium:
-  #   description: Install the CNI:Cilium as a Helm:Chart
-  #   node: node.helm
-  #   fn: AddPkgHelm # aka. Helm chart (Pkg is not a concept in Helm language)
-  #   dependency:
-  #     - AddRepoHelm
-
-  # ConfigureCni:
-  #   description: Configure CNI:Cilium for this cluster
-  #   node: node.helm
-  #   fn: ConfigureCilium
-  #   dependency:
-  #     - FixCiliumDns

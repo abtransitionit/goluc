@@ -6,6 +6,12 @@ This document defines
   - organize a set of domain around **first-class Kubernetes concerns**
   - Each domain defines a clear responsibility and scope.
 
+## The state after this workflow is palyed
+- Pods can talk to each other
+- Nothing can be reached from the **internet** unless 
+  - being exposed from **in**side.
+  - being reachable **out**side.
+
 
 # 1️⃣ Domains Overview
 
@@ -105,8 +111,45 @@ Scope includes:
 
 > kse answers: *“What is allowed to happen, and what is forbidden?”*
 
+# `ingress` in the cluster
+# Role of an `ingress`
+```sh
+# generic
+Internet - > [Ingress Controller] - > [Service] - > [Pod]
 
+# nginx
+Internet - > [NGINX Pod] - > [kube-proxy / Cilium] - > [Service → Pod]
+
+
+# cilium
+Internet - > [Envoy (Cilium-managed)] - > [Cilium L7 routing] - > [Service → Pod]
+```
+
+
+Ingress = HTTP(S) reverse proxy that **route** traffic based on **host/path**:
+- listens on ports (80 / 443)
+- terminates TLS
+
+## open source possible ingress for K8s
+|name|comment|
+|-|-|
+|Traefik|popular, simple, **legacy**|
+|HAProxy|**legacy**|
+|NGINX Ingress Controller|production grade, simple, No CNI-specific|
+|Cilium Ingress|production grade, **modern**|
+
+# Test ingress used in the cluster
+```sh
+kubectl get ingress -A
+kubectl get pods -A | grep -i ingress
+kubectl get ingressclass
+```
 # Todo
+## dig
+- NodePort
+- MetalLB
+- cloud LB
+- NodePort vs MetalLB decision
 
 ## Practical Mapping (GitOps-friendly)
 
