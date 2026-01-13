@@ -105,19 +105,23 @@ workflow:
       node:  # where to install
         name: o1u
     helm: # helm repos and releases to manage
+      upgrade:
+        name: kbe-cilium
       repo:
         - name: cilium
       release:
         - name: kbe-cilium
-          cqname: cilium/cilium
-          version: 1.18.5
+          chart:
+            qname: cilium/cilium
+            version: 1.18.5
           param:
             podCidr: 192.168.0.0/16
           # 0.18.7
           namespace: kube-system
-        # - name: kbe-mxtest
-        #   chart: ~/wkspc/chart/mxtest
-        #   namespace: default
+        - name: kbe-mxtest
+          chart: 
+            qname: ~/wkspc/chart/mxtest
+          namespace: default
 
     cluster:
       parameter:

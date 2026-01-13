@@ -79,5 +79,7 @@ func registerFunctions() {
 	// - Helm
 	registry.Add(worflowName, "AddRepoHelm", k8s.AddRepoHelm)
 	registry.Add(worflowName, "InstallReleaseHelm", k8s.InstallReleaseHelm)
+	// - ingress
+	registry.Add(worflowName, "InstallIngressCilium", k8s.InstallIngressCilium)
 
 }

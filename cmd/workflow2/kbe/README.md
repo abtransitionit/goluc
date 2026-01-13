@@ -115,14 +115,16 @@ Scope includes:
 # Role of an `ingress`
 ```sh
 # generic
-Internet - > [Ingress Controller] - > [Service] - > [Pod]
+Internet → Ingress Controller → Service → Pod
+Internet → [Ingress Controller] → [Service] → [Pod]
+
 
 # nginx
-Internet - > [NGINX Pod] - > [kube-proxy / Cilium] - > [Service → Pod]
+Internet → [NGINX Pod] → [kube-proxy / Cilium] → [Service → Pod]
 
 
 # cilium
-Internet - > [Envoy (Cilium-managed)] - > [Cilium L7 routing] - > [Service → Pod]
+Internet → [Envoy (Cilium-managed)] → [Cilium L7 routing] → [Service → Pod]
 ```
 
 
@@ -137,6 +139,18 @@ Ingress = HTTP(S) reverse proxy that **route** traffic based on **host/path**:
 |HAProxy|**legacy**|
 |NGINX Ingress Controller|production grade, simple, No CNI-specific|
 |Cilium Ingress|production grade, **modern**|
+
+## By default cilium Ingress:
+
+* expose via **NodePort**
+* You’ll reach it using **node public IPs**
+
+Later you may want:
+
+* MetalLB
+* OVH LB
+* or DNS + multiple nodes
+
 
 # Test ingress used in the cluster
 ```sh

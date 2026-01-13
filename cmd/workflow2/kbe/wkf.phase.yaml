@@ -240,3 +240,12 @@ phases:
       - node.helm
     dependency:
       - FixCiliumDns
+
+  AddIngressCilium:
+    description: Install the Ingress cilium as an addon to the CNI cilium (helm release)
+    node: node.helm
+    fn: InstallIngressCilium
+    param:
+      - helm.upgrade.name
+    dependency:
+      - FixCiliumDns

@@ -36,9 +36,9 @@ var statusCmd = &cobra.Command{
 		}
 
 		// display status
-		output, err := cilium.CilumSvc.DisplayStatus(localFlag, helmHost, logger)
+		output, err := cilium.CilumSvc.DisplayStatus("local", helmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to get cilium status via the cilium cli: %v", err)
+			logger.Errorf("failed to get cilium status via the cilium cli > %v", err)
 			return
 		}
 		// handle success
