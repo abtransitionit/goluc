@@ -5,11 +5,13 @@ package conf
 
 import (
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 var forceFlag bool
 var localFlag bool
+var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "displaying helm configuration."

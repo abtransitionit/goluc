@@ -5,10 +5,12 @@ package chart
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 var localFlag bool
+var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "managing helm chart."

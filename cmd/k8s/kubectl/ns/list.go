@@ -7,12 +7,14 @@ import (
 	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
 var listSDesc = "list all cluster namespaces."
 var listLDesc = listSDesc
+var HelmHost = shared.HelmHost
 
 // root Command
 var ListCmd = &cobra.Command{

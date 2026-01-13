@@ -60,15 +60,8 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// get instance and operate
-		output, err := helm2.RepoSvc.List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

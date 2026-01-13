@@ -246,6 +246,6 @@ phases:
     node: node.helm
     fn: InstallIngressCilium
     param:
-      - helm.upgrade.name
+      - helm.upgrade
     dependency:
       - FixCiliumDns

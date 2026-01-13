@@ -5,10 +5,12 @@ package release
 
 import (
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 var localFlag bool
+var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "managing helm release."

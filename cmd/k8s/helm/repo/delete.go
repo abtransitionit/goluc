@@ -36,15 +36,8 @@ var deleteCmd = &cobra.Command{
 		logger.Info(deleteSDesc)
 		// ctx := context.Background()
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// get instance and operate
-		output, err := helm2.RepoSvc.List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -74,16 +67,9 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		// get helm host
-		helmHost, err = helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// get instance from resource property and operate
 		i := helm2.GetRepo(repoName, "")
-		output, err = i.Delete("local", helmHost, logger)
+		output, err = i.Delete("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

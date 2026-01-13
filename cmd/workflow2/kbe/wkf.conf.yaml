@@ -106,7 +106,10 @@ workflow:
         name: o1u
     helm: # helm repos and releases to manage
       upgrade:
-        name: kbe-cilium
+        - name: kbe-cilium
+          namespace: kube-system
+          chart:
+            qname: cilium/cilium
       repo:
         - name: cilium
       release:
@@ -118,10 +121,10 @@ workflow:
             podCidr: 192.168.0.0/16
           # 0.18.7
           namespace: kube-system
-        - name: kbe-mxtest
-          chart: 
-            qname: ~/wkspc/chart/mxtest
-          namespace: default
+        # - name: kbe-mxtest
+        #   chart: 
+        #     qname: ~/wkspc/chart/mxtest
+        #   namespace: default
 
     cluster:
       parameter:

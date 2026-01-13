@@ -38,15 +38,8 @@ var kindCmd = &cobra.Command{
 		logger.Info(kindSDesc)
 		// ctx := context.Background()
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// display the list of installed repos
-		output, err := helm2.RepoSvc.List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -74,7 +67,7 @@ var kindCmd = &cobra.Command{
 
 		// get instance from resource property and operate
 		repo := helm2.GetRepo(repoName, repoUrl)
-		output, err = repo.ListChart("local", helmHost, logger)
+		output, err = repo.ListChart("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -104,7 +97,7 @@ var kindCmd = &cobra.Command{
 		helmChart := helm2.GetChart("", chartQName, "")
 
 		// get the list and nb of resources kind
-		output, err = helmChart.ListResKind("local", helmHost, logger)
+		output, err = helmChart.ListResKind("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to list chart kind: %w", err)
 			return
@@ -118,7 +111,7 @@ var kindCmd = &cobra.Command{
 		list.PrettyPrintTable(output)
 
 		// 4 - get the list of resources kind and name
-		output, err = helmChart.ListRes("local", helmHost, logger)
+		output, err = helmChart.ListRes("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to list chart kind: %v", err)
 			return

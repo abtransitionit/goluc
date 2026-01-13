@@ -35,15 +35,8 @@ var DescribeCmd = &cobra.Command{
 		logger.Info(describeSDesc)
 		// ctx := context.Background()
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// get instance and operate to get list repo
-		output, err := helm2.RepoSvc.List("local", helmHost, logger)
+		output, err := helm2.RepoSvc.List("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return
@@ -71,7 +64,7 @@ var DescribeCmd = &cobra.Command{
 
 		// get instance from resource property and operate
 		i := helm2.GetRepo(repoName, "")
-		output, err = i.ListChart("local", helmHost, logger)
+		output, err = i.ListChart("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

@@ -26,15 +26,8 @@ var listCmd = &cobra.Command{
 		logger.Info(listSDesc)
 		// ctx := context.Background()
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
-		if err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
 		// get stateless instance and operate
-		output, err := helm2.ReleaseSvc.List("local", helmHost, logger)
+		output, err := helm2.ReleaseSvc.List("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%w", err)
 			return

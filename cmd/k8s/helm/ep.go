@@ -11,7 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var forceFlag bool
+var (
+	forceFlag bool
+)
 
 // Description
 var epSDesc = "manage k8s resources using helm."
