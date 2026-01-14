@@ -4,9 +4,9 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package sa
 
 import (
-	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
 	"github.com/spf13/cobra"
 )
 
@@ -24,10 +24,11 @@ var ListCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListSa(localFlag, "o1u", logger)
+		output, err := kubectl.List(kubectl.ResSA, "local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
+
 		}
 
 		// print

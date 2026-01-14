@@ -6,10 +6,10 @@ package cm
 import (
 	"fmt"
 
-	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ var DescribeCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListCm(localFlag, "o1u", logger)
+		output, err := kubectl.List(kubectl.ResCM, "local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -43,28 +43,25 @@ var DescribeCmd = &cobra.Command{
 			return
 		}
 
-		// define object properties from ID and output
-		cmName, err := list.GetFieldByID(output, id, 1)
-		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
-			return
-		}
-		cmNs, err := list.GetFieldByID(output, id, 0)
+		// define resource property from user choice
+		resName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
-		// define an object from its properties
-		cm := kubectl.Resource{Type: "cm", Name: cmName, Ns: cmNs}
+		// get instance
+		logger.Infof("ns name: %s", resName)
+		i := kubectl.Resource{Type: kubectl.ResCM, Name: resName}
 
-		// operate on this object
-		output, err = kubectl.DescribeCm(localFlag, "o1u", cm, logger)
+		// get detail
+		output, err = i.Describe("local", HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("failed to describe resource: %v", err)
 			return
 		}
 
+		// print detail
 		fmt.Println(output)
 	},
 }

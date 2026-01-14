@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sa
+package pod
 
 import (
 	"fmt"
@@ -14,31 +14,30 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single ServiceAccount."
-var describeLDesc = describeSDesc
+var eventSDesc = "list all events for pods."
+var eventLDesc = eventSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
+var EventCmd = &cobra.Command{
+	Use:   "event",
+	Short: eventSDesc,
+	Long:  eventLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.List(kubectl.ResSA, "local", HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResPod, "local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
-
 		}
 
-		// print list
+		// output
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -59,10 +58,10 @@ var DescribeCmd = &cobra.Command{
 
 		// get instance
 		logger.Infof("ns name: %s", resName)
-		i := kubectl.Resource{Type: kubectl.ResSA, Name: resName, Ns: resNs}
+		i := kubectl.Resource{Type: kubectl.ResPod, Name: resName, Ns: resNs}
 
 		// get detail
-		output, err = i.Describe("local", HelmHost, logger)
+		output, err = i.ListEvent("local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to describe resource: %v", err)
 			return
@@ -70,5 +69,6 @@ var DescribeCmd = &cobra.Command{
 
 		// print detail
 		fmt.Println(output)
+
 	},
 }

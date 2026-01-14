@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package list
 
 import (
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -45,8 +46,13 @@ func init() {
 	saListCmd.Use = "sa"
 	saListCmd.Short = "List serviceAccounts"
 
+	cmListCmd := *cm.ListCmd
+	cmListCmd.Use = "cm"
+	cmListCmd.Short = "List configMaps"
+
 	EpCmd.AddCommand(&nodeListCmd)
 	EpCmd.AddCommand(&podListCmd)
 	EpCmd.AddCommand(&nsListCmd)
 	EpCmd.AddCommand(&saListCmd)
+	EpCmd.AddCommand(&cmListCmd)
 }

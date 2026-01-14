@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package node
 
 import (
-	// kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
@@ -25,7 +24,7 @@ var ListCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.NodeSvc.List("local", HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResNode, "local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return

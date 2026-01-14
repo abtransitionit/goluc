@@ -5,6 +5,7 @@ package kubectl
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
@@ -28,6 +29,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(list.EpCmd)
+	EpCmd.AddCommand(desc.EpCmd)
 
 	EpCmd.AddCommand(ns.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
