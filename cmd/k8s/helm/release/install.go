@@ -39,9 +39,9 @@ var installCmd = &cobra.Command{
 		}
 		// - print
 		if list.CountNbLine(output) == 1 {
-			return
+			logger.Infof("none installed")
 		} else {
-			list.PrettyPrintTable(output)
+
 		}
 
 		// list configured repos
