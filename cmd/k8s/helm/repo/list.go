@@ -29,7 +29,7 @@ var ListCmd = &cobra.Command{
 		i := helm.Resource{Type: helm.ResRepo}
 		output, err := i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print

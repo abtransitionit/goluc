@@ -30,7 +30,7 @@ var AddCmd = &cobra.Command{
 		i := helm.Resource{Type: helm.ResRepo}
 		output, err := i.ListPermit("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// print
@@ -58,6 +58,8 @@ var AddCmd = &cobra.Command{
 			logger.Errorf("%v", err)
 			return
 		}
+		// log
+		logger.Infof("selected item: %s ", resName)
 		// add repo
 		// - get instance and operate
 		i = helm.Resource{Type: helm.ResRepo, Name: resName, Url: resUrl}

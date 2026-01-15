@@ -4,8 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package node
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -33,15 +31,19 @@ var DescribeCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get list
+		// list nodes
+		// - get instance and operate
 		output, err := kubectl.List(kubectl.ResNode, "local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// print list
-		list.PrettyPrintTable(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
@@ -56,18 +58,22 @@ var DescribeCmd = &cobra.Command{
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
-		// get instance
-		logger.Infof("node name: %s", resName)
-		i := kubectl.Resource{Type: kubectl.ResNode, Name: resName}
 
-		// get detail
+		// log
+		logger.Infof("selected item: %s ", resName)
+		// describe node
+		// - get instance and operate
+		i := kubectl.Resource{Type: kubectl.ResNode, Name: resName}
 		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to describe resource: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// print detail
-		fmt.Println(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 	},
 }

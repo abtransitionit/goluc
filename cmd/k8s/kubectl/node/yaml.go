@@ -27,15 +27,19 @@ var YamlCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get list
+		// list nodes
+		// - get instance and operate
 		output, err := kubectl.List(kubectl.ResNode, "local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// output
-		list.PrettyPrintTable(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
@@ -51,18 +55,17 @@ var YamlCmd = &cobra.Command{
 			return
 		}
 
-		// get instance
-		logger.Infof("ns name: %s", resName)
+		// log
+		logger.Infof("selected item: %s ", resName)
+		// yaml node
+		// - get instance and operate
 		i := kubectl.Resource{Type: kubectl.ResNode, Name: resName}
-
-		// get detail
 		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to describe resource: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// print detail
+		// - print
 		fmt.Println(output)
 
 	},

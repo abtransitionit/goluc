@@ -27,16 +27,20 @@ var DescribeCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get list
+		// list sa
+		// - get instance and operate
 		output, err := kubectl.List(kubectl.ResSA, "local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 
 		}
-
-		// print list
-		list.PrettyPrintTable(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
@@ -58,17 +62,16 @@ var DescribeCmd = &cobra.Command{
 			return
 		}
 
-		// get instance
-		logger.Infof("ns name: %s", resName)
+		// log
+		logger.Infof("selected item: %s ", resName)
+		// describe sa
+		// - get instance and operate
 		i := kubectl.Resource{Type: kubectl.ResSA, Name: resName, Ns: resNs}
-
-		// get detail
 		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to describe resource: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
 		// print detail
 		fmt.Println(output)
 	},

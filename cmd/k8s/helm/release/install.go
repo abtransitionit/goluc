@@ -4,12 +4,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package release
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
 	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +43,22 @@ var installCmd = &cobra.Command{
 		} else {
 			list.PrettyPrintTable(output)
 		}
+
+		// list configured repos
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResRepo}
+		output, err = i.List("local", shared.HelmHost, logger)
+		if err != nil {
+			logger.Errorf("failed to build helm command: %v", err)
+			return
+		}
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
+
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
@@ -52,25 +67,18 @@ var installCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get property from ID: %s > %v", id, err)
 			return
 		}
-		resNs, err := list.GetFieldByID(output, id, 1)
-		if err != nil {
-			logger.Errorf("failed to get property from ID: %s > %v", id, err)
-			return
-		}
-		// log
-		logger.Infof("selected item: %s / %s", resName, resNs)
 
-		// list revision history
+		// list the repo's charts
 		// - get instance and operate
-		i = helm.Resource{Type: helm.ResRelease, Name: resName, Namespace: resNs}
-		output, err = i.ListHistory("local", shared.HelmHost, logger)
+		i = helm.Resource{Type: helm.ResChart, Repo: repoName}
+		output, err = i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("%v", err)
+			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 		// - print
@@ -86,25 +94,48 @@ var installCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-
 		// define resource property from user choice
-		resRevision, err := list.GetFieldByID(output, id, 0)
+		chartQName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get property from ID: %s > %v", id, err)
+			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
 			return
 		}
+
 		// log
-		logger.Infof("selected item: %s / %s / %s", resName, resNs, resRevision)
-		// list revision detail
+		logger.Infof("selected item: %s ", chartQName)
+		// list ns
 		// - get instance and operate
-		i = helm.Resource{Type: helm.ResRelease, Name: resName, Namespace: resNs, Revision: resRevision}
-		output, err = i.Detail("local", shared.HelmHost, logger)
+		output, err = kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("%v", err)
+			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 		// - print
-		fmt.Println(output)
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
+
+		// Ask user which ID (to choose) from the printed list
+		id, err = ui.AskUserInt("\nchoose item (enter ID): ")
+		if err != nil {
+			logger.Errorf("invalid ID: %v", err)
+			return
+		}
+		// define resource property from user choice
+		releaseNs, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
+			return
+		}
+		// log
+		logger.Infof("selected item: %s : %s ", releaseNs, chartQName)
+
+		// Ask user the release prefix
+		releasePrefix := ui.AskUserString("\ndefine a release prefix (name is <prefix>-<repo-name>): ")
+		// log
+		logger.Infof("creating release: %s-%s from chart %s in namespace %s", releasePrefix, repoName, chartQName, releaseNs)
 
 	},
 }

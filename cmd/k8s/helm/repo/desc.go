@@ -55,13 +55,13 @@ var DescribeCmd = &cobra.Command{
 			return
 		}
 		// log
-		logger.Infof("res name: %s", resName)
+		logger.Infof("selected item: %s ", resName)
 		// list the repo's charts
 		// - get instance and operate
 		i = helm.Resource{Type: helm.ResChart, Repo: resName}
 		output, err = i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print
