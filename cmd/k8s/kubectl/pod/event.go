@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ var EventCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.List(kubectl.ResPod, "local", HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResPod, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
@@ -61,7 +62,7 @@ var EventCmd = &cobra.Command{
 		i := kubectl.Resource{Type: kubectl.ResPod, Name: resName, Ns: resNs}
 
 		// get detail
-		output, err = i.ListEvent("local", HelmHost, logger)
+		output, err = i.ListEvent("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to describe resource: %v", err)
 			return

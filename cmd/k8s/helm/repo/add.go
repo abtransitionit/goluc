@@ -4,88 +4,68 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package repo
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
-	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
-	"github.com/abtransitionit/goluc/internal"
+	"github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var addSDesc = "add a helm repo from the whitelist (ie. authorized Helm repo)."
-var addLDesc = addSDesc + `
-- This command add the helm repo by just updating the Helm client configuration file in the user's home directory.
-- If the repository name is not already in the Helm configuration file, it adds it.
-- If the repository name is already in the Helm configuration file, it updates the URL of the repository.
-`
+var addSDesc = "add a repo to the helm client config/cache files."
+var addLDesc = addSDesc
 
 // root Command
-var addCmd = &cobra.Command{
+var AddCmd = &cobra.Command{
 	Use:   "add",
 	Short: addSDesc,
 	Long:  addLDesc,
-	Example: fmt.Sprintf(`
-  # add helm repo from whitelist
-  %[1]s repo add bitnami
-  `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(addSDesc)
-		// ctx := context.Background()
 
-		// get the yaml as a printable string
-		output, err := helm2.RepoSvc.GetWhitelist("")
+		// list authorized repos
+		// - get instance and operate
+		i := helm.Resource{Type: helm.ResRepo}
+		output, err := i.ListPermit("local", shared.HelmHost, logger)
 		if err != nil {
-			log.Fatal(err)
+			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-		// display it
-		list.PrettyPrintTable(output)
+		// print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		repoName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
+			logger.Errorf("%v", err)
 			return
 		}
-		repoUrl, err := list.GetFieldByID(output, id, 1)
+		resUrl, err := list.GetFieldByID2(output, id, 2)
 		if err != nil {
-			logger.Errorf("failed to get property repo:url from ID: %s > %w", id, err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// get instance from resource property and operate
-		i := helm2.GetRepo(repoName, repoUrl)
-		if err := i.Add("local", HelmHost, logger); err != nil {
-			logger.Errorf("%w", err)
-			return
-		}
-
-		// get instance and operate
-		output, err = helm2.RepoSvc.List("local", HelmHost, logger)
+		// add repo
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResRepo, Name: resName, Url: resUrl}
+		_, err = i.Add("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("%w", err)
+			logger.Errorf("%v", err)
 			return
 		}
-		// no action is needed based on the number of row
-		rowCount := list.CountNbLine(output)
-		if rowCount == 1 {
-			return
-		}
-		list.PrettyPrintTable(output)
 
 	},
 }

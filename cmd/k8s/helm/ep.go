@@ -8,11 +8,13 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/conf"
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/release"
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 var (
 	forceFlag bool
+	HelmHost  = shared.HelmHost
 )
 
 // Description

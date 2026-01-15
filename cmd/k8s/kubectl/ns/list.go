@@ -26,7 +26,7 @@ var ListCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.List(kubectl.ResNS, "local", HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return

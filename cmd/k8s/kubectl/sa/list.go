@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +25,7 @@ var ListCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.List(kubectl.ResSA, "local", HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSA, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return

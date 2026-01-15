@@ -6,10 +6,11 @@ package release
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
+	"github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
@@ -35,54 +36,54 @@ var describeCmd = &cobra.Command{
 		logger.Info(describeSDesc)
 		// ctx := context.Background()
 
-		// get list of installed releases
-		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)
+		// list installed release
+		// - get instance and operate
+		i := helm.Resource{Type: helm.ResRelease}
+		output, err := i.List("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-
-		// no action is needed based on the number of row
-		rowCount := list.CountNbLine(output)
-		if rowCount == 1 {
-			logger.Warn("no item to list")
+		// - print
+		if list.CountNbLine(output) == 1 {
 			return
+		} else {
+			list.PrettyPrintTable(output)
 		}
-
-		// print
-		list.PrettyPrintTable(output)
-
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose repo (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		releaseName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
 			return
 		}
-		releaseK8sNs, err := list.GetFieldByID(output, id, 1)
+		resNs, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
 			return
 		}
-
-		// create the object
-		helmRelease := helm.HelmRelease{Name: releaseName, Namespace: releaseK8sNs}
-
-		// operate on this object
-		output, err = helmRelease.Describe(localFlag, "o1u", logger)
+		// log
+		logger.Infof("selected item: %s / %s", resName, resNs)
+		// list manifest
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResRelease, Name: resName, Namespace: resNs}
+		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to list helm charts: %v", err)
+			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-
-		// print
-		list.PrettyPrintTable(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			fmt.Println(output)
+		}
 
 	},
 }

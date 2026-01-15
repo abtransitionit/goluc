@@ -1,21 +1,19 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package ns
+package repo
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
-	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
+	"github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var describeSDesc = "display single namespace details."
+var describeSDesc = "list charts of a specific repo."
 var describeLDesc = describeSDesc
 
 // root Command
@@ -27,17 +25,24 @@ var DescribeCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get list
-		output, err := kubectl.List(kubectl.ResNS, "local", HelmHost, logger)
+		// list configured repos
+		// - get instance and operate
+		i := helm.Resource{Type: helm.ResRepo}
+		output, err := i.List("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-		// print list
-		list.PrettyPrintTable(output)
+
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose namespace (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -49,19 +54,21 @@ var DescribeCmd = &cobra.Command{
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
-
-		// get instance
-		logger.Infof("ns name: %s", resName)
-		i := kubectl.Resource{Type: kubectl.ResNS, Name: resName}
-
-		// get detail
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		// log
+		logger.Infof("res name: %s", resName)
+		// list the repo's charts
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResChart, Repo: resName}
+		output, err = i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to describe resource: %v", err)
+			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-
-		// print detail
-		fmt.Println(output)
+		// - print
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 	},
 }

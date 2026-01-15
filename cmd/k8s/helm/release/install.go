@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package chart
+package release
 
 import (
 	"fmt"
@@ -11,40 +11,31 @@ import (
 	"github.com/abtransitionit/gocore/ui"
 	"github.com/abtransitionit/golinux/mock/k8scli/helm"
 	"github.com/abtransitionit/goluc/cmd/k8s/shared"
-	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var readmeSDesc = "get the Readme file of a chart"
-var reamdeLDesc = readmeSDesc + `
-manage following use case:
-	- chart is on the local FS where the helm client lives
-	- chart is part of a chart repository configured in the helm client configuration files
-`
+var installSDesc = "install a release from a chart of an authorized repo."
+var installLDesc = installSDesc
 
 // root Command
-var ReadmeCmd = &cobra.Command{
-	Use:   "readme",
-	Short: readmeSDesc,
-	Long:  reamdeLDesc,
-	Example: fmt.Sprintf(`
-  # add helm repo from whitelist
-  %[1]s repo add bitnami
-  `, internal.CliName),
+var installCmd = &cobra.Command{
+	Use:   "install",
+	Short: installSDesc,
+	Long:  installLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(readmeSDesc)
+		logger.Info(installSDesc)
 		// ctx := context.Background()
 
-		// list configured repos
+		// list installed release
 		// - get instance and operate
-		i := helm.Resource{Type: helm.ResRepo}
+		i := helm.Resource{Type: helm.ResRelease}
 		output, err := i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print
@@ -53,7 +44,6 @@ var ReadmeCmd = &cobra.Command{
 		} else {
 			list.PrettyPrintTable(output)
 		}
-
 		// Ask user which ID (to choose) from the printed list
 		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
@@ -64,16 +54,23 @@ var ReadmeCmd = &cobra.Command{
 		// define resource property from user choice
 		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get property repo:name from ID: %s > %w", id, err)
+			logger.Errorf("failed to get property from ID: %s > %v", id, err)
 			return
 		}
-
-		// list the repo's charts
-		// - get instance and operate
-		i = helm.Resource{Type: helm.ResChart, Repo: resName}
-		output, err = i.List("local", shared.HelmHost, logger)
+		resNs, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("failed to get property from ID: %s > %v", id, err)
+			return
+		}
+		// log
+		logger.Infof("selected item: %s / %s", resName, resNs)
+
+		// list revision history
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResRelease, Name: resName, Namespace: resNs}
+		output, err = i.ListHistory("local", shared.HelmHost, logger)
+		if err != nil {
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print
@@ -89,21 +86,24 @@ var ReadmeCmd = &cobra.Command{
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
-		// define resource property from user choice
-		resQName, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
-			return
-		}
 
-		// Get the readme
-		// - get instance and operate
-		i = helm.Resource{Type: helm.ResChart, QName: resQName, Name: resName}
-		output, err = i.GetReadme("local", shared.HelmHost, logger)
+		// define resource property from user choice
+		resRevision, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("failed to get property from ID: %s > %v", id, err)
 			return
 		}
+		// log
+		logger.Infof("selected item: %s / %s / %s", resName, resNs, resRevision)
+		// list revision detail
+		// - get instance and operate
+		i = helm.Resource{Type: helm.ResRelease, Name: resName, Namespace: resNs, Revision: resRevision}
+		output, err = i.Detail("local", shared.HelmHost, logger)
+		if err != nil {
+			logger.Errorf("%v", err)
+			return
+		}
+		// - print
 		fmt.Println(output)
 
 	},

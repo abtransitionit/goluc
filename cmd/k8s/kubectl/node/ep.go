@@ -4,13 +4,14 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package node
 
 import (
-	"github.com/abtransitionit/goluc/cmd/k8s/shared"
+	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // var
 var localFlag bool
-var HelmHost = shared.HelmHost
+
+// var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "manage k8s nodes."

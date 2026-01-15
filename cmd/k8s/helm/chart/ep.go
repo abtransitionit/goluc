@@ -13,7 +13,7 @@ var localFlag bool
 var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "managing helm chart."
+var epSDesc = "manage helm chart."
 var epLDesc = epSDesc
 
 // root Command
@@ -27,12 +27,23 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	chartListCmd := *repo.ChartCmd
+	chartListCmd.Use = "list"
+	chartListCmd.Short = "List all charts of all repo configured in the helm client's config."
+
 	repoListCmd := *repo.DescribeCmd
-	repoListCmd.Use = "list"
+	repoListCmd.Use = "repo"
+	repoListCmd.Short = "List charts of a specific repo configured in the helm client's config."
+
+	// repoListCmd := *repo.DescribeCmd
+	// repoListCmd.Use = "list"
 
 	// EpCmd.PersistentFlags().BoolVarP(&remoteFlag, "remote", "r", false, "uses by default the local Helm client unless the flag is provided (it will use the remote Helm client)")
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(kindCmd)
-	EpCmd.AddCommand(readmeCmd)
+	// EpCmd.AddCommand(ListCmd)
+	EpCmd.AddCommand(&chartListCmd)
 	EpCmd.AddCommand(&repoListCmd)
+	EpCmd.AddCommand(ReadmeCmd)
+	// EpCmd.AddCommand(&repoListCmd)
 }

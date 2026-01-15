@@ -6,15 +6,16 @@ package node
 import (
 	"fmt"
 
-	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var yamlSDesc = "display a single node manifest."
+var yamlSDesc = "get the yaml manifest for pods."
 var yamlLDesc = yamlSDesc
 
 // root Command
@@ -27,39 +28,42 @@ var YamlCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListNode(localFlag, "o1u", logger)
+		output, err := kubectl.List(kubectl.ResNode, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
 
-		// print list
+		// output
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		nodeName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
 
-		// define object from property
-		node := kubectl.Resource{Type: "node", Name: nodeName}
+		// get instance
+		logger.Infof("ns name: %s", resName)
+		i := kubectl.Resource{Type: kubectl.ResNode, Name: resName}
 
 		// get detail
-		output, err = kubectl.YamlNode(localFlag, "o1u", node, logger)
+		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("failed to describe resource: %v", err)
 			return
 		}
 
+		// print detail
 		fmt.Println(output)
+
 	},
 }

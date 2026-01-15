@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package release
+package repo
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -12,27 +12,24 @@ import (
 )
 
 // Description
-var listSDesc = "list all releases installed in the cluster."
-var listLDesc = listSDesc
+var chartSDesc = "list charts of all repos."
+var chartLDesc = chartSDesc
 
 // root Command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: listSDesc,
-	Long:  listLDesc,
+var ChartCmd = &cobra.Command{
+	Use:   "chart",
+	Short: chartSDesc,
+	Long:  chartLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(listSDesc)
-		// ctx := context.Background()
 
-		// list installed release
+		// list charts of all repos
 		// - get instance and operate
-		i := helm.Resource{Type: helm.ResRelease}
+		i := helm.Resource{Type: helm.ResChart}
 		output, err := i.List("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print

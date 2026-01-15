@@ -23,7 +23,7 @@ var deleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(createSDesc)
+		// logger.Info(createSDesc)
 
 		// list release
 		output, err := helm.HelmRelease{}.List(localFlag, "o1u", logger)

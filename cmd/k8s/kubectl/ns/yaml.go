@@ -6,17 +6,16 @@ package ns
 import (
 	"fmt"
 
-	helm "github.com/abtransitionit/gocore/k8s-helm"
-	kubectl "github.com/abtransitionit/gocore/k8s-kubectl"
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/gocore/run"
 	"github.com/abtransitionit/gocore/ui"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var yamlSDesc = "display a single namespace manifest."
+var yamlSDesc = "get the yaml manifest for pods."
 var yamlLDesc = yamlSDesc
 
 // root Command
@@ -29,42 +28,41 @@ var YamlCmd = &cobra.Command{
 		logger := logx.GetLogger()
 
 		// get list
-		output, err := kubectl.ListNs(localFlag, "o1u", logger)
-		// cli, err := kubectl.Resource{Type: "ns"}.List()
+		output, err := kubectl.List(kubectl.ResNS, "local", HelmHost, logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
-		// print list
+
+		// output
 		list.PrettyPrintTable(output)
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose namespace (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		nsName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
-		// define cli
-		cli, err := kubectl.Resource{Type: "ns", Name: nsName}.Yaml()
+
+		// get instance
+		logger.Infof("ns name: %s", resName)
+		i := kubectl.Resource{Type: kubectl.ResNS, Name: resName}
+
+		// get detail
+		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("failed to describe resource: %v", err)
 			return
 		}
 
-		// play cli
-		output, err = run.ExecuteCliQuery(cli, logger, localFlag, "o1u", helm.HandleHelmError)
-		if err != nil {
-			logger.Errorf("failed to run command: %s: %w", cli, err)
-			return
-		}
-
+		// print detail
 		fmt.Println(output)
 
 	},
