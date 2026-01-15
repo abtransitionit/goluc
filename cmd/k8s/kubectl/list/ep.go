@@ -5,6 +5,7 @@ package list
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -30,6 +31,10 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	crdListCmd := *crd.ListCmd
+	crdListCmd.Use = "crd"
+	crdListCmd.Short = "List CRDs"
+
 	nodeListCmd := *node.ListCmd
 	nodeListCmd.Use = "node"
 	nodeListCmd.Short = "List nodes"
@@ -50,6 +55,7 @@ func init() {
 	cmListCmd.Use = "cm"
 	cmListCmd.Short = "List configMaps"
 
+	EpCmd.AddCommand(&crdListCmd)
 	EpCmd.AddCommand(&nodeListCmd)
 	EpCmd.AddCommand(&podListCmd)
 	EpCmd.AddCommand(&nsListCmd)

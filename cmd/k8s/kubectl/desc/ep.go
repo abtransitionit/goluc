@@ -5,6 +5,7 @@ package desc
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -30,6 +31,10 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	crdDescCmd := *crd.DescribeCmd
+	crdDescCmd.Use = "crd"
+	crdDescCmd.Short = "Describe CRDs"
+
 	nodeDescCmd := *node.DescribeCmd
 	nodeDescCmd.Use = "node"
 	nodeDescCmd.Short = "Describe nodes"
@@ -50,6 +55,7 @@ func init() {
 	cmDescCmd.Use = "cm"
 	cmDescCmd.Short = "Describe configMaps"
 
+	EpCmd.AddCommand(&crdDescCmd)
 	EpCmd.AddCommand(&nodeDescCmd)
 	EpCmd.AddCommand(&podDescCmd)
 	EpCmd.AddCommand(&nsDescCmd)

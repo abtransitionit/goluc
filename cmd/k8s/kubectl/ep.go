@@ -5,6 +5,7 @@ package kubectl
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
@@ -37,8 +38,10 @@ func init() {
 	EpCmd.AddCommand(desc.EpCmd)
 
 	EpCmd.AddCommand(ns.EpCmd)
+	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(pod.EpCmd)
 	EpCmd.AddCommand(sa.EpCmd)
+	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(cm.EpCmd)
 }
