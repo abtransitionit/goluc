@@ -100,9 +100,15 @@ var installCmd = &cobra.Command{
 			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
 			return
 		}
+		// define resource property from user choice
+		chartVersion, err := list.GetFieldByID(output, id, 1)
+		if err != nil {
+			logger.Errorf("failed to get resource property from ID: %s: %v", id, err)
+			return
+		}
 
 		// log
-		logger.Infof("selected item: %s ", chartQName)
+		logger.Infof("selected item: %s - %s", chartQName, chartVersion)
 		// list ns
 		// - get instance and operate
 		output, err = kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
@@ -133,9 +139,9 @@ var installCmd = &cobra.Command{
 		logger.Infof("selected item: %s : %s ", releaseNs, chartQName)
 
 		// Ask user the release prefix
-		releasePrefix := ui.AskUserString("\ndefine a release prefix (name is <prefix>-<repo-name>): ")
+		releasePrefix := ui.AskUserString("\ndefine a release prefix (name is <prefix>-" + repoName + "): ")
 		// log
-		logger.Infof("creating release: %s-%s from chart %s in namespace %s", releasePrefix, repoName, chartQName, releaseNs)
+		logger.Infof("creating release: %s-%s from chart %s version %s in namespace %s", releasePrefix, repoName, chartQName, chartVersion, releaseNs)
 
 	},
 }

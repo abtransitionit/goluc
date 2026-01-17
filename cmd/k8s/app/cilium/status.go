@@ -9,7 +9,7 @@ import (
 	// cilium "github.com/abtransitionit/gocore/k8s-cilium"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/mock/k8sapp/cilium"
-	helm2 "github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -28,20 +28,14 @@ var statusCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get helm host
-		helmHost, err := helm2.GetHelmHost("local")
+		// get status
+		// - get instance and operate
+		output, err := cilium.CilumSvc.GetStatus("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("%w", err)
+			logger.Errorf("%v", err)
 			return
 		}
-
-		// display status
-		output, err := cilium.CilumSvc.DisplayStatus("local", helmHost, logger)
-		if err != nil {
-			logger.Errorf("failed to get cilium status via the cilium cli > %v", err)
-			return
-		}
-		// handle success
+		// - print
 		fmt.Println(output)
 	},
 }
