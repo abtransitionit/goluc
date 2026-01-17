@@ -25,8 +25,8 @@ phases:
     dependency:
       - CheckNodeSshAccess
 
-  AddRepoHelm:
-    description: Install Helm charts repositories
+  AddContainerRegistry:
+    description: A private cluster container registry, with admission control enforcing that only images from it can run.
     node: node.helm
     fn: AddRepoHelm
     param:

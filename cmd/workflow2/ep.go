@@ -12,6 +12,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/workflow2/file"
 	"github.com/abtransitionit/goluc/cmd/workflow2/funcx"
 	"github.com/abtransitionit/goluc/cmd/workflow2/kbe"
+	"github.com/abtransitionit/goluc/cmd/workflow2/kex"
 	"github.com/abtransitionit/goluc/cmd/workflow2/kind"
 	"github.com/abtransitionit/goluc/cmd/workflow2/kobe"
 	"github.com/abtransitionit/goluc/cmd/workflow2/kse"
@@ -59,6 +60,7 @@ func init() {
 	// define the entry point for each workflow
 	// EpCmd.AddCommand(gotc.EpCmd)
 	EpCmd.AddCommand(kbe.EpCmd)
+	EpCmd.AddCommand(kex.EpCmd)
 	EpCmd.AddCommand(kobe.EpCmd)
 	EpCmd.AddCommand(kse.EpCmd)
 	EpCmd.AddCommand(kind.EpCmd)
