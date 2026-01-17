@@ -71,13 +71,28 @@ spec:
 - Declarative
 - Easy to audit
 
-## Steps
+## phases
+**Step 1**
 
-* Deploy 
 * Deploy registry **`registry:2`** as `ClusterIP`
-* Add **ValidatingAdmissionPolicy**
-* Enforce `registry.mycorp.local/*`
+* TLS enabled
+* Basic auth
+* Push/pull works
+
+**Step 2**
+
+* Add ValidatingAdmissionPolicy`
+* Enforce by only allow `registry.mycorp.local/*`
 * Use digests
+
+
+**Step 3** : Access strategy
+
+* If needed: temporary NodePort
+* Or SSH port-forward
+* Or CI inside cluster
+
+
 
 after that:
 * `Pods` pull images **from inside the cluster**
