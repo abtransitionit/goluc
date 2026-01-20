@@ -135,4 +135,5 @@ If you want, next we can:
 * Write the **full admission policy with namespace exceptions**
 * Decide **inside vs outside cluster** based on your OVH topology
 
-This is a very solid direction 👌
+
+

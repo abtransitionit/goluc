@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all ConfigMap."
+var listSDesc = "list ConfigMaps."
 var listLDesc = listSDesc
 
 // root Command

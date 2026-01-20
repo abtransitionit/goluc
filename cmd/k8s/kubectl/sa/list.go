@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all ServiceAccount."
+var listSDesc = "list ServiceAccounts."
 var listLDesc = listSDesc
 
 // root Command

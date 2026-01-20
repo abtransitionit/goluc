@@ -1,4 +1,4 @@
-name: koe
+name: kex
 description: extend a Kubernetes cluster with basic EXtensions
 phases:
   CheckNodeConf:
@@ -25,11 +25,32 @@ phases:
     dependency:
       - CheckNodeSshAccess
 
-  AddContainerRegistry:
-    description: A private cluster container registry, with admission control enforcing that only images from it can run.
+  AddPVC:
+    description: deploy a PVC to persist container images.
     node: node.helm
-    fn: AddRepoHelm
+    fn: DeployPvc
     param:
       - helm.repo
     dependency:
       - DeployAgent
+
+  AddNamespace:
+    description: create a namespace where to deploy the registry.
+    node: node.helm
+    fn: AddNs
+    param:
+      - app.namespace
+    dependency:
+      - AddPVC
+
+  AddContainerRegistry:
+    # A private cluster container registry, with admission control enforcing that only images from it can run.
+    description: deploy A Deployement with registry:2.
+    node: node.helm
+    fn: AddContainerRegistry
+    param:
+      - helm.repo
+    dependency:
+      - DeployAgent
+
+

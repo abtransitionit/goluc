@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package crd
+package res
 
 import (
 	"fmt"
@@ -15,21 +15,21 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single CRD."
-var describeLDesc = describeSDesc
+var yamlSDesc = "get the yaml manifest for pods."
+var yamlLDesc = yamlSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
+var YamlCmd = &cobra.Command{
+	Use:   "yaml",
+	Short: yamlSDesc,
+	Long:  yamlLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list cm
+		// list nodes
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResCM, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -42,29 +42,31 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 1)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
 			return
 		}
+
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe cm
+		// yaml instance
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResCM, Name: resName}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
+		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 		// - print
 		fmt.Println(output)
+
 	},
 }

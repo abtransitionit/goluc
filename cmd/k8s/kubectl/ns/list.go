@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all cluster namespaces."
+var listSDesc = "list namespaces."
 var listLDesc = listSDesc
 var HelmHost = shared.HelmHost
 

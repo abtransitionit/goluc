@@ -29,7 +29,6 @@ func init() {
 	EpCmd.AddCommand(AddCmd)
 	EpCmd.AddCommand(DeleteCmd)
 	EpCmd.AddCommand(DescribeCmd)
-	EpCmd.AddCommand(PermitCmd)
 	EpCmd.AddCommand(ListCmd)
 	EpCmd.AddCommand(ChartCmd)
 	// EpCmd.AddCommand(DescribeCmd)

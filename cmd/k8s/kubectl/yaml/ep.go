@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package node
+package yaml
 
 import (
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
@@ -14,12 +14,12 @@ var localFlag bool
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage nodes."
+var epSDesc = "manage yaml or manifest files."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "node",
+	Use:   "yaml",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -30,6 +30,5 @@ var EpCmd = &cobra.Command{
 func init() {
 	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(ListCmd)
-	EpCmd.AddCommand(DescribeCmd)
-	EpCmd.AddCommand(YamlCmd)
+	EpCmd.AddCommand(ApplyCmd)
 }

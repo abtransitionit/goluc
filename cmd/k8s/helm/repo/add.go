@@ -28,7 +28,7 @@ var AddCmd = &cobra.Command{
 		// list authorized repos
 		// - get instance and operate
 		i := helm.Resource{Type: helm.ResRepo}
-		output, err := i.ListPermit("local", shared.HelmHost, logger)
+		output, err := i.ListAuth("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

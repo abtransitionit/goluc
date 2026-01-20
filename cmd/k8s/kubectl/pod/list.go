@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all pods."
+var listSDesc = "list pods."
 var listLDesc = listSDesc
 
 // root Command

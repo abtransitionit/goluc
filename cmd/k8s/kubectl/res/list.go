@@ -1,23 +1,24 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package repo
+package res
 
 import (
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
 	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
 var (
-	flagAuth bool
+	flagNs   bool
+	flagNoNs bool
 )
 
 // Description
-var listSDesc = "list authorized/installed repos."
+var listSDesc = "list all api resources."
 var listLDesc = listSDesc
 
 // root Command
@@ -29,17 +30,19 @@ var ListCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// get instance
-		i := helm.Resource{Type: helm.ResRepo}
 		// logic for the insatnce method
-		instanceFn := i.List // default (avoid declaration)
+		listFn := kubectl.ListNs // default (avoid declaration)
 		switch {
-		case flagAuth:
-			instanceFn = i.ListAuth
+		case flagNoNs:
+			listFn = kubectl.ListNoNs
+		case flagNs:
+			listFn = kubectl.ListNs
+		default:
+			// optional: fallback to generic List
+			listFn = kubectl.List
 		}
-		// list configured repos
 		// - get instance and operate
-		output, err := instanceFn("local", shared.HelmHost, logger)
+		output, err := listFn(kubectl.ResRes, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -49,12 +52,16 @@ var ListCmd = &cobra.Command{
 			return
 		} else {
 			list.PrettyPrintTable(output)
-			logger.Infof("other options: --auth")
+			logger.Infof("other options: --ns, --nons")
 		}
 
 	},
 }
 
 func init() {
-	ListCmd.Flags().BoolVar(&flagAuth, "auth", false, "list repos authorized to be installed")
+	ListCmd.Flags().BoolVar(&flagNs, "ns", false, "list namespace-scoped resources (default)")
+	ListCmd.Flags().BoolVar(&flagNoNs, "nons", false, "list non-namespace-scoped resources")
+
+	// optional but recommended: make them mutually exclusive
+	ListCmd.MarkFlagsMutuallyExclusive("ns", "nons")
 }

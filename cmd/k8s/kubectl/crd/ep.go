@@ -13,7 +13,7 @@ var localFlag bool
 var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage k8s CRDs."
+var epSDesc = "manage CRDs."
 var epLDesc = epSDesc
 
 // root Command

@@ -13,7 +13,7 @@ var localFlag bool
 var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage k8s pods."
+var epSDesc = "manage pods."
 var epLDesc = epSDesc
 
 // root Command

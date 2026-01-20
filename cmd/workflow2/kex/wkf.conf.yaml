@@ -19,3 +19,6 @@ workflow:
     helm: # helm repos and releases to install
       repo:
         - name: kdabsh
+    app: # app config
+      namespace: 
+        - name: cim-registry

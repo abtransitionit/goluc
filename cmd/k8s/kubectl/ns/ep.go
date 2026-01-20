@@ -11,7 +11,7 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "manage k8s namespaces."
+var epSDesc = "manage namespaces."
 var epLDesc = epSDesc
 
 // root Command

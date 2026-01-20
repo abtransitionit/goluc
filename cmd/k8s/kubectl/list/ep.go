@@ -9,6 +9,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "list k8s resources."
+var epSDesc = "list resources."
 var epLDesc = epSDesc
 
 // root Command
@@ -31,31 +32,36 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	resListCmd := *res.ListCmd
+	resListCmd.Use = "res"
+	resListCmd.Short = "display generics API resources"
+
 	crdListCmd := *crd.ListCmd
 	crdListCmd.Use = "crd"
-	crdListCmd.Short = "List CRDs"
+	crdListCmd.Short = "list CRDs"
 
 	nodeListCmd := *node.ListCmd
 	nodeListCmd.Use = "node"
-	nodeListCmd.Short = "List nodes"
+	nodeListCmd.Short = "list nodes"
 
 	podListCmd := *pod.ListCmd
 	podListCmd.Use = "pod"
-	podListCmd.Short = "List pods"
+	podListCmd.Short = "list pods"
 
 	nsListCmd := *ns.ListCmd
 	nsListCmd.Use = "ns"
-	nsListCmd.Short = "List namespaces"
+	nsListCmd.Short = "list namespaces"
 
 	saListCmd := *sa.ListCmd
 	saListCmd.Use = "sa"
-	saListCmd.Short = "List serviceAccounts"
+	saListCmd.Short = "list serviceAccounts"
 
 	cmListCmd := *cm.ListCmd
 	cmListCmd.Use = "cm"
-	cmListCmd.Short = "List configMaps"
+	cmListCmd.Short = "list configMaps"
 
 	EpCmd.AddCommand(&crdListCmd)
+	EpCmd.AddCommand(&resListCmd)
 	EpCmd.AddCommand(&nodeListCmd)
 	EpCmd.AddCommand(&podListCmd)
 	EpCmd.AddCommand(&nsListCmd)

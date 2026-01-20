@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package crd
+package sc
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list CRDs."
+var listSDesc = "list StorageClasses."
 var listLDesc = listSDesc
 
 // root Command
@@ -24,9 +24,9 @@ var ListCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list crd
+		// list nodes
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResCRD, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

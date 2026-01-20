@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package node
+package res
 
 import (
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
@@ -14,12 +14,12 @@ var localFlag bool
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage nodes."
+var epSDesc = "list k8s API servers generic resources."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "node",
+	Use:   "res",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {

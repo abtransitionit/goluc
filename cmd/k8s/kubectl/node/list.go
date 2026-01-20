@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list all nodes."
+var listSDesc = "list nodes."
 var listLDesc = listSDesc
 
 // root Command

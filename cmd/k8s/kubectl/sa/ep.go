@@ -13,7 +13,7 @@ var localFlag bool
 var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage k8s ServiceAccount."
+var epSDesc = "manage ServiceAccounts."
 var epLDesc = epSDesc
 
 // root Command

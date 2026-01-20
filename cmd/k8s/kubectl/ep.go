@@ -11,7 +11,10 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/yaml"
 
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
@@ -38,10 +41,12 @@ func init() {
 	EpCmd.AddCommand(desc.EpCmd)
 
 	EpCmd.AddCommand(ns.EpCmd)
-	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(pod.EpCmd)
 	EpCmd.AddCommand(sa.EpCmd)
+	EpCmd.AddCommand(sc.EpCmd)
 	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(cm.EpCmd)
+	EpCmd.AddCommand(res.EpCmd)
+	EpCmd.AddCommand(yaml.EpCmd)
 }

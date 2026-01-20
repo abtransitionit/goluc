@@ -17,4 +17,7 @@ func init() {
 	// sub cde
 	common.SetInitSubCmd(EpCmd, cmdPathName)
 
+	// register functions
+	registerFunctions()
+
 }
