@@ -1,11 +1,9 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sa
+package mnf
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -15,26 +13,26 @@ import (
 )
 
 // Description
-var yamlSDesc = "get the yaml manifest for pods."
-var yamlLDesc = yamlSDesc
+var DeleteSDesc = "delete a yaml or manifest to a cluster."
+var DeleteLDesc = DeleteSDesc
 
 // root Command
-var YamlCmd = &cobra.Command{
-	Use:   "yaml",
-	Short: yamlSDesc,
-	Long:  yamlLDesc,
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: DeleteSDesc,
+	Long:  DeleteLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-
-		// list sa
+		// list authorized manifest
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSA, "local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResManifest}
+		output, err := i.ListAuth("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
-		// - print
+		// print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
@@ -42,37 +40,27 @@ var YamlCmd = &cobra.Command{
 		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 1)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
-			return
-		}
-		// define resource property from user choice
-		resNs, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// yaml sa
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSA, Name: resName, Ns: resNs}
-		output, err = i.GetYaml("local", shared.HelmHost, logger)
+		i = kubectl.Resource{Type: kubectl.ResManifest, Name: resName}
+		_, err = i.Delete("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
-		// - print
-		fmt.Println(output)
-
 	},
 }

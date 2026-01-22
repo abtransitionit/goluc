@@ -5,12 +5,8 @@ package release
 
 import (
 	"github.com/abtransitionit/gocore/logx"
-	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
-
-var localFlag bool
-var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "manage helm release."
@@ -30,8 +26,6 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
-	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
-	// EpCmd.AddCommand(createCmd)
 	EpCmd.AddCommand(installCmd)
 	EpCmd.AddCommand(listCmd)
 	EpCmd.AddCommand(describeCmd)

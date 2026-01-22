@@ -1,37 +1,36 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package conf
+package mnf
 
 import (
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
-	helm "github.com/abtransitionit/golinux/mock/k8scli/helm"
+	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
 	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var envSDesc = "list helm envars."
-var envLDesc = envSDesc
+var ListSDesc = "list applied/authorized yaml or manifest."
+var ListLDesc = ListSDesc
 
 // root Command
-var envCmd = &cobra.Command{
-	Use:   "env",
-	Short: envSDesc,
-	Long:  envLDesc,
+var ListCmd = &cobra.Command{
+	Use:   "list",
+	Short: ListSDesc,
+	Long:  ListLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(epSDesc)
+		// logger.Info("list applied/authorized yaml or manifest")
 
-		// list installed release
+		// list authorized manifest
 		// - get instance and operate
-		i := helm.Resource{Type: helm.ResHelm}
-		output, err := i.GetEnv("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResManifest}
+		output, err := i.ListAuth("local", shared.HelmHost, logger)
 		if err != nil {
-			logger.Errorf("failed to build helm command: %v", err)
+			logger.Errorf("%v", err)
 			return
 		}
 		// - print
@@ -40,6 +39,5 @@ var envCmd = &cobra.Command{
 		} else {
 			list.PrettyPrintTable(output)
 		}
-
 	},
 }

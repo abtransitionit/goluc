@@ -5,12 +5,8 @@ package chart
 
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/helm/repo"
-	"github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
-
-var localFlag bool
-var HelmHost = shared.HelmHost
 
 // Description
 var epSDesc = "manage helm chart."
@@ -38,8 +34,6 @@ func init() {
 	// repoListCmd := *repo.DescribeCmd
 	// repoListCmd.Use = "list"
 
-	// EpCmd.PersistentFlags().BoolVarP(&remoteFlag, "remote", "r", false, "uses by default the local Helm client unless the flag is provided (it will use the remote Helm client)")
-	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(kindCmd)
 	// EpCmd.AddCommand(ListCmd)
 	EpCmd.AddCommand(&chartListCmd)

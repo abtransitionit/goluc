@@ -9,7 +9,6 @@ import (
 )
 
 // var
-var localFlag bool
 var HelmHost = shared.HelmHost
 
 // Description
@@ -27,7 +26,6 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
-	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(ListCmd)
 	EpCmd.AddCommand(DescribeCmd)
 	EpCmd.AddCommand(EventCmd)

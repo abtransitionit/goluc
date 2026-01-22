@@ -14,9 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// var
-var localFlag bool
-
 // Description
 var epSDesc = "describe resources."
 var epLDesc = epSDesc

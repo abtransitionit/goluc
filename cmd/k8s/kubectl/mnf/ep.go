@@ -1,25 +1,22 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package yaml
+package mnf
 
 import (
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
 
-// var
-var localFlag bool
-
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage yaml or manifest files."
+var epSDesc = "manage manifest [yaml] files."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "yaml",
+	Use:   "mnf",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -28,7 +25,8 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
-	EpCmd.PersistentFlags().BoolVarP(&localFlag, "local", "l", false, "Use the local Helm client if the flag is set; otherwise, use the remote Helm client")
 	EpCmd.AddCommand(ListCmd)
-	EpCmd.AddCommand(ApplyCmd)
+	EpCmd.AddCommand(applyCmd)
+	EpCmd.AddCommand(kindCmd)
+	EpCmd.AddCommand(deleteCmd)
 }

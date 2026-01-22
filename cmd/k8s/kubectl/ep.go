@@ -8,19 +8,17 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/mnf"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/yaml"
 
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
-
-var forceFlag bool
 
 // var HelmHost = shared.HelmHost
 
@@ -48,5 +46,5 @@ func init() {
 	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(cm.EpCmd)
 	EpCmd.AddCommand(res.EpCmd)
-	EpCmd.AddCommand(yaml.EpCmd)
+	EpCmd.AddCommand(mnf.EpCmd)
 }
