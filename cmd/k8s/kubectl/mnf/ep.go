@@ -29,4 +29,5 @@ func init() {
 	EpCmd.AddCommand(applyCmd)
 	EpCmd.AddCommand(kindCmd)
 	EpCmd.AddCommand(deleteCmd)
+	EpCmd.AddCommand(descCmd)
 }

@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package mnf
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -13,17 +15,24 @@ import (
 )
 
 // Description
-var DeleteSDesc = "delete a yaml or manifest to a cluster."
-var DeleteLDesc = DeleteSDesc
+var descSDesc = "desc resources the manifest created into the cluster."
+var descLDesc = descSDesc
 
 // root Command
-var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: DeleteSDesc,
-	Long:  DeleteLDesc,
+var descCmd = &cobra.Command{
+	Use:   "desc",
+	Short: descSDesc,
+	Long:  descLDesc,
+	// Args: func(cmd *cobra.Command, args []string) error {
+	// 	if len(args) != 1 {
+	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
+	// 	}
+	// 	return nil
+	// },
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
+
 		// list authorized manifest
 		// - get instance and operate
 		i := kubectl.Resource{Type: kubectl.ResManifest}
@@ -32,7 +41,7 @@ var deleteCmd = &cobra.Command{
 			logger.Errorf("%v", err)
 			return
 		}
-		// print
+		// - print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
@@ -52,7 +61,6 @@ var deleteCmd = &cobra.Command{
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
-
 		// define resource property from user choice
 		resUrl, err := list.GetFieldByID2(output, id, 2)
 		if err != nil {
@@ -64,16 +72,6 @@ var deleteCmd = &cobra.Command{
 		logger.Infof("selected item: %s ", resName)
 		// - get instance and operate
 		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
-		_, err = i.Delete("local", shared.HelmHost, logger)
-		if err != nil {
-			logger.Errorf("%v", err)
-			return
-		}
-
-		// log
-		logger.Infof("resource still in the cluster for: %s", resName)
-		// - get instance and operate
-		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
 		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
@@ -83,7 +81,7 @@ var deleteCmd = &cobra.Command{
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
-			list.PrettyPrintTable(output)
+			fmt.Println(output)
 		}
 	},
 }

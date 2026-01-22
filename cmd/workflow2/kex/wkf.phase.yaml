@@ -25,10 +25,10 @@ phases:
     dependency:
       - CheckNodeSshAccess
 
-  AddPVC:
-    description: deploy a PVC to persist container images.
+  DeployLpp:
+    description: deploy the rancher local Path Provisionner.
     node: node.helm
-    fn: DeployPvc
+    fn: DeployLpp
     param:
       - helm.repo
     dependency:
@@ -41,7 +41,7 @@ phases:
     param:
       - app.namespace
     dependency:
-      - AddPVC
+      - DeployLpp
 
   AddContainerRegistry:
     # A private cluster container registry, with admission control enforcing that only images from it can run.

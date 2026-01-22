@@ -23,6 +23,6 @@ func registerFunctions() {
 	worflowName := filepath.Base(cmdPathName) // the workflow name
 
 	// ensure node:ssh status
-	registry.Add(worflowName, "DeployPvc", k8s.DeployPvc)
+	registry.Add(worflowName, "DeployLpp", k8s.DeployLpp)
 	registry.Add(worflowName, "AddNs", k8s.AddNs)
 }
