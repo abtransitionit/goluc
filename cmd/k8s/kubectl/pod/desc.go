@@ -15,7 +15,7 @@ import (
 )
 
 // Description
-var describeSDesc = "list all pods."
+var describeSDesc = "describe a pod."
 var describeLDesc = describeSDesc
 
 // root Command
@@ -42,7 +42,7 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return

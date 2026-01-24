@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sc
+package ns
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -13,27 +13,21 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single StorageClass."
-var describeLDesc = describeSDesc
+var resSDesc = "list all resources."
+var resLDesc = resSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
+var ResCmd = &cobra.Command{
+	Use:   "res",
+	Short: resSDesc,
+	Long:  resLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// list nodes
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -61,10 +55,10 @@ var DescribeCmd = &cobra.Command{
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe instance
+		// describe node
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResNS, Name: resName}
+		output, err = i.ListResource("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

@@ -1,9 +1,11 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sc
+package secret
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -13,27 +15,21 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single StorageClass."
-var describeLDesc = describeSDesc
+var yamlSDesc = "get the yaml manifest."
+var yamlLDesc = yamlSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
+var yamlCmd = &cobra.Command{
+	Use:   "yaml",
+	Short: yamlSDesc,
+	Long:  yamlLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list nodes
+		// list pods
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSecret, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -53,27 +49,30 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
-			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item name from ID: %s: %v", id, err)
+			return
+		}
+		// define resource property from user choice
+		resNs, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get item ns from ID: %s: %v", id, err)
 			return
 		}
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe instance
+		// yaml pod
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResSecret, Name: resName, Ns: resNs}
+		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 		// - print
-		if list.CountNbLine(output) == 1 {
-			return
-		} else {
-			list.PrettyPrintTable(output)
-		}
+		fmt.Println(output)
+
 	},
 }

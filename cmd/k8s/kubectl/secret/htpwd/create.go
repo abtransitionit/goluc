@@ -1,9 +1,11 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package mnf
+package htpwd
 
 import (
+	"strings"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -13,26 +15,31 @@ import (
 )
 
 // Description
-var DeleteSDesc = "delete manifest(s) resource(s) from a cluster."
-var DeleteLDesc = DeleteSDesc
+var createSDesc = "generate and saved the pwd as a secret in the cluster."
+var createLDesc = createSDesc + "\n" + `
+The follwoing information are needed
+- namespace (choose from the list)
+- user name
+- name of the secret
+`
 
 // root Command
-var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: DeleteSDesc,
-	Long:  DeleteLDesc,
+var createCmd = &cobra.Command{
+	Use:   "create",
+	Short: createSDesc,
+	Long:  createLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
+
 		// list authorized manifest
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResManifest}
-		output, err := i.ListAuth("local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
-		// print
+		// - print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
@@ -47,34 +54,35 @@ var deleteCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		resNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
 
-		// define resource property from user choice
-		resUrl, err := list.GetFieldByID2(output, id, 2)
-		if err != nil {
-			logger.Errorf("failed to get res url from ID: %s: %v", id, err)
-			return
-		}
-
 		// log
-		logger.Infof("selected item: %s ", resName)
+		logger.Infof("selected item: %s ", resNs)
+
+		// Ask user
+		resUserName := ui.AskUserString("\ndefine the secret user name (often same as namespace): ")
+		resSecretName := ui.AskUserString("\ndefine the secret name : ")
+		// logger.Infof("creating secret in selected ns:%s with UserName:%s", resName, resUserName)
+
+		logger.Infof("user name is: %s ", resUserName)
 		// - get instance and operate
-		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
-		_, err = i.Delete("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResSecret, Ns: resNs, UserName: resUserName, Name: resSecretName}
+		output, err = i.Create("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 
 		// log
-		logger.Infof("resource still in the cluster for: %s", resName)
+		logger.Infof("created resource: %s", strings.TrimSpace(output))
+		logger.Info("resource still in the cluster")
+		// list items
 		// - get instance and operate
-		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		output, err = kubectl.List(kubectl.ResSecret, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -85,5 +93,6 @@ var deleteCmd = &cobra.Command{
 		} else {
 			list.PrettyPrintTable(output)
 		}
+
 	},
 }

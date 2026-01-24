@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sc
+package secret
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -13,27 +13,20 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single StorageClass."
-var describeLDesc = describeSDesc
+var DeleteSDesc = "delete a secret."
+var DeleteLDesc = DeleteSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
-	// Args: func(cmd *cobra.Command, args []string) error {
-	// 	if len(args) != 1 {
-	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
-	// 	}
-	// 	return nil
-	// },
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: DeleteSDesc,
+	Long:  DeleteLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-
-		// list nodes
+		// list items
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSecret, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -53,18 +46,34 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
 
+		// define resource property from user choice
+		resNs, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get res Ns from ID: %s: %v", id, err)
+			return
+		}
+
 		// log
-		logger.Infof("selected item: %s ", resName)
-		// describe instance
+		logger.Infof("selected item: %s:%s ", resNs, resName)
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResSecret, Ns: resNs, Name: resName}
+		_, err = i.Delete("local", shared.HelmHost, logger)
+		if err != nil {
+			logger.Errorf("%v", err)
+			return
+		}
+
+		// log
+		logger.Infof("resource still in the cluster for: %s", resName)
+		// list items
+		// - get instance and operate
+		output, err = kubectl.List(kubectl.ResSecret, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

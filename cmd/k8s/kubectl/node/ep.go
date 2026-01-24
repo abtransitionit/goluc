@@ -24,6 +24,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(ListCmd)
+	EpCmd.AddCommand(ImgCmd)
 	EpCmd.AddCommand(DescribeCmd)
 	EpCmd.AddCommand(YamlCmd)
 }

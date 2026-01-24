@@ -25,4 +25,5 @@ func init() {
 	EpCmd.AddCommand(ListCmd)
 	EpCmd.AddCommand(DescribeCmd)
 	EpCmd.AddCommand(YamlCmd)
+	EpCmd.AddCommand(ResCmd)
 }

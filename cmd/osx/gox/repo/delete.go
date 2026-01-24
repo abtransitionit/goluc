@@ -70,7 +70,7 @@ var deleteCmd = &cobra.Command{
 		// define resource property from user choice
 		repoName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item name from ID: %s: %v", id, err)
 			return
 		}
 

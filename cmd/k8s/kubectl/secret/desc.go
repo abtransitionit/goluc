@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package sc
+package secret
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -13,14 +13,14 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single StorageClass."
-var describeLDesc = describeSDesc
+var DescribeSDesc = "display details for a single secret."
+var DescribeLDesc = DescribeSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
+var describeCmd = &cobra.Command{
 	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
+	Short: DescribeSDesc,
+	Long:  DescribeLDesc,
 	// Args: func(cmd *cobra.Command, args []string) error {
 	// 	if len(args) != 1 {
 	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
@@ -31,9 +31,9 @@ var DescribeCmd = &cobra.Command{
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list nodes
+		// list authorized manifest
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSecret, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -53,7 +53,12 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 1)
+		if err != nil {
+			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
+			return
+		}
+		resNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
@@ -61,9 +66,8 @@ var DescribeCmd = &cobra.Command{
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe instance
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
+		i := kubectl.Resource{Type: kubectl.ResSecret, Name: resName, Ns: resNs}
 		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
@@ -75,5 +79,6 @@ var DescribeCmd = &cobra.Command{
 		} else {
 			list.PrettyPrintTable(output)
 		}
+
 	},
 }

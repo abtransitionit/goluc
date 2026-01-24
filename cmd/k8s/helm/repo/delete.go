@@ -41,7 +41,7 @@ var DeleteCmd = &cobra.Command{
 		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose node (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -50,7 +50,7 @@ var DeleteCmd = &cobra.Command{
 		// define resource property from user choice
 		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item name from ID: %s: %v", id, err)
 			return
 		}
 

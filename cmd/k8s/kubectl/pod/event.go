@@ -42,7 +42,7 @@ var EventCmd = &cobra.Command{
 		}
 
 		// Ask user which ID (to choose) from the printed list
-		id, err := ui.AskUserInt("\nchoose pod (enter ID): ")
+		id, err := ui.AskUserInt("\nchoose item (enter ID): ")
 		if err != nil {
 			logger.Errorf("invalid ID: %v", err)
 			return
@@ -51,13 +51,13 @@ var EventCmd = &cobra.Command{
 		// define resource property from user choice
 		resName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item name from ID: %s: %v", id, err)
 			return
 		}
 		// define resource property from user choice
 		resNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get pod name from ID: %s: %v", id, err)
+			logger.Errorf("failed to get item ns from ID: %s: %v", id, err)
 			return
 		}
 		// log

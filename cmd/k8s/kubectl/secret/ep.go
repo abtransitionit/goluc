@@ -1,23 +1,20 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package pod
+package secret
 
 import (
-	"github.com/abtransitionit/goluc/cmd/k8s/shared"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/secret/htpwd"
 	"github.com/spf13/cobra"
 )
 
-// var
-var HelmHost = shared.HelmHost
-
 // Description
-var epSDesc = "manage pods."
+var epSDesc = "manage secrets."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "pod",
+	Use:   "secret",
 	Short: epSDesc,
 	Long:  epLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -27,9 +24,8 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(ListCmd)
-	EpCmd.AddCommand(LogCmd)
-	EpCmd.AddCommand(DescribeCmd)
-	EpCmd.AddCommand(DeleteCmd)
-	EpCmd.AddCommand(EventCmd)
-	EpCmd.AddCommand(YamlCmd)
+	EpCmd.AddCommand(htpwd.EpCmd)
+	EpCmd.AddCommand(deleteCmd)
+	EpCmd.AddCommand(describeCmd)
+	EpCmd.AddCommand(yamlCmd)
 }
