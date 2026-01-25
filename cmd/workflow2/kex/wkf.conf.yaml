@@ -26,7 +26,21 @@ workflow:
         - ns: cimreg
           username: cimreg
           name: cimreg
-          
+
+    helm: # helm repos and releases to manage
+      release:
+        - name: kbe-openebs
+          namespace: openebs
+          chart:
+            qname: openebs/openebs
+            version: 4.4.0
+          param:
+            engines.replicated.mayastor.enabled: false 
+            engines.local.lvm.enabled: false 
+            engines.local.zfs.enabled: false 
+      repo:
+        - name: openebs
+
 
     app: # app config
       namespace: 

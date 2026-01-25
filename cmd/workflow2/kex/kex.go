@@ -22,6 +22,8 @@ func registerFunctions() {
 	registry := phase2.GetFnRegistry()        // an instance of the FnRegistry that is shared by all phases
 	worflowName := filepath.Base(cmdPathName) // the workflow name
 
-	registry.Add(worflowName, "ApplyManifest", k8s.ApplyManifest)
-	registry.Add(worflowName, "CreateSecret", k8s.CreateSecret)
+	registry.Add(worflowName, "InstallReleaseHelm", k8s.InstallReleaseHelm)
+	registry.Add(worflowName, "AddRepoHelm", k8s.AddRepoHelm)
+	// registry.Add(worflowName, "ApplyManifest", k8s.ApplyManifest)
+	// registry.Add(worflowName, "CreateSecret", k8s.CreateSecret)
 }

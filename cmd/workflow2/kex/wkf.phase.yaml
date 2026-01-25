@@ -17,7 +17,7 @@ phases:
 
   DeployAgent:
     description: copy luca agent from the bastion to the cluster's node (only if it is different from the bastion)
-    node: node.bastion
+    node: cluster.bastion
     fn: DeployAgent
     param: 
       - cluster.node
@@ -25,23 +25,35 @@ phases:
     dependency:
       - CheckNodeSshAccess
 
-  DeployCustomLpp:
-    description: deploy the customized Rancher local Path Provisionner.
-    node: node.helm
-    fn: ApplyManifest
+  AddRepoHelm:
+    description: Install Helm charts repositories on the helm client (node.helm)
+    node: cluster.bastion
+    fn: AddRepoHelm
     param:
-      - manifest.apply
+      - helm.repo
+      - node.helm
     dependency:
       - DeployAgent
 
-  CreateSecret:
-    description: create a login/pwd used for Basic Auth to access the private docker registry.
-    node: node.helm
-    fn: CreateSecret
+  AddCsiOpenEBS:
+    description: Install the CSI OpenEBS, as a helm release.
+    node: cluster.bastion
+    fn: InstallReleaseHelm
     param:
-      - secret.cimreg
+      - helm.release
+      - node.helm
     dependency:
-      - DeployCustomLpp
+      - AddRepoHelm
+
+
+  # CreateSecret:
+  #   description: create a login/pwd used for Basic Auth to access the private docker registry.
+  #   node: node.helm
+  #   fn: CreateSecret
+  #   param:
+  #     - secret.cimreg
+  #   dependency:
+  #     - DeployCustomLpp
 
   # AddNamespace:
   #   description: create a namespace where to deploy the registry.
@@ -63,3 +75,11 @@ phases:
   #     - DeployAgent
 
 
+  # DeployCustomLpp:
+  #   description: deploy the customized Rancher local Path Provisionner.
+  #   node: node.helm
+  #   fn: ApplyManifest
+  #   param:
+  #     - manifest.apply
+  #   dependency:
+  #     - DeployAgent
