@@ -25,32 +25,41 @@ phases:
     dependency:
       - CheckNodeSshAccess
 
-  DeployLpp:
-    description: deploy the rancher local Path Provisionner.
+  DeployCustomLpp:
+    description: deploy the customized Rancher local Path Provisionner.
     node: node.helm
-    fn: DeployLpp
+    fn: ApplyManifest
     param:
-      - helm.repo
+      - manifest.apply
     dependency:
       - DeployAgent
 
-  AddNamespace:
-    description: create a namespace where to deploy the registry.
+  CreateSecret:
+    description: create a login/pwd used for Basic Auth to access the private docker registry.
     node: node.helm
-    fn: AddNs
+    fn: CreateSecret
     param:
-      - app.namespace
+      - secret.cimreg
     dependency:
-      - DeployLpp
+      - DeployCustomLpp
 
-  AddContainerRegistry:
-    # A private cluster container registry, with admission control enforcing that only images from it can run.
-    description: deploy A Deployement with registry:2.
-    node: node.helm
-    fn: AddContainerRegistry
-    param:
-      - helm.repo
-    dependency:
-      - DeployAgent
+  # AddNamespace:
+  #   description: create a namespace where to deploy the registry.
+  #   node: node.helm
+  #   fn: AddNs
+  #   param:
+  #     - app.namespace
+  #   dependency:
+  #     - DeployLpp
+
+  # AddContainerRegistry:
+  #   # A private cluster container registry, with admission control enforcing that only images from it can run.
+  #   description: deploy A Deployement with registry:2.
+  #   node: node.helm
+  #   fn: AddContainerRegistry
+  #   param:
+  #     - helm.repo
+  #   dependency:
+  #     - DeployAgent
 
 

@@ -99,7 +99,7 @@ after that:
 # 🟡 Step 1
 ## phase **auth**
 create a secret that can be used 
-- as a `.htpasswd` file for a website or a private docker registry
+- as a `.htpasswd` file for a website,  or a private docker registry
 - by an ingress controller
 
 **create a hashed secret**
@@ -195,6 +195,19 @@ metadata:
     # This is the message the user sees in the login popup
     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
 ```
+
+**The right way**
+
+instead of using **imperative** methods like above use one of the following **declarative** methods: 
+- a **Job** that 
+  - runs an`httpd` image. 
+  - execute a script to generate the password
+  - use a ServiceAccount with the right permissions to `kubectl create secret`.
+- a **controller** that 
+  - use a CRD (e.g., `HtpasswdRequest`)
+  - watches for this CRs
+  - generates the password locally by code
+  - pushes the `Secret` to the API.
 
 # 🟡 Step 2
 ## Todo
@@ -480,3 +493,19 @@ If you want next steps, I can help you with:
 * mirroring images into this registry cleanly
 
 Just say where you want to go next 🚀
+
+
+# Todo
+
+If you want, next we can:
+
+* 🔍 look at the exact code path in the provisioner
+* 🧪 make your manifest future-proof for upgrades
+* 📦 turn this into a clean Helm-like parametrized version
+
+If you want, I can show you:
+
+* how to convert htpasswd to other formats
+* how to use Kubernetes secrets for **other authentication types** (JWT, API keys, TLS certs, etc.)
+
+Just tell me.

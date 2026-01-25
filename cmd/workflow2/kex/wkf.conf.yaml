@@ -16,9 +16,21 @@ workflow:
         - o4f
         - o5d
         
-    helm: # helm repos and releases to install
-      repo:
-        - name: kdabsh
+    manifest: # manifest to manage
+      apply: 
+        - name: clpp # local path provisionner
+        # - name: creg # cim registry
+
+    secret: # secret to manage
+      cimreg:  # for cim registry
+        - ns: cimreg
+          username: cimreg
+          name: cimreg
+          
+
     app: # app config
       namespace: 
         - name: cim-registry
+    # helm: # helm repos and releases to install
+    #   repo:
+    #     - name: kdabsh

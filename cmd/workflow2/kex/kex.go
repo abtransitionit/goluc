@@ -22,7 +22,6 @@ func registerFunctions() {
 	registry := phase2.GetFnRegistry()        // an instance of the FnRegistry that is shared by all phases
 	worflowName := filepath.Base(cmdPathName) // the workflow name
 
-	// ensure node:ssh status
-	registry.Add(worflowName, "DeployLpp", k8s.DeployLpp)
-	registry.Add(worflowName, "AddNs", k8s.AddNs)
+	registry.Add(worflowName, "ApplyManifest", k8s.ApplyManifest)
+	registry.Add(worflowName, "CreateSecret", k8s.CreateSecret)
 }
