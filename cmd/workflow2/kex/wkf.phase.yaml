@@ -45,6 +45,16 @@ phases:
     dependency:
       - AddRepoHelm
 
+  DeployNodeLocalStorage:
+    description: deploy a node local storage based on the OpenEBS Provisionner.
+    node: cluster.bastion
+    fn: ApplyManifest
+    param:
+      - manifest.apply
+      - node.kubectl
+    dependency:
+      - AddCsiOpenEBS
+
 
   # CreateSecret:
   #   description: create a login/pwd used for Basic Auth to access the private docker registry.

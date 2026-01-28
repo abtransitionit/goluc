@@ -27,6 +27,7 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(installCmd)
+	EpCmd.AddCommand(upgradeCmd)
 	EpCmd.AddCommand(listCmd)
 	EpCmd.AddCommand(describeCmd)
 	EpCmd.AddCommand(deleteCmd)

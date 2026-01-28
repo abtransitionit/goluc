@@ -52,16 +52,16 @@ var ListCmd = &cobra.Command{
 			return
 		} else {
 			list.PrettyPrintTable(output)
-			logger.Infof("other options: --ns, --nons")
+			logger.Infof("other options: --ns, --cl")
 		}
 
 	},
 }
 
 func init() {
-	ListCmd.Flags().BoolVar(&flagNs, "ns", false, "list namespace-scoped resources (default)")
-	ListCmd.Flags().BoolVar(&flagNoNs, "nons", false, "list non-namespace-scoped resources")
+	ListCmd.Flags().BoolVar(&flagNs, "ns", false, "list namespaced resources (default)")
+	ListCmd.Flags().BoolVar(&flagNoNs, "cl", false, "list clustered resources")
 
 	// optional but recommended: make them mutually exclusive
-	ListCmd.MarkFlagsMutuallyExclusive("ns", "nons")
+	ListCmd.MarkFlagsMutuallyExclusive("ns", "cl")
 }

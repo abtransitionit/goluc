@@ -24,6 +24,6 @@ func registerFunctions() {
 
 	registry.Add(worflowName, "InstallReleaseHelm", k8s.InstallReleaseHelm)
 	registry.Add(worflowName, "AddRepoHelm", k8s.AddRepoHelm)
-	// registry.Add(worflowName, "ApplyManifest", k8s.ApplyManifest)
+	registry.Add(worflowName, "ApplyManifest", k8s.ApplyManifest)
 	// registry.Add(worflowName, "CreateSecret", k8s.CreateSecret)
 }
