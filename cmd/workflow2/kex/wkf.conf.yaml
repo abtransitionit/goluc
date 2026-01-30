@@ -18,17 +18,17 @@ workflow:
         - o4f
         - o5d
         
-    manifest: # manifest to manage
-      apply: 
-        - name: cimreg # app based on OpenEBS, docker registry
-
-    secret: # secret to manage
-      cimreg:  # for cim registry
+    secret: # K8s secret to manage
+      cimreg:  # for cimreg app
         - ns: cimreg
           username: cimreg
           name: cimreg
 
-    helm: # helm repos and releases to manage
+    kubectl: # objects to manage in the cluster
+      manifest: # manifest
+        apply: 
+          - name: cimreg # app based on the CSI OpenEBS to have a private (in-cluster) docker registry
+    helm: # helm objects to manage
       release:
         - name: kbe-openebs
           namespace: openebs

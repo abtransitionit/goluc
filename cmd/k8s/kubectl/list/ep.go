@@ -32,11 +32,12 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+
 	cmListCmd := *cm.ListCmd
 	cmListCmd.Use = "cm"
 	cmListCmd.Short = "list configMaps"
-	crdListCmd := *crd.ListCmd
 
+	crdListCmd := *crd.ListCmd
 	crdListCmd.Use = "crd"
 	crdListCmd.Short = "list CRDs"
 
@@ -47,6 +48,10 @@ func init() {
 	nsListCmd := *ns.ListCmd
 	nsListCmd.Use = "ns"
 	nsListCmd.Short = "list namespaces"
+
+	nsResListCmd := *ns.ResCmd
+	nsResListCmd.Use = "ns-r"
+	nsResListCmd.Short = "List a namespace's resources"
 
 	podListCmd := *pod.ListCmd
 	podListCmd.Use = "pod"
@@ -62,7 +67,7 @@ func init() {
 
 	resListCmd := *res.ListCmd
 	resListCmd.Use = "res"
-	resListCmd.Short = "display generics API resources"
+	resListCmd.Short = "display API server object type"
 
 	saListCmd := *sa.ListCmd
 	saListCmd.Use = "sa"
@@ -75,6 +80,7 @@ func init() {
 	EpCmd.AddCommand(&crdListCmd)
 	EpCmd.AddCommand(&cmListCmd)
 	EpCmd.AddCommand(&nsListCmd)
+	EpCmd.AddCommand(&nsResListCmd)
 	EpCmd.AddCommand(&nodeListCmd)
 	EpCmd.AddCommand(&podListCmd)
 	EpCmd.AddCommand(&pvListCmd)

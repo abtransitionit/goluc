@@ -15,15 +15,6 @@ phases:
     param: 
       - cluster.node
 
-  DeployAgent:
-    description: copy luca agent from the bastion to the cluster's node (only if it is different from the bastion)
-    node: cluster.bastion
-    fn: DeployAgent
-    param: 
-      - cluster.node
-      - agent
-    dependency:
-      - CheckNodeSshAccess
 
   AddRepoHelm:
     description: Install Helm charts repositories on the helm client (node.helm)
@@ -33,10 +24,10 @@ phases:
       - helm.repo
       - node.helm
     dependency:
-      - DeployAgent
+      - CheckNodeSshAccess
 
-  AddCsiOpenEBS:
-    description: Install the CSI OpenEBS, as a helm release.
+  DeployCsiOpenEBS:
+    description: Install the CSI OpenEBS provisioner (only the local storage feature), as a helm release.
     node: cluster.bastion
     fn: InstallReleaseHelm
     param:
@@ -45,15 +36,15 @@ phases:
     dependency:
       - AddRepoHelm
 
-  DeployNodeLocalStorage:
-    description: deploy a node local storage based on the OpenEBS Provisionner.
+  DeployCimRegistry:
+    description: deploy the app cimreg (container image registry). meaning -> make it really work
     node: cluster.bastion
     fn: ApplyManifest
     param:
-      - manifest.apply
+      - kubectl.manifest.apply
       - node.kubectl
     dependency:
-      - AddCsiOpenEBS
+      - DeployCsiOpenEBS
 
 
   # CreateSecret:
