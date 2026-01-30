@@ -24,10 +24,10 @@ workflow:
           username: cimreg
           name: cimreg
 
-    kubectl: # objects to manage in the cluster
+    kubectl: # K8s objects to manage
       manifest: # manifest
         apply: 
-          - name: cimreg # app based on the CSI OpenEBS to have a private (in-cluster) docker registry
+          - name: cimreg # an private in-cluster docker registry using the CSI OpenEBS hostPath provisioner
     helm: # helm objects to manage
       release:
         - name: kbe-openebs

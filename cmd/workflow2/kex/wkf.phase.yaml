@@ -37,7 +37,7 @@ phases:
       - AddRepoHelm
 
   DeployCimRegistry:
-    description: deploy the app cimreg (container image registry). meaning -> make it really work
+    description: deploy the containerized app cimreg.
     node: cluster.bastion
     fn: ApplyManifest
     param:
