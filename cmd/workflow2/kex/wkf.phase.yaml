@@ -76,7 +76,7 @@ phases:
   #     - DeployAgent
 
 
-  # DeployCustomLpp:
+  # DeployCsiCLpp:
   #   description: deploy the customized Rancher local Path Provisionner.
   #   node: node.helm
   #   fn: ApplyManifest
