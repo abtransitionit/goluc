@@ -9,6 +9,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pvc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/spf13/cobra"
@@ -28,40 +29,69 @@ var EpCmd = &cobra.Command{
 	},
 }
 
+type Cmd struct {
+	Src   *cobra.Command
+	Use   string
+	Short string
+}
+
+var mapCmd = []Cmd{
+	{res.DescribeCmd, "res", "API resource"},
+	{crd.DescribeCmd, "crd", "describe CRD"},
+	{node.DescribeCmd, "node", "describe node"},
+	{pod.DescribeCmd, "pod", "describe pod"},
+	{pvc.DescribeCmd, "pvc", "describe pvc"},
+	{ns.DescribeCmd, "ns", "describe namespace"},
+	{sa.DescribeCmd, "sa", "describe serviceAccount"},
+	{cm.DescribeCmd, "cm", "describe configMap"},
+}
+
 func init() {
-	resDescCmd := *res.DescribeCmd
-	resDescCmd.Use = "res"
-	resDescCmd.Short = "API resources"
+	for _, item := range mapCmd {
+		cmd := *item.Src
+		cmd.Use = item.Use
+		cmd.Short = item.Short
 
-	crdDescCmd := *crd.DescribeCmd
-	crdDescCmd.Use = "crd"
-	crdDescCmd.Short = "describe CRDs"
+		EpCmd.AddCommand(&cmd)
+	}
+	// resDescCmd := *res.DescribeCmd
+	// resDescCmd.Use = "res"
+	// resDescCmd.Short = "API resource"
 
-	nodeDescCmd := *node.DescribeCmd
-	nodeDescCmd.Use = "node"
-	nodeDescCmd.Short = "describe nodes"
+	// crdDescCmd := *crd.DescribeCmd
+	// crdDescCmd.Use = "crd"
+	// crdDescCmd.Short = "describe CRD"
 
-	podDescCmd := *pod.DescribeCmd
-	podDescCmd.Use = "pod"
-	podDescCmd.Short = "describe pods"
+	// nodeDescCmd := *node.DescribeCmd
+	// nodeDescCmd.Use = "node"
+	// nodeDescCmd.Short = "describe node"
 
-	nsDescCmd := *ns.DescribeCmd
-	nsDescCmd.Use = "ns"
-	nsDescCmd.Short = "describe namespaces"
+	// podDescCmd := *pod.DescribeCmd
+	// podDescCmd.Use = "pod"
+	// podDescCmd.Short = "describe pod"
 
-	saDescCmd := *sa.DescribeCmd
-	saDescCmd.Use = "sa"
-	saDescCmd.Short = "describe serviceAccounts"
+	// pvcDescCmd := *pvc.DescribeCmd
+	// pvcDescCmd.Use = "pvc"
+	// pvcDescCmd.Short = "describe pvc"
 
-	cmDescCmd := *cm.DescribeCmd
-	cmDescCmd.Use = "cm"
-	cmDescCmd.Short = "describe configMaps"
+	// nsDescCmd := *ns.DescribeCmd
+	// nsDescCmd.Use = "ns"
+	// nsDescCmd.Short = "describe namespace"
 
-	EpCmd.AddCommand(&crdDescCmd)
-	EpCmd.AddCommand(&resDescCmd)
-	EpCmd.AddCommand(&nodeDescCmd)
-	EpCmd.AddCommand(&podDescCmd)
-	EpCmd.AddCommand(&nsDescCmd)
-	EpCmd.AddCommand(&saDescCmd)
-	EpCmd.AddCommand(&cmDescCmd)
+	// saDescCmd := *sa.DescribeCmd
+	// saDescCmd.Use = "sa"
+	// saDescCmd.Short = "describe serviceAccount"
+
+	// cmDescCmd := *cm.DescribeCmd
+	// cmDescCmd.Use = "cm"
+	// cmDescCmd.Short = "describe configMap"
+
+	// EpCmd.AddCommand(&crdDescCmd)
+	// EpCmd.AddCommand(&resDescCmd)
+	// EpCmd.AddCommand(&nodeDescCmd)
+	// EpCmd.AddCommand(&podDescCmd)
+	// EpCmd.AddCommand(&pvcDescCmd)
+	// EpCmd.AddCommand(&nsDescCmd)
+	// EpCmd.AddCommand(&saDescCmd)
+	// EpCmd.AddCommand(&cmDescCmd)
 }

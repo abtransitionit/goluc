@@ -54,18 +54,18 @@ var YamlCmd = &cobra.Command{
 			logger.Errorf("failed to get item name from ID: %s: %v", id, err)
 			return
 		}
-		// define resource property from user choice
-		resNs, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get item ns from ID: %s: %v", id, err)
-			return
-		}
+		// // define resource property from user choice
+		// resNs, err := list.GetFieldByID(output, id, 0)
+		// if err != nil {
+		// 	logger.Errorf("failed to get item ns from ID: %s: %v", id, err)
+		// 	return
+		// }
 
 		// log
 		logger.Infof("selected item: %s ", resName)
 		// yaml cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResPv, Name: resName, Ns: resNs}
+		i := kubectl.Resource{Type: kubectl.ResPv, Name: resName}
 		output, err = i.GetYaml("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)

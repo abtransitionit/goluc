@@ -15,14 +15,14 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single CRD."
-var describeLDesc = describeSDesc
+var deleteSDesc = "delete pv"
+var deleteLDesc = deleteSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
+var DeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: deleteSDesc,
+	Long:  deleteLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
@@ -66,7 +66,7 @@ var DescribeCmd = &cobra.Command{
 		// describe cm
 		// - get instance and operate
 		i := kubectl.Resource{Type: kubectl.ResPv, Name: resName}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		output, err = i.Delete("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
