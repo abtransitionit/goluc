@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package cm
+package deploy
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single ConfigMap."
+var describeSDesc = "display details for a single Deployment"
 var describeLDesc = describeSDesc
 
 // root Command
@@ -29,7 +29,7 @@ var DescribeCmd = &cobra.Command{
 
 		// list cm
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResCM, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResDeploy, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -65,7 +65,7 @@ var DescribeCmd = &cobra.Command{
 		logger.Infof("selected item: %s ", resName)
 		// describe cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResCM, Name: resName, Ns: resNs}
+		i := kubectl.Resource{Type: kubectl.ResDeploy, Name: resName, Ns: resNs}
 		output, err = i.Describe("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)

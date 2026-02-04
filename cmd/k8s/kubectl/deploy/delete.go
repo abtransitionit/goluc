@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package cm
+package deploy
 
 import (
 	"fmt"
@@ -15,21 +15,21 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single ConfigMap."
-var describeLDesc = describeSDesc
+var deleteSDesc = "delete Deployment"
+var deleteLDesc = deleteSDesc
 
 // root Command
-var DescribeCmd = &cobra.Command{
-	Use:   "desc",
-	Short: describeSDesc,
-	Long:  describeLDesc,
+var DeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: deleteSDesc,
+	Long:  deleteLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
 		// list cm
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResCM, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResPv, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -54,19 +54,19 @@ var DescribeCmd = &cobra.Command{
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
-		// define resource property from user choice
-		resNs, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
-			return
-		}
+		// // define resource property from user choice
+		// resNs, err := list.GetFieldByID(output, id, 0)
+		// if err != nil {
+		// 	logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
+		// 	return
+		// }
 
 		// log
 		logger.Infof("selected item: %s ", resName)
 		// describe cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResCM, Name: resName, Ns: resNs}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResPv, Name: resName}
+		output, err = i.Delete("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return

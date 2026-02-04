@@ -6,6 +6,7 @@ package kubectl
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/mnf"
@@ -18,6 +19,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/secret"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/yaml"
 
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
@@ -38,11 +40,16 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	// EpCmd.PersistentFlags().StringVar(&shared.HelmHost, "helm-host", "", "Helm host to use")
+
+	// shortcut
 	EpCmd.AddCommand(list.EpCmd)
 	EpCmd.AddCommand(desc.EpCmd)
+	EpCmd.AddCommand(yaml.EpCmd)
 
+	// std resource
 	EpCmd.AddCommand(cm.EpCmd)
 	EpCmd.AddCommand(crd.EpCmd)
+	EpCmd.AddCommand(deploy.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(mnf.EpCmd)
 	EpCmd.AddCommand(ns.EpCmd)

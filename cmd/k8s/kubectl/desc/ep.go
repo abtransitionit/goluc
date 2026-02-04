@@ -6,12 +6,14 @@ package desc
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pvc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
 	"github.com/spf13/cobra"
 )
 
@@ -38,12 +40,14 @@ type Cmd struct {
 var mapCmd = []Cmd{
 	{res.DescribeCmd, "res", "API resource"},
 	{crd.DescribeCmd, "crd", "describe CRD"},
-	{node.DescribeCmd, "node", "describe node"},
-	{pod.DescribeCmd, "pod", "describe pod"},
-	{pvc.DescribeCmd, "pvc", "describe pvc"},
-	{ns.DescribeCmd, "ns", "describe namespace"},
-	{sa.DescribeCmd, "sa", "describe serviceAccount"},
 	{cm.DescribeCmd, "cm", "describe configMap"},
+	{deploy.DescribeCmd, "deploy", "describe Deployment"},
+	{node.DescribeCmd, "node", "describe Node"},
+	{pod.DescribeCmd, "pod", "describe Pod"},
+	{pvc.DescribeCmd, "pvc", "describe pvc"},
+	{ns.DescribeCmd, "ns", "describe Namespace"},
+	{sa.DescribeCmd, "sa", "describe ServiceAccount"},
+	{sc.DescribeCmd, "sc", "describe StoraceClass"},
 }
 
 func init() {
@@ -54,44 +58,4 @@ func init() {
 
 		EpCmd.AddCommand(&cmd)
 	}
-	// resDescCmd := *res.DescribeCmd
-	// resDescCmd.Use = "res"
-	// resDescCmd.Short = "API resource"
-
-	// crdDescCmd := *crd.DescribeCmd
-	// crdDescCmd.Use = "crd"
-	// crdDescCmd.Short = "describe CRD"
-
-	// nodeDescCmd := *node.DescribeCmd
-	// nodeDescCmd.Use = "node"
-	// nodeDescCmd.Short = "describe node"
-
-	// podDescCmd := *pod.DescribeCmd
-	// podDescCmd.Use = "pod"
-	// podDescCmd.Short = "describe pod"
-
-	// pvcDescCmd := *pvc.DescribeCmd
-	// pvcDescCmd.Use = "pvc"
-	// pvcDescCmd.Short = "describe pvc"
-
-	// nsDescCmd := *ns.DescribeCmd
-	// nsDescCmd.Use = "ns"
-	// nsDescCmd.Short = "describe namespace"
-
-	// saDescCmd := *sa.DescribeCmd
-	// saDescCmd.Use = "sa"
-	// saDescCmd.Short = "describe serviceAccount"
-
-	// cmDescCmd := *cm.DescribeCmd
-	// cmDescCmd.Use = "cm"
-	// cmDescCmd.Short = "describe configMap"
-
-	// EpCmd.AddCommand(&crdDescCmd)
-	// EpCmd.AddCommand(&resDescCmd)
-	// EpCmd.AddCommand(&nodeDescCmd)
-	// EpCmd.AddCommand(&podDescCmd)
-	// EpCmd.AddCommand(&pvcDescCmd)
-	// EpCmd.AddCommand(&nsDescCmd)
-	// EpCmd.AddCommand(&saDescCmd)
-	// EpCmd.AddCommand(&cmDescCmd)
 }
