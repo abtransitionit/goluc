@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package deploy
+package sc
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 )
 
 // Description
-var deleteSDesc = "delete Deployment"
+var deleteSDesc = "delete StoraceClass"
 var deleteLDesc = deleteSDesc
 
 // root Command
@@ -29,7 +29,7 @@ var DeleteCmd = &cobra.Command{
 
 		// list cm
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResDeploy, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSC, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -49,15 +49,9 @@ var DeleteCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 1)
+		resName, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
-			return
-		}
-		// define resource property from user choice
-		resNs, err := list.GetFieldByID(output, id, 0)
-		if err != nil {
-			logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
 			return
 		}
 
@@ -65,7 +59,7 @@ var DeleteCmd = &cobra.Command{
 		logger.Infof("selected item: %s ", resName)
 		// describe cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResDeploy, Name: resName, Ns: resNs}
+		i := kubectl.Resource{Type: kubectl.ResSC, Name: resName}
 		output, err = i.Delete("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)

@@ -6,6 +6,7 @@ package kubectl
 import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/delete"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ds"
@@ -46,6 +47,7 @@ func init() {
 	EpCmd.AddCommand(list.EpCmd)
 	EpCmd.AddCommand(desc.EpCmd)
 	EpCmd.AddCommand(yaml.EpCmd)
+	EpCmd.AddCommand(delete.EpCmd)
 
 	// std resource
 	EpCmd.AddCommand(cm.EpCmd)

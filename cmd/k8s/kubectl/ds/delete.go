@@ -54,18 +54,18 @@ var DeleteCmd = &cobra.Command{
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
-		// // define resource property from user choice
-		// resNs, err := list.GetFieldByID(output, id, 0)
-		// if err != nil {
-		// 	logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
-		// 	return
-		// }
+		// define resource property from user choice
+		resNs, err := list.GetFieldByID(output, id, 0)
+		if err != nil {
+			logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
+			return
+		}
 
 		// log
 		logger.Infof("selected item: %s ", resName)
 		// describe cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResDs, Name: resName}
+		i := kubectl.Resource{Type: kubectl.ResDs, Name: resName, Ns: resNs}
 		output, err = i.Delete("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
