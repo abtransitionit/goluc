@@ -8,6 +8,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/desc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ds"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/list"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/mnf"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
@@ -50,6 +51,7 @@ func init() {
 	EpCmd.AddCommand(cm.EpCmd)
 	EpCmd.AddCommand(crd.EpCmd)
 	EpCmd.AddCommand(deploy.EpCmd)
+	EpCmd.AddCommand(ds.EpCmd)
 	EpCmd.AddCommand(node.EpCmd)
 	EpCmd.AddCommand(mnf.EpCmd)
 	EpCmd.AddCommand(ns.EpCmd)
