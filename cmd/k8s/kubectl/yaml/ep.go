@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ep"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -37,6 +38,7 @@ type Cmd struct {
 var mapCmd = []Cmd{
 	// {res.YamlCmd, "res", "API resource"},
 	{deploy.YamlCmd, "deploy", "yaml Deployment"},
+	{ep.YamlCmd, "deploy", "yaml Entrypoin"},
 	{crd.YamlCmd, "crd", "yaml CRD"},
 	{node.YamlCmd, "node", "yaml node"},
 	{pod.YamlCmd, "pod", "yaml pod"},

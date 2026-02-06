@@ -39,6 +39,7 @@ var mapCmd = []cmd{
 	// {crd.DeleteCmd, "crd", "delete CRD"},
 	{deploy.DeleteCmd, "deploy", "delete Deployment"},
 	{ds.DeleteCmd, "ds", "delete DaemonSet"},
+	{ds.DeleteCmd, "ds", "delete DaemonSet"},
 	// {node.DeleteCmd, "node", "delete node"},
 	// {ns.DeleteCmd, "ns", "delete namespace"},
 	{ns.ResCmd, "ns-r", "delete a namespace's resource"},

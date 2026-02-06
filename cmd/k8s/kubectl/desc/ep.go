@@ -7,6 +7,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ep"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -42,6 +43,7 @@ var mapCmd = []Cmd{
 	{crd.DescribeCmd, "crd", "describe CRD"},
 	{cm.DescribeCmd, "cm", "describe configMap"},
 	{deploy.DescribeCmd, "deploy", "describe Deployment"},
+	{ep.DescribeCmd, "ep", "describe Entrypoint"},
 	{node.DescribeCmd, "node", "describe Node"},
 	{pod.DescribeCmd, "pod", "describe Pod"},
 	{pvc.DescribeCmd, "pvc", "describe pvc"},

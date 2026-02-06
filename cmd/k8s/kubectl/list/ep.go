@@ -8,6 +8,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ds"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ep"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
@@ -44,6 +45,7 @@ var mapCmd = []cmd{
 	{crd.ListCmd, "crd", "list CRD"},
 	{deploy.ListCmd, "deploy", "list Deployment"},
 	{ds.ListCmd, "ds", "list DaemonSet"},
+	{ep.ListCmd, "ep", "list Enrypoint"},
 	{node.ListCmd, "node", "list node"},
 	{ns.ListCmd, "ns", "list namespace"},
 	{ns.ResCmd, "ns-r", "List a namespace's resource"},
