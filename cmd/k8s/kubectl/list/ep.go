@@ -17,6 +17,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -55,6 +56,7 @@ var mapCmd = []cmd{
 	{res.ListCmd, "res", "display API server object type"},
 	{sa.ListCmd, "sa", "list serviceAccount"},
 	{sc.ListCmd, "sc", "list SC"},
+	{svc.ListCmd, "sc", "list Service"},
 }
 
 func init() {

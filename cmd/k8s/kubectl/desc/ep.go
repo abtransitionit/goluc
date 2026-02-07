@@ -15,6 +15,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -50,6 +51,7 @@ var mapCmd = []Cmd{
 	{ns.DescribeCmd, "ns", "describe Namespace"},
 	{sa.DescribeCmd, "sa", "describe ServiceAccount"},
 	{sc.DescribeCmd, "sc", "describe StoraceClass"},
+	{svc.DescribeCmd, "svc", "describe Service"},
 }
 
 func init() {

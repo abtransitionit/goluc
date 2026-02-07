@@ -12,6 +12,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
 	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pvc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -37,15 +38,16 @@ type Cmd struct {
 
 var mapCmd = []Cmd{
 	// {res.YamlCmd, "res", "API resource"},
+	{crd.YamlCmd, "crd", "yaml CRD"},
+	{cm.YamlCmd, "cm", "yaml configMap"},
 	{deploy.YamlCmd, "deploy", "yaml Deployment"},
 	{ep.YamlCmd, "deploy", "yaml Entrypoin"},
-	{crd.YamlCmd, "crd", "yaml CRD"},
 	{node.YamlCmd, "node", "yaml node"},
+	{ns.YamlCmd, "ns", "yaml namespace"},
 	{pod.YamlCmd, "pod", "yaml pod"},
 	{pvc.YamlCmd, "pvc", "yaml pvc"},
-	{ns.YamlCmd, "ns", "yaml namespace"},
+	{svc.YamlCmd, "pvc", "yaml service"},
 	// {sa.YamlCmd, "sa", "yaml serviceAccount"},
-	{cm.YamlCmd, "cm", "yaml configMap"},
 }
 
 func init() {

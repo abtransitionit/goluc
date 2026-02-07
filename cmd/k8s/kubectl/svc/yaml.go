@@ -15,7 +15,7 @@ import (
 )
 
 // Description
-var yamlSDesc = "get the yaml manifest for pods."
+var yamlSDesc = "get the yaml manifest for a Service"
 var yamlLDesc = yamlSDesc
 
 // root Command

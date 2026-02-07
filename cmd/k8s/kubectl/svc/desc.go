@@ -13,7 +13,7 @@ import (
 )
 
 // Description
-var describeSDesc = "display details for a single StorageClass."
+var describeSDesc = "display details for a single Service."
 var describeLDesc = describeSDesc
 
 // root Command

@@ -15,7 +15,7 @@ import (
 )
 
 // Description
-var deleteSDesc = "delete StoraceClass"
+var deleteSDesc = "delete Service"
 var deleteLDesc = deleteSDesc
 
 // root Command

@@ -12,7 +12,7 @@ import (
 )
 
 // Description
-var listSDesc = "list StorageClasses."
+var listSDesc = "list Service."
 var listLDesc = listSDesc
 
 // root Command
