@@ -24,10 +24,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var workflowSDesc = "Manage systems, software or tools using a workflow."
+var actOn = "systems: infra, software, tools"
+var workflowSDesc = fmt.Sprintf("Manage %s", actOn)
 var workflowLDesc = workflowSDesc + "\n" + `
-This command allows you to act on various systems, software or tools, on your local
-machine or on remote hosts (ie. VMs or containers).
+This command works from your local worstation, computer or from a remote hosts (ie. VMs or containers on a cloud provider).
 `
 
 // root Command

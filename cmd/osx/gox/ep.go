@@ -5,6 +5,7 @@ package gox
 
 import (
 	"github.com/abtransitionit/goluc/cmd/osx/gox/luca"
+	"github.com/abtransitionit/goluc/cmd/osx/gox/lucm"
 	"github.com/spf13/cobra"
 )
 
@@ -26,4 +27,5 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	EpCmd.AddCommand(luca.EpCmd)
+	EpCmd.AddCommand(lucm.EpCmd)
 }
