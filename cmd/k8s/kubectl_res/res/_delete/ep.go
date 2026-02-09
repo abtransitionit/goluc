@@ -4,13 +4,14 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package delete
 
 import (
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ds"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pv"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pvc"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/deploy"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/ds"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/ns"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/pv"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/pvc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -49,6 +50,7 @@ var mapCmd = []cmd{
 	// {res.DeleteCmd, "res", "display API server object type"},
 	// {sa.DeleteCmd, "sa", "delete serviceAccount"},
 	{sc.DeleteCmd, "sc", "delete SC"},
+	{svc.DeleteCmd, "svc", "delete SVC"},
 }
 
 func init() {

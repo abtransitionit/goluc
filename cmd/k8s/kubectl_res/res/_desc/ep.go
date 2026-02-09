@@ -4,23 +4,23 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package desc
 
 import (
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/cm"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/crd"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/deploy"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ep"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/node"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/ns"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pod"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/pvc"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/res"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sa"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/sc"
-	"github.com/abtransitionit/goluc/cmd/k8s/kubectl/svc"
+	res "github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/_res"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/cm"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/crd"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/deploy"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/ep"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/node"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/ns"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/pod"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/pvc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/sa"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/sc"
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res/svc"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var epSDesc = "describe resources."
+var epSDesc = "display a resource status	"
 var epLDesc = epSDesc
 
 // root Command

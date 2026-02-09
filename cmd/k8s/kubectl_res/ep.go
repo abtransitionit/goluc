@@ -1,9 +1,11 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package svc
+package kubectl_res
 
 import (
+	"github.com/abtransitionit/goluc/cmd/k8s/kubectl_res/res"
+
 	// "github.com/abtransitionit/goluc/cmd/k8s/shared"
 	"github.com/spf13/cobra"
 )
@@ -11,22 +13,19 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage StorageClasses (related to PVC)."
+var epSDesc = "manage k8s resources using kubectl."
 var epLDesc = epSDesc
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "svc",
+	Use:   "kubectl",
 	Short: epSDesc,
 	Long:  epLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
-	},
 }
 
 func init() {
-	EpCmd.AddCommand(ListCmd)
-	EpCmd.AddCommand(DescribeCmd)
-	EpCmd.AddCommand(DeleteCmd)
-	EpCmd.AddCommand(YamlCmd)
+	// EpCmd.PersistentFlags().StringVar(&shared.HelmHost, "helm-host", "", "Helm host to use")
+
+	// std resource
+	EpCmd.AddCommand(res.EpCmd)
 }

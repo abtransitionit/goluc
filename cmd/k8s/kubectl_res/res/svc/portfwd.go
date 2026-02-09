@@ -1,9 +1,12 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package mnf
+package svc
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -13,26 +16,26 @@ import (
 )
 
 // Description
-var DeleteSDesc = "delete manifest(s) resource(s) from a cluster."
-var DeleteLDesc = DeleteSDesc
+var portFwdSDesc = "port-forward a  Service"
+var portFwdLDesc = portFwdSDesc
 
 // root Command
-var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: DeleteSDesc,
-	Long:  DeleteLDesc,
+var PortFwdCmd = &cobra.Command{
+	Use:   "pfwd",
+	Short: portFwdSDesc,
+	Long:  portFwdLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-		// list authorized manifest
+
+		// list cm
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResManifest}
-		output, err := i.ListAuth("local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResSvc, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
-		// print
+		// - print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
@@ -47,43 +50,36 @@ var deleteCmd = &cobra.Command{
 		}
 
 		// define resource property from user choice
-		resName, err := list.GetFieldByID(output, id, 0)
+		resName, err := list.GetFieldByID(output, id, 1)
 		if err != nil {
 			logger.Errorf("failed to get res name from ID: %s: %v", id, err)
 			return
 		}
-
 		// define resource property from user choice
-		resUrl, err := list.GetFieldByID2(output, id, 2)
+		resNs, err := list.GetFieldByID(output, id, 0)
 		if err != nil {
-			logger.Errorf("failed to get res url from ID: %s: %v", id, err)
+			logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
 			return
 		}
-
-		// log
-		logger.Infof("selected item: %s ", resName)
-		// - get instance and operate
-		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
-		_, err = i.Delete("local", shared.HelmHost, logger)
+		// define resource property from user choice
+		resPort, err := list.GetFieldByID(output, id, 5)
 		if err != nil {
-			logger.Errorf("%v", err)
+			logger.Errorf("failed to get res ns from ID: %s: %v", id, err)
 			return
 		}
+		// remove the protocol (e.g., "80/TCP" -> "80")
+		resPort = strings.Split(resPort, "/")[0]
 
 		// log
-		logger.Infof("resource still in the cluster for: %s", resName)
+		logger.Infof("selected item: name:%s - ns:%s - port:%s", resName, resNs, resPort)
 		// - get instance and operate
-		i = kubectl.Resource{Type: kubectl.ResManifest, Url: resUrl}
-		output, err = i.Describe("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResSvc, Name: resName, Ns: resNs, Port: resPort}
+		output, err = i.PortForward("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 		// - print
-		if list.CountNbLine(output) == 1 {
-			return
-		} else {
-			list.PrettyPrintTable(output)
-		}
+		fmt.Println(output)
 	},
 }

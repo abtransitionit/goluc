@@ -1,9 +1,11 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package ns
+package mnf
 
 import (
+	"regexp"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -13,30 +15,39 @@ import (
 )
 
 // Description
-var resSDesc = "list all resources."
-var resLDesc = resSDesc
+var ApplySDesc = "apply manifest(s) resource(s) into a cluster."
+var ApplyLDesc = ApplySDesc
 
 // root Command
-var ResCmd = &cobra.Command{
-	Use:   "res",
-	Short: resSDesc,
-	Long:  resLDesc,
+var applyCmd = &cobra.Command{
+	Use:   "apply",
+	Short: ApplySDesc,
+	Long:  ApplyLDesc,
+	// Args: func(cmd *cobra.Command, args []string) error {
+	// 	if len(args) != 1 {
+	// 		return fmt.Errorf("❌ you must pass exactly 1 arguments, the name of the node, got %d", len(args))
+	// 	}
+	// 	return nil
+	// },
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list nodes
+		// list authorized manifest
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResManifest}
+		output, err := i.ListAuth("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
+		// customize display (kepp only url:filename)
+		output2 := regexp.MustCompile(`https://\S+/(\S+)`).ReplaceAllString(output, "$1")
 		// - print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
-			list.PrettyPrintTable(output)
+			list.PrettyPrintTable(output2)
 		}
 
 		// Ask user which ID (to choose) from the printed list
@@ -55,19 +66,12 @@ var ResCmd = &cobra.Command{
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe node
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResNS, Name: resName}
-		output, err = i.ListResource("local", shared.HelmHost, logger)
+		i = kubectl.Resource{Type: kubectl.ResManifest, Name: resName}
+		_, err = i.Apply("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
-		}
-		// - print
-		if list.CountNbLine(output) == 1 {
-			return
-		} else {
-			list.PrettyPrintTable(output)
 		}
 	},
 }

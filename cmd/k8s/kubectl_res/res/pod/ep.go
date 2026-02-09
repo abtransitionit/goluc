@@ -26,6 +26,9 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	// ishell
+	EpCmd.AddCommand(iShellCmd)
+	// std
 	EpCmd.AddCommand(ListCmd)
 	EpCmd.AddCommand(LogCmd)
 	EpCmd.AddCommand(DescribeCmd)

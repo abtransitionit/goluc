@@ -1,11 +1,9 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package svc
+package ns
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/gocore/ui"
@@ -15,21 +13,21 @@ import (
 )
 
 // Description
-var deleteSDesc = "delete Service"
-var deleteLDesc = deleteSDesc
+var resSDesc = "list all resources."
+var resLDesc = resSDesc
 
 // root Command
-var DeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: deleteSDesc,
-	Long:  deleteLDesc,
+var ResCmd = &cobra.Command{
+	Use:   "res-02",
+	Short: resSDesc,
+	Long:  resLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
 
-		// list cm
+		// list nodes
 		// - get instance and operate
-		output, err := kubectl.List(kubectl.ResSvc, "local", shared.HelmHost, logger)
+		output, err := kubectl.List(kubectl.ResNS, "local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
@@ -57,15 +55,19 @@ var DeleteCmd = &cobra.Command{
 
 		// log
 		logger.Infof("selected item: %s ", resName)
-		// describe cm
+		// describe node
 		// - get instance and operate
-		i := kubectl.Resource{Type: kubectl.ResSvc, Name: resName}
-		output, err = i.Delete("local", shared.HelmHost, logger)
+		i := kubectl.Resource{Type: kubectl.ResNS, Name: resName}
+		output, err = i.ListResource("local", shared.HelmHost, logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
 		}
 		// - print
-		fmt.Println(output)
+		if list.CountNbLine(output) == 1 {
+			return
+		} else {
+			list.PrettyPrintTable(output)
+		}
 	},
 }

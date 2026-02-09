@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package mnf
 
 import (
+	"regexp"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/mock/k8scli/kubectl"
@@ -12,7 +14,7 @@ import (
 )
 
 // Description
-var ListSDesc = "list applied/authorized yaml or manifest."
+var ListSDesc = "list authorized yaml/manifest."
 var ListLDesc = ListSDesc
 
 // root Command
@@ -23,9 +25,7 @@ var ListCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger
 		logger := logx.GetLogger()
-		// logger.Info("list applied/authorized yaml or manifest")
 
-		// list authorized manifest
 		// - get instance and operate
 		i := kubectl.Resource{Type: kubectl.ResManifest}
 		output, err := i.ListAuth("local", shared.HelmHost, logger)
@@ -33,11 +33,13 @@ var ListCmd = &cobra.Command{
 			logger.Errorf("%v", err)
 			return
 		}
+		// customize display (kepp only url:filename)
+		output2 := regexp.MustCompile(`https://\S+/(\S+)`).ReplaceAllString(output, "$1")
 		// - print
 		if list.CountNbLine(output) == 1 {
 			return
 		} else {
-			list.PrettyPrintTable(output)
+			list.PrettyPrintTable(output2)
 		}
 	},
 }
