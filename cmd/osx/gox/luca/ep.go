@@ -14,7 +14,7 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "build luca for the KBE project."
+var epSDesc = "build luc for the KBE project (aka luca)."
 var epLDesc = epSDesc
 
 // root Command

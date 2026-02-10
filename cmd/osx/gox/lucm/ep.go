@@ -14,7 +14,7 @@ import (
 var localFlag bool
 
 // Description
-var epSDesc = "build lucm for mac."
+var epSDesc = "build luc for mac (aka lucm)."
 var epLDesc = epSDesc
 
 // root Command

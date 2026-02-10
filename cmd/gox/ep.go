@@ -1,5 +1,5 @@
 // file: gocore/cli/cli.go
-package goprj
+package gox
 
 import (
 	"github.com/abtransitionit/gocore/logx"
@@ -14,7 +14,7 @@ This command allows to act on a go project: vet, test, build, ...
 
 // root Command
 var EpCmd = &cobra.Command{
-	Use:   "goprj",
+	Use:   "go",
 	Short: SDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		logger := logx.GetLogger()

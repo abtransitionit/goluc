@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package goprj
+package gox
 
 import (
 	"github.com/abtransitionit/gocore/logx"
@@ -11,9 +11,9 @@ import (
 // Package variables for CLI flags
 
 // root command
-var vetCmd = &cobra.Command{
-	Use:   "vet",
-	Short: "check the syntax of a go project",
+var testCmd = &cobra.Command{
+	Use:   "test",
+	Short: "run all existing unit test of a go project",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		logger := logx.GetLogger()
 		logger.Infof("%s", cmd.Short)

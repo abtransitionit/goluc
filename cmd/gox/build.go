@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package goprj
+package gox
 
 import (
 	"github.com/abtransitionit/gocore/gocli"
