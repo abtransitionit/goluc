@@ -15,17 +15,6 @@ phases:
     param: 
       - cluster.node
 
-
-  AddApp:
-    description: Install Helm charts repositories on the helm client (node.helm)
-    node: cluster.bastion
-    fn: AddRepoHelm
-    param:
-      - helm.repo
-      - node.helm
-    dependency:
-      - CheckNodeSshAccess
-
   AddRepoHelm:
     description: Install Helm charts repositories on the helm client (node.helm)
     node: cluster.bastion
@@ -46,15 +35,15 @@ phases:
     dependency:
       - AddRepoHelm
 
-  DeployCimRegistry:
-    description: deploy the containerized app cimreg.
-    node: cluster.bastion
-    fn: ApplyManifest
-    param:
-      - kubectl.manifest.apply
-      - node.kubectl
-    dependency:
-      - DeployCsiOpenEBS
+  # DeployCimRegistry:
+  #   description: deploy the containerized app cimreg.
+  #   node: cluster.bastion
+  #   fn: ApplyManifest
+  #   param:
+  #     - kubectl.manifest.apply
+  #     - node.kubectl
+  #   dependency:
+  #     - DeployCsiOpenEBS
 
 
   # CreateSecret:

@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/goluc/cmd/gox"
 	"github.com/abtransitionit/goluc/cmd/k8s"
 	"github.com/abtransitionit/goluc/cmd/osx"
+	"github.com/abtransitionit/goluc/cmd/property"
 	"github.com/abtransitionit/goluc/cmd/workflow2"
 	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
@@ -46,7 +47,7 @@ func init() {
 	rootCmd.AddCommand(gox.EpCmd)
 	// rootCmd.AddCommand(workflow.EpCmd)
 	rootCmd.AddCommand(workflow2.EpCmd)
-	// rootCmd.AddCommand(property.EpCmd)
+	rootCmd.AddCommand(property.EpCmd)
 	// rootCmd.AddCommand(test.EpCmd)
 	// rootCmd.AddCommand(do.EpCmd)
 	rootCmd.AddCommand(api.EpCmd)

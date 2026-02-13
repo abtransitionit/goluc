@@ -39,7 +39,6 @@ var kindCmd = &cobra.Command{
 		logger.Info(kindSDesc)
 		// ctx := context.Background()
 
-		// list configured repos
 		// - get instance and operate
 		i := helm.Resource{Type: helm.ResRepo}
 		output, err := i.List("local", shared.HelmHost, logger)
@@ -68,7 +67,6 @@ var kindCmd = &cobra.Command{
 			return
 		}
 
-		// list the repo's charts
 		// - get instance and operate
 		i = helm.Resource{Type: helm.ResChart, Repo: resName}
 		output, err = i.List("local", shared.HelmHost, logger)

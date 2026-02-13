@@ -1,35 +1,41 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package release
+package chart
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/gocore/list"
 	"github.com/abtransitionit/gocore/logx"
 	"github.com/abtransitionit/golinux/mock/k8scli/helm"
-	"github.com/abtransitionit/goluc/cmd/k8s/shared"
+	"github.com/abtransitionit/goluc/internal"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var listSDesc = "list all releases installed in the cluster."
-var listLDesc = listSDesc
+var srcListSDesc = "list possible chart to build"
+var srcListLDesc = srcListSDesc
 
 // root Command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: listSDesc,
-	Long:  listLDesc,
+var sListCmd = &cobra.Command{
+	Use:   "slist",
+	Short: srcListSDesc,
+	Long:  srcListLDesc,
+	Example: fmt.Sprintf(`
+  # add helm repo from whitelist
+  %[1]s build add bitnami
+  `, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(listSDesc)
+		logger.Info(srcListSDesc)
 		// ctx := context.Background()
 
-		// - get instance and operate
-		i := helm.Resource{Type: helm.ResRelease}
-		output, err := i.List("local", shared.HelmHost, logger)
+		// get instance and operate
+		i := helm.Resource{Type: helm.ResChart, SType: helm.STypeChartBuild}
+		output, err := i.List("local", "local", logger)
 		if err != nil {
 			logger.Errorf("failed to build helm command: %v", err)
 			return

@@ -34,10 +34,14 @@ func init() {
 	// repoListCmd := *repo.DescribeCmd
 	// repoListCmd.Use = "list"
 
+	// EpCmd.AddCommand(buildCmd)
+	EpCmd.AddCommand(buildCmd)
 	EpCmd.AddCommand(kindCmd)
-	// EpCmd.AddCommand(ListCmd)
+	EpCmd.AddCommand(sListCmd)
 	EpCmd.AddCommand(&chartListCmd)
 	EpCmd.AddCommand(&repoListCmd)
 	EpCmd.AddCommand(ReadmeCmd)
+	EpCmd.AddCommand(pushCmd)
+	// EpCmd.AddCommand(ListCmd)
 	// EpCmd.AddCommand(&repoListCmd)
 }

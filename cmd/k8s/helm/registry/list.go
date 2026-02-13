@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package repo
+package registry
 
 import (
 	"github.com/abtransitionit/gocore/list"
@@ -17,20 +17,23 @@ var (
 )
 
 // Description
-var listSDesc = "list authorized/installed repos."
-var listLDesc = listSDesc
+var listSDesc = "list known OCI registry."
+var listDesc = listSDesc
 
 // root Command
 var ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: listSDesc,
-	Long:  listLDesc,
+	Long:  listDesc,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		// define ctx and logger
 		logger := logx.GetLogger()
+		logger.Info(listSDesc)
+		// ctx := context.Background()
 
 		// 1 - get instance
-		i := helm.Resource{Type: helm.ResRepo}
+		i := helm.Resource{Type: helm.ResRegistry}
 
 		// 2 - logic - choose the method to call based on the flag
 		instanceFn := i.List // default (no flag)
