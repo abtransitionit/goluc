@@ -9,7 +9,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage secrets."
+var epSDesc = "manage a Secret"
 var epLDesc = epSDesc
 
 // root Command

@@ -13,7 +13,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage k8s resources using helm."
+var epSDesc = "manage k8s resources with helm"
 var epLDesc = epSDesc + `
 - This command is used to run action(s) on OVH resource(s) using an OVH client'srequest.
 `

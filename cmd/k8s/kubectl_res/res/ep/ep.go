@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage EndPoint"
+var epSDesc = "manage an EndPoint"
 var epLDesc = epSDesc
 
 // root Command

@@ -20,7 +20,7 @@ import (
 )
 
 // Description
-var epSDesc = "display a resource status	"
+var epSDesc = "display a resource status/spec (aka. actual/desired state)"
 var epLDesc = epSDesc
 
 // root Command

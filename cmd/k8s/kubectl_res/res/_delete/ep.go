@@ -16,7 +16,7 @@ import (
 )
 
 // Description
-var epSDesc = "delete resources."
+var epSDesc = "delete a resource"
 var epLDesc = epSDesc
 
 // root Command

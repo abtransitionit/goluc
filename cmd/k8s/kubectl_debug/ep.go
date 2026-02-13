@@ -11,7 +11,7 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "debug a k8s cluster using kubectl."
+var epSDesc = "debug a k8s cluster with kubectl"
 var epLDesc = epSDesc
 
 // root Command

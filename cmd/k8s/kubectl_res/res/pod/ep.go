@@ -12,7 +12,7 @@ import (
 var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage pods."
+var epSDesc = "manage a pods"
 var epLDesc = epSDesc
 
 // root Command

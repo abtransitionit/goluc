@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage ConfigMaps."
+var epSDesc = "manage a ConfigMap"
 var epLDesc = epSDesc
 
 // root Command

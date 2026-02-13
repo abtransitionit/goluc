@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage ServiceAccounts."
+var epSDesc = "manage a ServiceAccounts"
 var epLDesc = epSDesc
 
 // root Command

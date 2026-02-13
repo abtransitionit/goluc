@@ -9,7 +9,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage nodes."
+var epSDesc = "manage a node"
 var epLDesc = epSDesc
 
 // root Command

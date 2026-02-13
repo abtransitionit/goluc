@@ -13,7 +13,7 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage k8s resources using kubectl."
+var epSDesc = "manage k8s resources with kubectl"
 var epLDesc = epSDesc
 
 // root Command

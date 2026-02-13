@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage namespaces."
+var epSDesc = "manage a namespace"
 var epLDesc = epSDesc
 
 // root Command

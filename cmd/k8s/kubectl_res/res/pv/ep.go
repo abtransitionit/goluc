@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage CRDs."
+var epSDesc = "manage a PV"
 var epLDesc = epSDesc
 
 // root Command

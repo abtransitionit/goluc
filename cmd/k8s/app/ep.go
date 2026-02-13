@@ -11,7 +11,7 @@ import (
 var forceFlag bool
 
 // Description
-var epSDesc = "manage resources of specific k8s application."
+var epSDesc = "manage a specific application in the cluster"
 var epLDesc = epSDesc + `
 - This command is used to run action(s) on resources of specific k8s application.
 `

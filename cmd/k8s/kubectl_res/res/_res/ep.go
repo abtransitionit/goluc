@@ -11,7 +11,7 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "list k8s API servers generic resources."
+var epSDesc = "list all known resources from API server"
 var epLDesc = epSDesc
 
 // root Command

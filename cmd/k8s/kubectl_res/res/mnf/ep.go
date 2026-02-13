@@ -11,7 +11,7 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage manifest [yaml] files."
+var epSDesc = "manage a manifest [yaml] file"
 var epLDesc = epSDesc
 
 // root Command

@@ -8,7 +8,7 @@ import (
 )
 
 // Description
-var epSDesc = "manage Deployment"
+var epSDesc = "manage a Deployment"
 var epLDesc = epSDesc
 
 // root Command

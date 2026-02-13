@@ -11,7 +11,7 @@ import (
 // var HelmHost = shared.HelmHost
 
 // Description
-var epSDesc = "manage StorageClasses (related to PVC)."
+var epSDesc = "manage a StorageClasses"
 var epLDesc = epSDesc
 
 // root Command
