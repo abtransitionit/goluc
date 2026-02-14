@@ -65,8 +65,8 @@ var buildCmd = &cobra.Command{
 			return
 		}
 
-		// list possible chart to build
 		// get instance and operate
+		logger.Infof("building chart artifact: %s", resName)
 		i = helm.Resource{Type: helm.ResChart, SType: helm.STypeChartBuild, Name: resName}
 		err = i.Build("local", "local", logger)
 		if err != nil {

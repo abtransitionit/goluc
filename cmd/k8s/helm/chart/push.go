@@ -65,15 +65,14 @@ var pushCmd = &cobra.Command{
 			return
 		}
 
-		logger.Infof("pushing chart: %s", resName)
-
-		// // 3- get instance and operate
-		// i := helm.Resource{Type: helm.ResChart, Name: resName, Param: param}
-		// _, err := i.Build("local", "local", logger)
-		// if err != nil {
-		// 	logger.Errorf("%v", err)
-		// 	return
-		// }
+		// - get instance and operate
+		logger.Infof("pushinging chart artifact: %s", resName)
+		i = helm.Resource{Type: helm.ResChart, SType: helm.STypeChartBuild, Name: resName}
+		err = i.Push("local", "local", logger)
+		if err != nil {
+			logger.Errorf("%v", err)
+			return
+		}
 
 	},
 }
