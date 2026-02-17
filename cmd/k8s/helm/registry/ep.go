@@ -22,6 +22,7 @@ var EpCmd = &cobra.Command{
 }
 
 func init() {
+	EpCmd.AddCommand(listCmd)
 	EpCmd.AddCommand(loginCmd)
 	EpCmd.AddCommand(logoutCmd)
 }

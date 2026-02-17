@@ -36,6 +36,7 @@ func init() {
 
 	// EpCmd.AddCommand(buildCmd)
 	EpCmd.AddCommand(buildCmd)
+	EpCmd.AddCommand(pullCmd)
 	EpCmd.AddCommand(kindCmd)
 	EpCmd.AddCommand(sListCmd)
 	EpCmd.AddCommand(&chartListCmd)

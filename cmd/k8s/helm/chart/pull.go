@@ -15,17 +15,17 @@ import (
 )
 
 // Description
-var pushSDesc = "push a chart's artifact to an OCI registry"
-var pushLDesc = pushSDesc + `
+var pullSDesc = "download a chart's artifact from an OCI registry"
+var pullLDesc = pullSDesc + `
 manage following use case:
 	- the chart artifact (targz) is on the local FS where the helm client is installed
 `
 
 // root Command
-var pushCmd = &cobra.Command{
-	Use:   "push",
-	Short: pushSDesc,
-	Long:  pushLDesc,
+var pullCmd = &cobra.Command{
+	Use:   "pull",
+	Short: pullSDesc,
+	Long:  pullLDesc,
 	Example: fmt.Sprintf(`
   # add helm repo from whitelist
   %[1]s build add bitnami
@@ -34,7 +34,7 @@ var pushCmd = &cobra.Command{
 
 		// define ctx and logger
 		logger := logx.GetLogger()
-		logger.Info(pushSDesc)
+		logger.Info(pullSDesc)
 		// ctx := context.Background()
 
 		// - get instance and operate
@@ -99,7 +99,7 @@ var pushCmd = &cobra.Command{
 		// - get instance and operate
 		logger.Infof("pushing chart artifact %q to registry %q", chartName, registryName)
 		i = helm.Resource{Type: helm.ResChart, SType: helm.STypeChartBuild, Name: chartName, Param: param}
-		err = i.Push("local", "local", logger)
+		err = i.Pull("local", "local", logger)
 		if err != nil {
 			logger.Errorf("%v", err)
 			return
