@@ -24,12 +24,12 @@ var EpCmd = &cobra.Command{
 
 func init() {
 	chartListCmd := *repo.ChartCmd
-	chartListCmd.Use = "list"
-	chartListCmd.Short = "List all charts of all repo configured in the helm client's config."
+	chartListCmd.Use = "listr"
+	chartListCmd.Short = (*repo.ChartCmd).Short
 
 	repoListCmd := *repo.DescribeCmd
-	repoListCmd.Use = "repo"
-	repoListCmd.Short = "List charts of a specific repo configured in the helm client's config."
+	repoListCmd.Short = (*repo.DescribeCmd).Short
+	repoListCmd.Use = "listc"
 
 	// repoListCmd := *repo.DescribeCmd
 	// repoListCmd.Use = "list"
@@ -38,7 +38,7 @@ func init() {
 	EpCmd.AddCommand(buildCmd)
 	EpCmd.AddCommand(pullCmd)
 	EpCmd.AddCommand(kindCmd)
-	EpCmd.AddCommand(sListCmd)
+	EpCmd.AddCommand(listSCmd)
 	EpCmd.AddCommand(&chartListCmd)
 	EpCmd.AddCommand(&repoListCmd)
 	EpCmd.AddCommand(ReadmeCmd)

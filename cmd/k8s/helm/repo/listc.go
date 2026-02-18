@@ -13,12 +13,12 @@ import (
 )
 
 // Description
-var describeSDesc = "list charts of a specific repo."
+var describeSDesc = "List charts of a specific repo configured in the helm client's config."
 var describeLDesc = describeSDesc
 
 // root Command
 var DescribeCmd = &cobra.Command{
-	Use:   "desc",
+	Use:   "listc",
 	Short: describeSDesc,
 	Long:  describeLDesc,
 	Run: func(cmd *cobra.Command, args []string) {

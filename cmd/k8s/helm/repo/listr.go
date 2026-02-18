@@ -21,8 +21,8 @@ var listSDesc = "list authorized/installed repos."
 var listLDesc = listSDesc
 
 // root Command
-var ListCmd = &cobra.Command{
-	Use:   "list",
+var ListRCmd = &cobra.Command{
+	Use:   "listr",
 	Short: listSDesc,
 	Long:  listLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -57,5 +57,5 @@ var ListCmd = &cobra.Command{
 }
 
 func init() {
-	ListCmd.Flags().BoolVar(&flagAuth, "auth", false, "list repos authorized to be installed")
+	ListRCmd.Flags().BoolVar(&flagAuth, "auth", false, "list repos authorized to be installed")
 }

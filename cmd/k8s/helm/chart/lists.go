@@ -14,12 +14,12 @@ import (
 )
 
 // Description
-var srcListSDesc = "list possible chart to build"
+var srcListSDesc = "list buildable local source chart folder"
 var srcListLDesc = srcListSDesc
 
 // root Command
-var sListCmd = &cobra.Command{
-	Use:   "slist",
+var listSCmd = &cobra.Command{
+	Use:   "lists",
 	Short: srcListSDesc,
 	Long:  srcListLDesc,
 	Example: fmt.Sprintf(`
