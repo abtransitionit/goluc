@@ -54,7 +54,9 @@ require (
 	golang.org/x/text v0.29.0 // indirect
 )
 
-// used in dev mode - removes by CI at tag step - simplify development when working on several inter dependant projects
+// dev mode 
+// removes by CI at tag step
+// simplify development on active dev when working on several projects with inetr dependencies 
 
 // direct dependency
 replace github.com/abtransitionit/gotask => ../gotask
