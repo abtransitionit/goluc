@@ -40,6 +40,7 @@ var listSCmd = &cobra.Command{
 			logger.Errorf("failed to build helm command: %v", err)
 			return
 		}
+		fmt.Println(output)
 		// - print
 		if list.CountNbLine(output) == 1 {
 			return
