@@ -26,10 +26,10 @@ var createCmd = &cobra.Command{
 		return nil
 	},
 	Example: fmt.Sprintf(`
-	%1[s] create 
-	%1[s] create --cilium    cilium
-	%1[s] create ingress-nginx --ingngin
-	%1[s] create cilium        --cilium
+	%[1]s create 
+	%[1]s create --cilium    cilium
+	%[1]s create ingress-nginx --ingngin
+	%[1]s create cilium        --cilium
 	`, internal.CliName),
 	Run: func(cmd *cobra.Command, args []string) {
 		// define ctx and logger

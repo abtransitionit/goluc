@@ -4,13 +4,15 @@ module github.com/abtransitionit/goluc
 go 1.24.2
 
 // prod mode
-require github.com/spf13/cobra v1.10.1
 
 require (
 	github.com/abtransitionit/gocore v0.0.1
 	github.com/abtransitionit/golinux v0.0.1
-	github.com/abtransitionit/gotask v0.0.1
-	github.com/spf13/viper v1.21.0
+	github.com/abtransitionit/gotask v0.0.0
+)
+
+require (
+	github.com/spf13/cobra v1.10.2
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -40,6 +42,7 @@ require (
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
+	github.com/spf13/viper v1.21.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
@@ -54,15 +57,13 @@ require (
 	golang.org/x/text v0.29.0 // indirect
 )
 
-// dev mode 
+// dev mode
 // removes by CI at tag step
-// simplify development on active dev when working on several projects with inetr dependencies 
+// simplify development on active dev when working on several projects with inetr dependencies
 
 // direct dependency
-replace github.com/abtransitionit/gotask => ../gotask
-
-// indirect dependency
-replace github.com/abtransitionit/gocore => ../gocore
-
-// indirect dependency
-replace github.com/abtransitionit/golinux => ../golinux
+replace (
+	github.com/abtransitionit/gocore => ../gocore
+	github.com/abtransitionit/golinux => ../golinux
+	github.com/abtransitionit/gotask => ../gotask
+)
